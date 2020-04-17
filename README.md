@@ -1,0 +1,2 @@
+# wzsh
+zsh quick config
