@@ -10,3 +10,4 @@ $ ln -sf $(pwd)/zprofile ${HOME}/.zprofile
 $ ln -sf $(pwd)/zshrc ${HOME}/.zshrc
 $ zsh
 ```
+
