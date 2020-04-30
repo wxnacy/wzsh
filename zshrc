@@ -32,17 +32,18 @@ do
     fi
 done
 
-# for name in .bash_profile .bashrc
-# do
-    # # echo $name
-    # shfile=${HOME}/${name}
-    # echo $shfile
+if [[ ${USER} == 'wxnacy' ]]; then
+    for name in .bash_profile .bashrc
+    do
+        # echo $name
+        shfile=${HOME}/${name}
+        echo $shfile
 
-    # if [ -f $shfile ]; then
-        # source $shfile
-    # fi
-# done
-
+        if [ -f $shfile ]; then
+            source $shfile
+        fi
+    done
+fi
 # prompt spaceship
 # colorls_sh=$(dirname $(gem which colorls))/tab_complete.sh
 # if [ -f $colorls_sh ]; then
