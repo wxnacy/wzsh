@@ -6,7 +6,9 @@ export ZSH=${HOME}/.oh-my-zsh
 ZSH_THEME="bureau"
 # history-substring-search
 plugins=(git python sublime )
-source $ZSH/oh-my-zsh.sh
+if [ -f $ZSH/oh-my-zsh.sh ]; then
+    source $ZSH/oh-my-zsh.sh
+fi
 
 # load zsh plugins
 for name in `ls ${WZSH_HOME}/plugins`
