@@ -35,7 +35,8 @@ done
 for name in .bash_profile .bashrc
 do
     # echo $name
-    shfile=~/${name}
+    shfile=${HOME}/${name}
+    echo $shfile
 
     if [ -f $shfile ]; then
         source $shfile
