@@ -21,8 +21,10 @@ echo ''
 echo -n -e "\t"
 echo 'ln -sf ${HOME}/.wzsh ${HOME}/.zsh'
 echo -n -e "\t"
-echo 'ln -sf ${HOME}/zshenv ${HOME}/.zshenv'
+echo 'ln -sf ${HOME}/.wzsh/zshenv ${HOME}/.zshenv'
 echo -n -e "\t"
-echo 'ln -sf ${HOME}/zprofile ${HOME}/.zprofile'
+echo 'ln -sf ${HOME}/.wzsh/zprofile ${HOME}/.zprofile'
 echo -n -e "\t"
-echo 'ln -sf ${HOME}/zshrc ${HOME}/.zshrc'
+echo 'ln -sf ${HOME}/.wzsh/zshrc ${HOME}/.zshrc'
+echo -n -e "\t"
+echo 'zsh'

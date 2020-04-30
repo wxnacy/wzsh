@@ -13,7 +13,7 @@ zsh 快速配置脚本
 $ curl -L https://raw.githubusercontent.com/wxnacy/wzsh/master/installer.sh | bash
 ```
 
-
+或者手动安装
 
 ```bash
 $ git clone --recursive https://github.com/wxnacy/wzsh
