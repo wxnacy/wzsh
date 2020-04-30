@@ -2,14 +2,27 @@
 # Author: wxnacy(wxnacy@gmail.com)
 # Description:
 
-WZSH_HOME=${HOME}/.wzsh
+for i in git ;do
+    if [ ! `command -v git` ];then
+        echo 'Install Wzsh failed'
+        echo 'Wzsh need git'
+        exit 0
+    fi
+done
 
-git clone --recursive https://github.com/wxnacy/wzsh -o ${WZSH_HOME}
+W_HOME=${HOME}/.wzsh
 
-cd ${wzsh}
-ln -sf $(pwd) ${HOME}/.zsh
-ln -sf $(pwd)/zshenv ${HOME}/.zshenv
-ln -sf $(pwd)/zprofile ${HOME}/.zprofile
-ln -sf $(pwd)/zshrc ${HOME}/.zshrc
+test -d ${W_HOME} || git clone --recursive https://github.com/wxnacy/wzsh ${W_HOME}
 
 
+echo 'The final step is to complete the configuration of Wzsh'
+echo 'Run these commands'
+echo ''
+echo -n -e "\t"
+echo 'ln -sf ${HOME}/.wzsh ${HOME}/.zsh'
+echo -n -e "\t"
+echo 'ln -sf ${HOME}/zshenv ${HOME}/.zshenv'
+echo -n -e "\t"
+echo 'ln -sf ${HOME}/zprofile ${HOME}/.zprofile'
+echo -n -e "\t"
+echo 'ln -sf ${HOME}/zshrc ${HOME}/.zshrc'

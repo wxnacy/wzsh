@@ -32,6 +32,7 @@ do
     fi
 done
 
+# 作者机器才会默认加载 .bashrc
 if [[ ${USER} == 'wxnacy' ]]; then
     for name in .bash_profile .bashrc
     do
