@@ -5,7 +5,7 @@ alias gb="git branch"
 alias gt="git tag -l"
 
 # for system
-alias cpwd="echo -n $(echo -n $(pwd) | sed 's/ /\\ /g') | pbcopy"
+alias cpwd="echo -n `echo -n $(pwd) | sed 's/ /\\ /g'` | pbcopy"
 alias ll="ls -l"
 alias la="ls -la"
 alias lh="ls -lh"
