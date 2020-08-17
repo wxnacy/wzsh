@@ -18,3 +18,16 @@ function proxyon() {
 function yd() {
     nohup youtube-dl $1 &
 }
+
+# pyenv 安装 python 新版本
+function pyinstall() {
+    v=$1
+    echo $v
+    curl https://npm.taobao.org/mirrors/python/$v/Python-$v.tar.xz -o ~/.pyenv/cache/Python-$v.tar.xz
+    pyenv install $v
+}
+
+# 更新 wzsh
+function wzshupdate() {
+    cd ~/.wzsh && git pull
+}
