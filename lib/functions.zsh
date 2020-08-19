@@ -8,7 +8,7 @@ function proxyoff(){
 
 # 开启代理
 function proxyon() {
-    export no_proxy="baidu.com,github.com,wxnacy.com"
+    export no_proxy="baidu.com,wxnacy.com"
     export http_proxy="http://127.0.0.1:1080"
     export https_proxy=$http_proxy
     echo -e "已开启代理"
