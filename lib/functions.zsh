@@ -31,3 +31,8 @@ function pyinstall() {
 function wzshupdate() {
     cd ~/.wzsh && git pull
 }
+
+# 添加 youtube-dl 后台任务
+function ydl() {
+    nohup youtube-dl $1 >> ${HOME}/Downloads/ydl.log & 2>&1
+}
