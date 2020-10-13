@@ -33,18 +33,20 @@ do
 done
 
 # 作者机器才会默认加载 .bashrc
-if [[ ${USER} == 'wxnacy' ]]; then
-    for name in .bash_profile .bashrc
-    do
-        # echo $name
-        shfile=${HOME}/${name}
-        echo $shfile
+# if [[ ${USER} == 'wenxiaoning' ]]; then
+# fi
+# load local bashrc
+for name in .bash_profile .bashrc
+do
+    # echo $name
+    shfile=${HOME}/${name}
 
-        if [ -f $shfile ]; then
-            source $shfile
-        fi
-    done
-fi
+    if [ -f $shfile ]; then
+        echo $shfile
+        source $shfile
+    fi
+done
+
 # prompt spaceship
 # colorls_sh=$(dirname $(gem which colorls))/tab_complete.sh
 # if [ -f $colorls_sh ]; then
