@@ -47,3 +47,10 @@ alias assh="autossh -M 0 "
 # python
 alias pipi="pip install -i https://pypi.tuna.tsinghua.edu.cn/simple"
 alias pydb="python -m pdb"
+
+# youtube-dl
+alias youtube-dl="youtube-dl --config-location ${WZSH_HOME}/config/youtube-dl.conf"
+alias dydl="docker run --rm -v ~/Downloads:/root/Downloads wxnacy/youtube-dl -o ~/Downloads/%(title)s.%(ext)s --proxy docker.for.mac.host.internal:1080"
+
+# git
+alias dgit="docker run --rm -e GIT_USERNAME:${GIT_USERNAME} -e GIT_EMAIL:${GIT_EMAIL} -e GIT_PASSWORD:${GIT_PASSWORD} -v $(pwd):/root/work wxnacy/git:1.0.0"
