@@ -1,17 +1,29 @@
+#===============================
+# Name: wxnacy's Wzsh setting
+# Author: wxnacy <wxnacy@gmail.com>
+# URL: https://wxnacy.com
+# Created: 2017-08-27
+# Modified: 2021-04-01
+# Description: 方法脚本
+#===============================
+
+PROXY="http://127.0.0.1:1080"
+no_proxy="baidu.com,wxnacy.com"
+
+# 开启代理
+function proxyon() {
+    echo 'proxy' ${PROXY}
+    export no_proxy=${no_proxy}
+    export http_proxy=${PROXY}
+    export https_proxy=$http_proxy
+    echo -e "已开启代理"
+}
 
 # 关闭代理
 function proxyoff(){
     unset http_proxy
     unset https_proxy
     echo -e "已关闭代理"
-}
-
-# 开启代理
-function proxyon() {
-    export no_proxy="baidu.com,wxnacy.com"
-    export http_proxy="http://127.0.0.1:1080"
-    export https_proxy=$http_proxy
-    echo -e "已开启代理"
 }
 
 # 下载指定版本 Python 包
