@@ -27,7 +27,11 @@ if [ -d "${HOME}/.nvm" ]; then
     [ -s "$NVM_DIR/bash_completion"  ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 fi
 
-
+# for homebrew
+if [ -d "/usr/local/Homebrew" ]; then
+    export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles/bottles #ckbrew
+    eval $(/usr/local/Homebrew/bin/brew shellenv) #ckbrew
+fi
 
 # for python
 # source /usr/local/opt/autoenv/activate.sh
