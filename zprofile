@@ -16,7 +16,7 @@ if [ -d "${HOME}/.pyenv" ]; then
     export PYTHON_CONFIGURE_OPTS="--enable-framework"
     # config for vim plugin YouComplateMe
     export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-    eval "$(pyenv init -)"
+    eval "$(pyenv init --path)"
     eval "$(pyenv virtualenv-init -)";
 fi
 
