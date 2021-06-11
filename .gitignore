@@ -156,3 +156,4 @@ plugins/tmux-continuum/
 # for local
 local_*
 zsh-local/
+*zsh-local*
