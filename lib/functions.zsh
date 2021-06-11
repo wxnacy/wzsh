@@ -56,7 +56,3 @@ function ydl() {
     nohup youtube-dl $1 >> ${HOME}/Downloads/ydl.log & 2>&1
 }
 
-# 直接提交并随访所有修改文件
-function gpush() {
-    git pull && git add . && git commit -m "$*" && git push
-}
