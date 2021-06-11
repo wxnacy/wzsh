@@ -50,3 +50,9 @@ function gcmit(){
     git commit -m "$msg"
 }
 
+# 拉取
+function gpull(){
+    proxyon
+    git pull
+    proxyoff
+}
