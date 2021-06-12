@@ -12,6 +12,7 @@
 
 export GitException=100
 
+# 推送
 function gpush(){
     bname=`git branch | grep '*' | awk '{print $2}'`
     echo '当前分支:' $bname
@@ -41,6 +42,15 @@ function gpush(){
     proxyoff
 }
 
+# 拉取最新子模块
+function gsub(){
+    proxyon
+    echo '拉取最新子模块'
+    git submodule update --init --recursive
+    proxyoff
+}
+
+# 添加并提交
 function gcmit(){
     file=$1
     echo '提交文件:' $file
