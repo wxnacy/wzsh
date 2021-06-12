@@ -66,3 +66,9 @@ function gpull(){
     git pull
     proxyoff
 }
+
+# 配置
+function gconf(){
+    git config user.name "wxnacy"
+    git config user.email "371032668@qq.com"
+}
