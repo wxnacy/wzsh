@@ -36,7 +36,10 @@ function gpush(){
             ;;
         esac
     }
-    git add $file
+    if [ $file ]
+    then
+        git add $file
+    fi
     git commit -m "$msg"
     git push origin $bname
     proxyoff
