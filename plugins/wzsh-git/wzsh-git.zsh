@@ -26,21 +26,25 @@ function gpush(){
         git pull origin $bname && throw $GitException
     )
     catch || {
-        case $ex_code in
-            $GitException)
-                echo "GitException was thrown"
-            ;;
-            *)
-                echo "An unexpected exception was thrown"
-                throw $ex_code # you can rethrow the "exception" causing the script to exit if not caught
-            ;;
-        esac
+        echo 'Pull Error'
+        # case $ex_code in
+            # $GitException)
+                # echo "GitException was thrown"
+            # ;;
+            # *)
+                # echo "An unexpected exception was thrown"
+                # throw $ex_code # you can rethrow the "exception" causing the script to exit if not caught
+            # ;;
+        # esac
     }
     if [ $file ]
     then
         git add $file
     fi
-    git commit -m "$msg"
+    if [ $msg ]
+    then
+        git commit -m "$msg"
+    fi
     git push origin $bname
     proxyoff
 }
