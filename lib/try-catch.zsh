@@ -5,6 +5,7 @@
 # Created: 2021-06-11
 # Modified: 2021-06-11
 # Description: try-catch 模块
+# https://www.itranslater.com/qa/details/2116267086019298304
 #===============================
 
 function try()
