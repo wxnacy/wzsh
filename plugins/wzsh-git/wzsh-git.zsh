@@ -67,6 +67,13 @@ function gpull(){
     proxyoff
 }
 
+# git clone
+function glone(){
+    proxyon
+    git clone $@
+    proxyoff
+}
+
 # 配置
 function gconf(){
     git config user.name "wxnacy"
