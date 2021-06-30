@@ -16,7 +16,14 @@ if [ -d "${HOME}/.pyenv" ]; then
     export PYTHON_CONFIGURE_OPTS="--enable-framework"
     # config for vim plugin YouComplateMe
     export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-    eval "$(pyenv init --path)"
+    # if [[ `sw_vers | awk 'NR==2 {print $2}'` == 11.2.3 ]]
+    if [[ -f ~/.wxnacy ]]
+    then
+        eval "$(pyenv init -)"
+    else
+        eval "$(pyenv init --path)"
+    fi
+
     eval "$(pyenv virtualenv-init -)";
 fi
 
