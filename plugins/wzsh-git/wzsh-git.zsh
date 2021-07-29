@@ -26,7 +26,6 @@ function gpush(){
         git pull origin $bname && throw $GitException
     )
     catch || {
-        echo 'pull error'
         # case $ex_code in
             # $GitException)
                 # echo "GitException was thrown"
@@ -36,9 +35,16 @@ function gpush(){
                 # throw $ex_code # you can rethrow the "exception" causing the script to exit if not caught
             # ;;
         # esac
+        echo 'Pull Error'
     }
-    git add $file
-    git commit -m "$msg"
+    if [ $file ]
+    then
+        git add $file
+    fi
+    if [ $msg ]
+    then
+        git commit -m "$msg"
+    fi
     git push origin $bname
     proxyoff
 }
@@ -71,6 +77,13 @@ function gcmit(){
 function gpull(){
     proxyon
     git pull
+    proxyoff
+}
+
+# git clone
+function glone(){
+    proxyon
+    git clone $@
     proxyoff
 }
 
