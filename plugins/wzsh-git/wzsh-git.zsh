@@ -26,6 +26,15 @@ function gpush(){
         git pull origin $bname && throw $GitException
     )
     catch || {
+        # case $ex_code in
+            # $GitException)
+                # echo "GitException was thrown"
+            # ;;
+            # *)
+                # echo "An unexpected exception was thrown"
+                # throw $ex_code # you can rethrow the "exception" causing the script to exit if not caught
+            # ;;
+        # esac
         echo 'Pull Error'
     }
     if [ $file ]
@@ -38,6 +47,12 @@ function gpush(){
     fi
     git push origin $bname
     proxyoff
+}
+
+# 创建并推送 tag
+function gptag(){
+    git tag ${1}
+    git push origin ${1}
 }
 
 # 拉取最新子模块
