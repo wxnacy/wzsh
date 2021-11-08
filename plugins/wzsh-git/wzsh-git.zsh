@@ -21,6 +21,14 @@ function gpush(){
     msg=${@/$1/}
     echo '提交信息:' $msg
     proxyon
+    if [ $file ]
+    then
+        git add $file
+    fi
+    if [ $msg ]
+    then
+        git commit -m "$msg"
+    fi
     try
     (   # open a subshell !!!
         git pull origin $bname && throw $GitException
@@ -35,16 +43,8 @@ function gpush(){
                 # throw $ex_code # you can rethrow the "exception" causing the script to exit if not caught
             # ;;
         # esac
-        echo 'Pull Error'
+        echo -e "\033[31mPull Error \033[0m"
     }
-    if [ $file ]
-    then
-        git add $file
-    fi
-    if [ $msg ]
-    then
-        git commit -m "$msg"
-    fi
     git push origin $bname
     proxyoff
 }
