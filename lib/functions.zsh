@@ -27,24 +27,24 @@ function proxyoff(){
 }
 
 # 下载指定版本 Python 包
-function pydl() {
-    v=$1
-    d=$2
-    if [ ! $d ]
-    then
-        d=./
-    fi
-    echo '准备下载 Python' $v
-    curl -L https://npm.taobao.org/mirrors/python/$v/Python-$v.tar.xz -o ${d}/Python-$v.tar.xz
-}
+# function pydl() {
+    # v=$1
+    # d=$2
+    # if [ ! $d ]
+    # then
+        # d=./
+    # fi
+    # echo '准备下载 Python' $v
+    # curl -L https://npm.taobao.org/mirrors/python/$v/Python-$v.tar.xz -o ${d}/Python-$v.tar.xz
+# }
 
 # pyenv 安装 python 新版本
-function pyi() {
-    v=$1
-    echo '准备按照 Python' $v
-    curl -L https://npm.taobao.org/mirrors/python/$v/Python-$v.tar.xz -o ~/.pyenv/cache/Python-$v.tar.xz
-    pyenv install $v
-}
+# function pyi() {
+    # v=$1
+    # echo '准备按照 Python' $v
+    # curl -L https://npm.taobao.org/mirrors/python/$v/Python-$v.tar.xz -o ~/.pyenv/cache/Python-$v.tar.xz
+    # pyenv install $v
+# }
 
 # 更新 wzsh
 function wzshupdate() {

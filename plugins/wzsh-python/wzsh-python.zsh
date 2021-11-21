@@ -24,3 +24,40 @@ function zcProfile(){
     snakeviz $tmpfile
 }
 
+# 下载指定版本 Python 包
+function pydl() {
+    v=$1
+    d=$2
+    if [ ! $d ]
+    then
+        d=./
+    fi
+    echo '准备下载 Python' $v
+    url=https://npm.taobao.org/mirrors/python/$v/Python-$v.tar.xz
+    echo '包地址：' $url
+    curl -L $url -o ${d}/Python-$v.tar.xz
+}
+
+# pyenv 安装 python 新版本
+function pyi() {
+    v=$1
+    echo '准备安装 Python' $v
+    url=https://npm.taobao.org/mirrors/python/$v/Python-$v.tar.xz
+    echo '包地址：' $url
+    # dl_dir=$(pip cache dir)
+    dl_dir=~/.pyenv/cache
+    pyname=Python-$v.tar.xz
+    dl_path=$dl_dir/$pyname
+    echo "下载 $pyname"
+    echo "-> $url"
+    echo "-> $dl_path"
+    # ~/.pyenv/cache
+    test -f $dl_path || curl -L $url -o $dl_path
+    echo "Python $v 下载完毕"
+    # TODO 优化日志输出
+    # export PYTHON_BUILD_CACHE_PATH=~/.pyenv/cache/
+    # export PYTHON_BUILD_CACHE_PATH=$dl_dir
+    # pyenv install $v -v
+    python-build $v $dl_path
+    test -f $dl_path && rm $dl_path
+}
