@@ -1,8 +1,4 @@
 # Uage: curl https://raw.githubusercontent.com/wxnacy/wzsh/master/lib/aliases.zsh -o ~/.bash_aliases
-# for git
-alias gst="git status"
-alias gb="git branch"
-alias gt="git tag -l"
 
 # for system
 alias cpwd="echo -n `echo -n $(pwd) | sed 's/ /\\ /g'` | pbcopy"
@@ -43,8 +39,4 @@ alias vgd="vagrant destroy -f"
 
 # autossh
 alias assh="autossh -M 0 "
-
-# python
-alias pipi="pip install -i https://pypi.tuna.tsinghua.edu.cn/simple"
-alias pydb="python -m pdb"
 
