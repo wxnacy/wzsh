@@ -8,8 +8,8 @@
 #===============================
 
 export WZSH_HOME=${HOME}/.zsh
+export WZSH_NAME=wZsh
 # 加载基础命令
 source ${WZSH_HOME}/lib/basic.zsh
-# echo 'source ~/.zshenv'
 zinfo '开始加载命令'
 zinfo '加载 ~/.zshenv'
