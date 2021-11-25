@@ -12,7 +12,7 @@ no_proxy="baidu.com,wxnacy.com"
 
 # 开启代理
 function proxyon() {
-    echo 'proxy' ${PROXY}
+    zdbug "代理地址：${PROXY}"
     export no_proxy=${no_proxy}
     export http_proxy=${PROXY}
     export https_proxy=$http_proxy
@@ -26,6 +26,15 @@ function proxyoff(){
     zinfo "已关闭代理"
 }
 
+function proxy() {
+    # 查看当前代理开启状态
+    if [ $http_proxy ]
+    then
+        zinfo "当前已开启代理"
+    else
+        zinfo "当前已关闭代理"
+    fi
+}
 
 # 更新 wzsh
 function wzshupdate() {
