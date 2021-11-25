@@ -20,7 +20,6 @@ function gpush(){
     zinfo '提交文件:' $file
     msg=${@/$1/}
     zinfo '提交信息:' $msg
-    exit
     proxyon
     if [ $file ]
     then
@@ -60,7 +59,7 @@ function gptag(){
 # 拉取最新子模块
 function gsub(){
     proxyon
-    echo '拉取最新子模块'
+    zinfo '拉取最新子模块'
     git submodule update --init --recursive
     proxyoff
 }
@@ -68,9 +67,9 @@ function gsub(){
 # 添加并提交
 function gcmit(){
     file=$1
-    echo '提交文件:' $file
+    zinfo '提交文件:' $file
     msg=${@/$1/}
-    echo '提交信息:' $msg
+    zinfo '提交信息:' $msg
     git add $file
     git commit -m "$msg"
 }
