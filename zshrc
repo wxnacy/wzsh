@@ -9,6 +9,17 @@ plugins=(git python sublime )
 if [ -f $ZSH/oh-my-zsh.sh ]; then
     source $ZSH/oh-my-zsh.sh
 fi
+#
+# load lib
+for name in `ls ${WZSH_HOME}/lib`
+do
+    shfile=${WZSH_HOME}/lib/${name}
+    echo $shfile
+
+    if [ -f $shfile ]; then
+        source $shfile
+    fi
+done
 
 # load zsh plugins
 for name in `ls ${WZSH_HOME}/plugins`
@@ -21,16 +32,6 @@ do
     fi
 done
 
-# load lib
-for name in `ls ${WZSH_HOME}/lib`
-do
-    shfile=${WZSH_HOME}/lib/${name}
-    echo $shfile
-
-    if [ -f $shfile ]; then
-        source $shfile
-    fi
-done
 
 # 作者机器才会默认加载 .bashrc
 # if [[ ${USER} == 'wenxiaoning' ]]; then
