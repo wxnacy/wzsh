@@ -39,13 +39,14 @@ done
 # if [[ ${USER} == 'wenxiaoning' ]]; then
 # fi
 # load local bashrc
+zinfo "开始加载本地环境"
 for name in .bash_profile .bashrc
 do
     # echo $name
     shfile=${HOME}/${name}
 
     if [ -f $shfile ]; then
-        echo $shfile
+        zinfo "加载 $shfile"
         source $shfile
     fi
 done
