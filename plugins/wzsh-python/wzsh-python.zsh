@@ -57,7 +57,7 @@ function pyi() {
     # TODO 优化日志输出
     # export PYTHON_BUILD_CACHE_PATH=~/.pyenv/cache/
     # export PYTHON_BUILD_CACHE_PATH=$dl_dir
-    # pyenv install $v -v
-    python-build $v $dl_path
+    pyenv install $v -v
+    # python-build $v $dl_path
     test -f $dl_path && rm $dl_path
 }
