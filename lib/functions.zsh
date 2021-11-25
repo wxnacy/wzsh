@@ -16,14 +16,14 @@ function proxyon() {
     export no_proxy=${no_proxy}
     export http_proxy=${PROXY}
     export https_proxy=$http_proxy
-    echo -e "已开启代理"
+    zinfo "已开启代理"
 }
 
 # 关闭代理
 function proxyoff(){
     unset http_proxy
     unset https_proxy
-    echo -e "已关闭代理"
+    zinfo "已关闭代理"
 }
 
 

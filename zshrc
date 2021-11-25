@@ -1,4 +1,4 @@
-echo 'source ~/.zshrc'
+zinfo '加载 ~/.zshrc'
 
 export ZSH=${HOME}/.oh-my-zsh
 
@@ -10,21 +10,23 @@ if [ -f $ZSH/oh-my-zsh.sh ]; then
     source $ZSH/oh-my-zsh.sh
 fi
 #
+zinfo "开始加载本地库"
 # load lib
 for name in `ls ${WZSH_HOME}/lib`
 do
     shfile=${WZSH_HOME}/lib/${name}
-    echo $shfile
+    zinfo "加载 $shfile"
 
     if [ -f $shfile ]; then
         source $shfile
     fi
 done
 
+zinfo "开始加载插件"
 # load zsh plugins
 for name in `ls ${WZSH_HOME}/plugins`
 do
-    echo $name
+    zinfo "加载插件 $name"
     shfile=${WZSH_HOME}/plugins/${name}/${name}.zsh
 
     if [ -f $shfile ]; then
