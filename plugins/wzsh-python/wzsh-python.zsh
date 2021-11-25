@@ -16,6 +16,14 @@ export GitException=100
 function zcProfile(){
     # 使用 cProfile 分析 python 文件运行耗时
     # 图形化分析需要 pip install snakeviz
+    if [ ! $(has_command snakeviz) ];
+    then
+        echo '图形化分析需要安装 snakeviz'
+        echo '可以执行命令进行安装'
+        echo '    pip install snakeviz'
+        exit
+    fi
+
     pyfile=$1
     dirname='/tmp/wzsh'
     test -d $dirname || mkdir $dirname
