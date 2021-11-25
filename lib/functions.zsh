@@ -37,7 +37,12 @@ function ydl() {
     nohup youtube-dl $1 >> ${HOME}/Downloads/ydl.log & 2>&1
 }
 
-# 判断是否存在某个命令
 function has_command() {
+    # 判断是否存在某个命令
+    # 使用方式
+    # > test $(has_command python) && echo 'yes' || echo 'no'
+    # > yes
+    # > if [ $(has_command python) ];then;echo 'yes';else; echo 'no';fi;
+    # > yes
     command -v $1 >/dev/null 2>&1 && echo true  || { echo ""; }
 }
