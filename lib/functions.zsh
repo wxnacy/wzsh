@@ -29,7 +29,7 @@ function proxyoff(){
 
 # 更新 wzsh
 function wzshupdate() {
-    cd ~/.wzsh && git pull
+    cd ~/.wzsh && git pull && cd -
 }
 
 # 添加 youtube-dl 后台任务
