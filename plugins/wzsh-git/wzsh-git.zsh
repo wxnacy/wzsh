@@ -15,11 +15,12 @@ export GitException=100
 # 推送
 function gpush(){
     bname=`git branch | grep '*' | awk '{print $2}'`
-    echo '当前分支:' $bname
+    zinfo '当前分支:' $bname
     file=$1
-    echo '提交文件:' $file
+    zinfo '提交文件:' $file
     msg=${@/$1/}
-    echo '提交信息:' $msg
+    zinfo '提交信息:' $msg
+    exit
     proxyon
     if [ $file ]
     then
@@ -43,7 +44,8 @@ function gpush(){
                 # throw $ex_code # you can rethrow the "exception" causing the script to exit if not caught
             # ;;
         # esac
-        echo -e "\033[31mPull Error \033[0m"
+        # echo -e "\033[31mPull Error \033[0m"
+        zerror "git pull failed"
     }
     git push origin $bname
     proxyoff
