@@ -17,13 +17,14 @@ if [ -d "${HOME}/.pyenv" ]; then
     # config for vim plugin YouComplateMe
     export PYENV_VIRTUALENV_DISABLE_PROMPT=1
     # if [[ `sw_vers | awk 'NR==2 {print $2}'` == 11.2.3 ]]
-    if [[ -f ~/.wxnacy ]]
-    then
-        eval "$(pyenv init -)"
-    else
-        eval "$(pyenv init --path)"
-    fi
+    # if [[ -f ~/.wxnacy ]]
+    # then
+        # eval "$(pyenv init -)"
+    # else
+        # eval "$(pyenv init --path)"
+    # fi
 
+    eval "$(pyenv init --path)"
     eval "$(pyenv virtualenv-init -)";
 fi
 
