@@ -81,6 +81,20 @@ function gpull(){
     proxyoff
 }
 
+function gsub(){
+    # 拉去子模块初始状态
+    proxyon
+    git submodule update --init --recursive
+    proxyoff
+}
+
+function gsubr(){
+    # 从远程拉去最新子模块的提交
+    proxyon
+    git submodule update --recursive --remote
+    proxyoff
+}
+
 # git clone
 function glone(){
     proxyon
