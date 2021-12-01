@@ -41,10 +41,6 @@ function wzshupdate() {
     cd ~/.wzsh && git pull && cd -
 }
 
-# 添加 youtube-dl 后台任务
-function ydl() {
-    nohup youtube-dl $1 >> ${HOME}/Downloads/ydl.log & 2>&1
-}
 
 function has_command() {
     # 判断是否存在某个命令
