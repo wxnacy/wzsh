@@ -45,18 +45,28 @@
 # 　　\33[?25l 隐藏光标
 # 　　\33[?25h 显示光标
 
+function _log() {
+    # 日志输出基础函数
+    args=($@)
+    echo -e "[$(now)] \033[${1}m[${2}]\033[0m" "${args[@]:2}"
+}
+
 function zdebug() {
-    echo -e "\033[34m[DBUG]\033[0m" "[$(now)] $@"
+    # debug 日志输出
+    _log 34 DBUG $@
 }
 
 function zinfo() {
-    echo -e "\033[36m[INFO]\033[0m" "[$(now)] $@"
+    # info 日志输出
+    _log 36 INFO $@
 }
 
 function zerror() {
-    echo -e "\033[31m[EROR]\033[0m" "[$(now)] $@"
+    # error 日志输出
+    _log 31 EROR $@
 }
 
 function zwarn() {
-    echo -e "\033[33m[WARN]\033[0m" "[$(now)] $@"
+    # warn 日志输出
+    _log 33 WARN $@
 }
