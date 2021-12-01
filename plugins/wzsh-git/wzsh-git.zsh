@@ -53,14 +53,8 @@ function gpush(){
 # 创建并推送 tag
 function gptag(){
     git tag ${1}
-    git push origin ${1}
-}
-
-# 拉取最新子模块
-function gsub(){
     proxyon
-    zinfo '拉取最新子模块'
-    git submodule update --init --recursive
+    git push origin ${1}
     proxyoff
 }
 
@@ -77,13 +71,14 @@ function gcmit(){
 # 拉取
 function gpull(){
     proxyon
-    git pull
+    git pull $@
     proxyoff
 }
 
 function gsub(){
     # 拉去子模块初始状态
     proxyon
+    zinfo '拉取子模块初始化状态'
     git submodule update --init --recursive
     proxyoff
 }
@@ -91,6 +86,7 @@ function gsub(){
 function gsubr(){
     # 从远程拉去最新子模块的提交
     proxyon
+    zinfo '拉取子模块最新提交'
     git submodule update --recursive --remote
     proxyoff
 }
