@@ -4,7 +4,7 @@
 # URL: https://wxnacy.com
 # Created: 2021-06-11
 # Modified: 2021-12-02
-# Description: try-catch 模块
+# Description: wzsh-git 插件
 #===============================
 
 . ${WZSH_HOME}/lib/try-catch.zsh
