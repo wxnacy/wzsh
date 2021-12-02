@@ -12,6 +12,32 @@
 
 export GitException=100
 
+function pymkdir() {
+    # 创建 python 文件夹，自动创建 __init__.py
+    dirname=$1
+    if [ -d $dirname ]
+    then
+        zinfo "$dirname 已存在，不再重新创建"
+    else
+        zinfo "创建 $dirname"
+        mkdir $dirname
+    fi
+
+    init_path=$dirname/__init__.py
+    if [ -f $init_path ]
+    then
+        zinfo "$init_path 已存在，不再重新创建"
+    else
+        zinfo "创建 $init_path"
+        touch $init_path
+        echo '#!/usr/bin/env python' >> $init_path
+        echo '# -*- coding:utf-8 -*-' >> $init_path
+        echo '# Author: wxnacy@gmail.com' >> $init_path
+    fi
+    zinfo "Python 文件夹 $dirname 创建完毕"
+
+}
+
 # 推送
 function zcProfile(){
     # 使用 cProfile 分析 python 文件运行耗时
