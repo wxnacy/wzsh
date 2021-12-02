@@ -12,6 +12,12 @@
 
 export GitException=100
 
+function pycrypto3() {
+    pip uninstall pycrypto
+    pip uninstall pycryptodome
+    pip install pycryptodome
+}
+
 function pymkdir() {
     # 创建 python 文件夹，自动创建 __init__.py
     dirname=$1
