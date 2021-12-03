@@ -3,7 +3,7 @@
 # Author: wxnacy <wxnacy@gmail.com>
 # URL: https://wxnacy.com
 # Created: 2021-11-21
-# Modified: 2021-11-21
+# Modified: 2021-12-03
 # Description: python 相关命令
 #===============================
 
@@ -12,7 +12,30 @@
 
 export GitException=100
 
+function pypush() {
+    # 发布 python 包
+    TAG_NAME=$1
+    if [ -f setup.py ]
+    then
+        test -d dist && rm -rf dist/*; zinfo "清理 dist 目录"
+
+        zinfo "开始打包"
+        python setup.py sdist
+        zinfo "开始上传"
+        proxyon
+        twine upload dist/* --verbose
+        proxyoff
+
+        # TODO 判断是否已经存在某个版本
+        test -d .git && zinfo "上传 tag 到 git"; gptag $TAG_NAME
+        zinfo "$TAG_NAME 推送成功"
+    else
+        zerror "缺失 setpy.py 进程终止"
+    fi
+}
+
 function pycrypto3() {
+    # py3 环境下重装 pycrypto 包
     pip uninstall pycrypto
     pip uninstall pycryptodome
     pip install pycryptodome
