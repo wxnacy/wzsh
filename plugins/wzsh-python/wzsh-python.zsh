@@ -34,6 +34,12 @@ function pypush() {
     fi
 }
 
+function pyver() {
+    # 查看当前模块的版本
+    dirname=$(python -c "import os; print(os.path.basename(os.getcwd()))")
+    echo $(python -c "from ${dirname}.__version__ import __version__;print(__version__)")
+}
+
 function pycrypto3() {
     # py3 环境下重装 pycrypto 包
     pip uninstall pycrypto
