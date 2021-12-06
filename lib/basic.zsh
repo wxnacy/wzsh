@@ -14,6 +14,16 @@ function now() {
 # 加载日志命令
 source ${WZSH_HOME}/lib/logger.zsh
 
+function has_command() {
+    # 判断是否存在某个命令
+    # 使用方式
+    # > test $(has_command python) && echo 'yes' || echo 'no'
+    # > yes
+    # > if [ $(has_command python) ];then;echo 'yes';else; echo 'no';fi;
+    # > yes
+    command -v $1 >/dev/null 2>&1 && echo true  || { echo ""; }
+}
+
 function is_debug() {
     # 判断是否为 debug 模式
     if [ $WZSH_DEBUG ]

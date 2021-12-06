@@ -41,13 +41,17 @@ function wzshupdate() {
     cd ~/.wzsh && git pull && cd -
 }
 
-
-function has_command() {
-    # 判断是否存在某个命令
-    # 使用方式
-    # > test $(has_command python) && echo 'yes' || echo 'no'
-    # > yes
-    # > if [ $(has_command python) ];then;echo 'yes';else; echo 'no';fi;
-    # > yes
-    command -v $1 >/dev/null 2>&1 && echo true  || { echo ""; }
+function send_kindle() {
+    # 发送文件到 kindle
+    zinfo "准备发送文件"
+    book_path=$1
+    kindle=371032668@qq.com
+    if [ $2 ]
+    then
+        kindle=$2
+    fi
+    filename=$(python -c "import os; print(os.path.basename('${book_path}'))")
+    zinfo "${filename} -> ${kindle}"
+    echo "$filename" | mutt ${kindle} -a ${book_path} -s "$filename"
+    zinfo "发送完毕"
 }
