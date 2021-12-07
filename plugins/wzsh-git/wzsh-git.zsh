@@ -70,8 +70,10 @@ function gcmit(){
 
 # 拉取
 function gpull(){
+    bname=`git branch | grep '*' | awk '{print $2}'`
+    zinfo "当前分支名称: ${bname}"
     proxyon
-    git pull $@
+    git pull origin $bname $@
     proxyoff
 }
 
