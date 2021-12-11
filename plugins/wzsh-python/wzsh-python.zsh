@@ -73,8 +73,18 @@ function pymkdir() {
 
 }
 
+function lProfile() {
+    # 使用 line_profiler 对 python 程序进行分析
+    pyfile=$1
+    dirname='/tmp/wzsh'
+    test -d $dirname || mkdir $dirname
+    tmpfile=$dirname/lProfile_$RANDOM
+    kernprof -l -o $tmpfile $@
+    python -m line_profiler $tmpfile
+}
+
 # 推送
-function zcProfile(){
+function cProfile(){
     # 使用 cProfile 分析 python 文件运行耗时
     # 图形化分析需要 pip install snakeviz
     if [ ! $(has_command snakeviz) ];
