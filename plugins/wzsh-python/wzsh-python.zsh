@@ -17,13 +17,13 @@ function pypush() {
     TAG_NAME=$1
     if [ -f setup.py ]
     then
-        test -d dist && rm -rf dist/*; zinfo "清理 dist 目录"
+        test -d dist && rm -rf dist; zinfo "清理 dist 目录"
 
         zinfo "开始打包"
         python setup.py sdist
         zinfo "开始上传"
         proxyon
-        twine upload dist/* --verbose
+        twine upload dist/*
         proxyoff
 
         # TODO 判断是否已经存在某个版本
