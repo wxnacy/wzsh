@@ -143,3 +143,9 @@ function pyi() {
     # python-build $v $dl_path
     test -f $dl_path && rm $dl_path
 }
+
+function pyready() {
+    # python 常用包和环境的准备工作
+    pip install -U pip
+    pipi pytest bpython pigar
+}
