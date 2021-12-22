@@ -11,6 +11,7 @@
 . ${WZSH_HOME}/plugins/wzsh-git/aliases.zsh
 
 export GitException=100
+export WZSH_GIT_PY=${WZSH_HOME}/plugins/wzsh-git/git.py
 
 # 推送
 function gpush(){
@@ -96,7 +97,9 @@ function gsubr(){
 # git clone
 function glone(){
     proxyon
-    git clone $@
+    params=$(python $WZSH_GIT_PY conver_clone_url $@)
+    zinfo "解析参数 $params"
+    git clone $params
     proxyoff
 }
 
