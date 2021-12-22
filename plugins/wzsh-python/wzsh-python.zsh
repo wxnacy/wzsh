@@ -17,6 +17,7 @@ function pypush() {
     TAG_NAME=$1
     if [ -f setup.py ]
     then
+        # TODO 检查 twine 命令
         test -d dist && rm -rf dist; zinfo "清理 dist 目录"
 
         zinfo "开始打包"
@@ -24,6 +25,8 @@ function pypush() {
         zinfo "开始上传"
         proxyon
         twine upload dist/*
+        # TODO 检查环境变量
+        # twine upload dist/* --verbose
         proxyoff
 
         # TODO 判断是否已经存在某个版本
