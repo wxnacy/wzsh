@@ -147,5 +147,5 @@ function pyi() {
 function pyready() {
     # python 常用包和环境的准备工作
     pip install -U pip
-    pipi pytest bpython pigar
+    pipi pytest bpython pigar twine
 }
