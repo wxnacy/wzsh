@@ -8,7 +8,7 @@
 #===============================
 
 PROXY="http://127.0.0.1:1080"
-no_proxy="baidu.com,wxnacy.com"
+no_proxy="baidu.com,wxnacy.com,localhost"
 
 # 开启代理
 function proxyon() {
