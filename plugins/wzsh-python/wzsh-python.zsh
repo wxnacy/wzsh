@@ -78,10 +78,7 @@ function pymkdir() {
 
 function lProfile() {
     # 使用 line_profiler 对 python 程序进行分析
-    pyfile=$1
-    dirname='/tmp/wzsh'
-    test -d $dirname || mkdir $dirname
-    tmpfile=$dirname/lProfile_$RANDOM
+    tmpfile=$WZSH_TEMP/lProfile_$RANDOM
     kernprof -l -o $tmpfile $@
     python -m line_profiler $tmpfile
 }
@@ -99,9 +96,7 @@ function cProfile(){
     fi
 
     pyfile=$1
-    dirname='/tmp/wzsh'
-    test -d $dirname || mkdir $dirname
-    tmpfile=$dirname/cProfile_$RANDOM
+    tmpfile=$WZSH_TEMP/cProfile_$RANDOM
     python -m cProfile -o $tmpfile $pyfile
     snakeviz $tmpfile
 }

@@ -1,6 +1,9 @@
 # echo '.zprofile' >> /tmp/zshmsg
 zinfo '加载 ~/.zprofile'
 
+# 创建临时文件目录
+test -d $WZSH_TEMP || mkdir $WZSH_TEMP && zinfo '创建临时文件目录'
+
 # for wshell
 if [ -d "${HOME}/.wshell" ]; then
     export WS_HOME="${HOME}/.wshell"
