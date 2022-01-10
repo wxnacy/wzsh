@@ -34,8 +34,8 @@ function brewready() {
     echo '---------'
 
     zinfo '开始安装必备软件'
-    for name in font-hack-nerd-font vagrant virtualbox;
+    for name in font-hack-nerd-font vagrant virtualbox raycast;
     do
-        echo $name
+        brew install --cask $name
     done
 }
