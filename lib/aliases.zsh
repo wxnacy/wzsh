@@ -40,3 +40,5 @@ alias vgd="vagrant destroy -f"
 # autossh
 alias assh="autossh -M 0 "
 
+# ranger
+alias ra="ranger"
