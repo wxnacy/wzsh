@@ -26,13 +26,16 @@ function brewinit() {
     # watch 循环执行任务
     # yarn node 包管理工具
     # taskwarrior-tui 任务管理工具
+    # ranger 文件管理区
+    # trash 回收站管理
     zinfo '开始安装必备工具'
     for name in ack gotop htop ffmpeg tmux ctags ncdu vim w3m node wget watch \
         taskwarrior-tui \
-        yarn;
+        yarn ranger trash;
     do
         brew install $name
     done
+
     echo '---------'
 
     zinfo '开始安装必备软件'
