@@ -46,6 +46,9 @@ if [ -d "/usr/local/Homebrew" ]; then
     eval $(/usr/local/Homebrew/bin/brew shellenv) #ckbrew
 fi
 
+# for iterm2
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
 # for python
 # source /usr/local/opt/autoenv/activate.sh
 
