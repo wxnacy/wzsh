@@ -28,19 +28,47 @@ function brewinit() {
     # taskwarrior-tui 任务管理工具
     # ranger 文件管理区
     # trash 回收站管理
+    # jq json 处理工具
+    # fzf 文件搜索
+    # rg 文件查找引擎
+    # ag 文件查找引擎
+    # highlight 文本高亮工具
     zinfo '开始安装必备工具'
     for name in ack gotop htop ffmpeg tmux ctags ncdu vim w3m node wget watch \
-        taskwarrior-tui \
+        taskwarrior-tui jq fzf rg\
         yarn ranger trash;
     do
-        brew install $name
+        cmd=$name
+        if [[ $name == 'taskwarrior-tui' ]]
+        then
+            cmd=task
+        fi
+        if [ $(has_command $cmd) ]
+        then
+            zinfo "$name 已安装"
+        else
+            zinfo "$name 开始安装"
+            brew install $name
+            if [[ $name == 'fzf' ]]
+            then
+                $(brew --prefix)/opt/fzf/install
+            fi
+        fi
     done
 
     echo '---------'
 
     zinfo '开始安装必备软件'
-    for name in font-hack-nerd-font vagrant virtualbox raycast;
-    do
-        brew install --cask $name
-    done
+    # font-hack-nerd-font vim 插件需要的字体
+    # vagrant virtualbox 虚拟机
+    # raycast 效率工具
+    # iterm2 iterminal 工具
+    # keycastr 键盘映射打印
+    # keepassxc 密码管理工具
+    #
+
+    # for name in font-hack-nerd-font vagrant virtualbox raycast;
+    # do
+        # brew install --cask $name
+    # done
 }
