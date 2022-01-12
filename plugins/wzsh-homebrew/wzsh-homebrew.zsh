@@ -11,7 +11,7 @@
 . ${WZSH_HOME}/plugins/wzsh-homebrew/aliases.zsh
 
 
-function brewready() {
+function brewinit() {
     # 准备 brew 初始安装包
     # ack 全文检索 ack.vim 需要使用
     # gotop htop 监控电脑性能
@@ -25,8 +25,10 @@ function brewready() {
     # wget 文件下载工具
     # watch 循环执行任务
     # yarn node 包管理工具
+    # taskwarrior-tui 任务管理工具
     zinfo '开始安装必备工具'
     for name in ack gotop htop ffmpeg tmux ctags ncdu vim w3m node wget watch \
+        taskwarrior-tui \
         yarn;
     do
         brew install $name
