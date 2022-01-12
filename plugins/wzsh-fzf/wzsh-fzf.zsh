@@ -38,3 +38,9 @@ fd() {
   cd "$dir"
 }
 
+function glog() {
+  local id
+  id=$(git log --oneline $* | fzf -e --multi --preview="git show {+1}") &&
+  git show "$id"
+}
+
