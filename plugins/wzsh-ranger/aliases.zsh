@@ -1,0 +1,2 @@
+# ranger
+alias ra="ranger"
