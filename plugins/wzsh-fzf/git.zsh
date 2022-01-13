@@ -35,8 +35,8 @@ function is_in_git_repo() {
   git rev-parse HEAD > /dev/null 2>&1
 }
 
-unalias gst
-function gst() {
+# unalias gst
+function gs() {
   # "Nothing to see here, move along"
   is_in_git_repo || return
 
