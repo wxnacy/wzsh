@@ -29,17 +29,19 @@ test -f $fzf_key_bind_file && source $fzf_key_bind_file
 
 export FZF_DEFAULT_COMMAND='rg --files --hidden'
 # export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -l -g ""'
-export FZF_DEFAULT_OPTS="--height 99% --layout=reverse
-    --preview '(highlight -O ansi {} || cat {}) 2> /dev/null | head -500'
-    --bind 'ctrl-v:execute(vim {})'
-    "
+export FZF_DEFAULT_OPTS="--height 99% --layout=reverse"
+    # --preview '(highlight -O ansi {} || cat {}) 2> /dev/null | head -500'
+    # --bind 'ctrl-v:execute(vim {})'
+    # "
 
-function fd() {
-  local dir
-  dir=$(find ${1:-.} -path '*/\.*' -prune \
-				  -o -type d -print 2> /dev/null | fzf +m) &&
-  cd "$dir"
-}
-
+. ${WZSH_HOME}/plugins/wzsh-fzf/functions.zsh
 . ${WZSH_HOME}/plugins/wzsh-fzf/chrome.zsh
 . ${WZSH_HOME}/plugins/wzsh-fzf/git.zsh
+# https://github.com/wfxr/forgit
+. ${WZSH_HOME}/plugins/wzsh-fzf/forgit.plugin.zsh
+
+
+function fupdate() {
+    # 更新 fzf 相关信息
+    wget https://raw.githubusercontent.com/wfxr/forgit/master/forgit.plugin.zsh -O ${WZSH_HOME}/plugins/wzsh-fzf/forgit.plugin.zsh
+}

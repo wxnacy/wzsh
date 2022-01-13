@@ -40,10 +40,10 @@ function cb() {
 
     python ${WZSH_HOME}/plugins/wzsh-fzf/chrome.py print_bookmarks |
         # awk 'BEGIN { FS = "\t" } { printf \x1b[36m%s\x1b[m\n", $1, $2 }' |
-        fzf --ansi --multi --no-hscroll --tiebreak=begin \
-            --preview "echo {} | awk 'BEGIN { FS="\t" } {print $2}'" |
+        fzf --ansi --multi --no-hscroll --tiebreak=begin |
         awk 'BEGIN { FS = "\t" } { print $2 }' |
         xargs open > /dev/null 2> /dev/null
+            # --preview "echo {} | awk 'BEGIN { FS="\t" } {print $2}'" |
 }
 
 cmd=$1
