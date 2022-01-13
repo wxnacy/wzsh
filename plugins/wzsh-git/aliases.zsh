@@ -7,6 +7,6 @@
 # Description: git 相关改写命令
 #===============================
 
-alias gst="git status"
+# alias gst="git status"
 alias gb="git branch"
 alias gt="git tag -l"

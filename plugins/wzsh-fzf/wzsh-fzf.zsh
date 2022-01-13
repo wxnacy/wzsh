@@ -5,6 +5,7 @@
 # Created: 2022-01-13
 # Modified: 2022-01-13
 # Description: fzf 相关命令
+# Reference: https://github.com/junegunn/fzf/wiki/examples
 #===============================
 
 . ${WZSH_HOME}/lib/try-catch.zsh
@@ -40,10 +41,5 @@ function fd() {
   cd "$dir"
 }
 
-# function glog() {
-  # local id
-  # id=$(git log --oneline $* | fzf -e --multi --preview="git show {+1}") &&
-  # git show "$id"
-# }
-
 . ${WZSH_HOME}/plugins/wzsh-fzf/chrome.zsh
+. ${WZSH_HOME}/plugins/wzsh-fzf/git.zsh
