@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-# Author: xiaoning.wen(xiaoning.wen@yiducloud.cn)
+# Author: wxnacy
 """
 chrome 相关代码模块
 """
