@@ -35,7 +35,7 @@ function brewinit() {
     # highlight 文本高亮工具
     zinfo '开始安装必备工具'
     for name in ack gotop htop ffmpeg tmux ctags ncdu vim w3m node wget watch \
-        taskwarrior-tui jq fzf rg\
+        taskwarrior-tui jq fzf rg \
         yarn ranger trash;
     do
         cmd=$name
@@ -49,10 +49,10 @@ function brewinit() {
         else
             zinfo "$name 开始安装"
             brew install $name
-            if [[ $name == 'fzf' ]]
-            then
-                $(brew --prefix)/opt/fzf/install
-            fi
+            # if [[ $name == 'fzf' ]]
+            # then
+                # $(brew --prefix)/opt/fzf/install
+            # fi
         fi
     done
 

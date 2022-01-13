@@ -22,7 +22,9 @@ fi
 
 # Key bindings
 # ------------
-source "/usr/local/opt/fzf/shell/key-bindings.zsh"
+# source "/usr/local/opt/fzf/shell/key-bindings.zsh"
+fzf_key_bind_file="/usr/local/opt/fzf/shell/key-bindings.zsh"
+test -f $fzf_key_bind_file && source $fzf_key_bind_file
 
 export FZF_DEFAULT_COMMAND='rg --files --hidden'
 # export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -l -g ""'
@@ -31,7 +33,7 @@ export FZF_DEFAULT_OPTS="--height 99% --layout=reverse
     --bind 'v:execute(vim {})'
     "
 
-fd() {
+function fd() {
   local dir
   dir=$(find ${1:-.} -path '*/\.*' -prune \
 				  -o -type d -print 2> /dev/null | fzf +m) &&
@@ -44,3 +46,4 @@ function glog() {
   git show "$id"
 }
 
+. ${WZSH_HOME}/plugins/wzsh-fzf/chrome.zsh

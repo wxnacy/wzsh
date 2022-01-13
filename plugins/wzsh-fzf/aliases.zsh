@@ -8,3 +8,5 @@
 #===============================
 
 alias f="fzf"
+# 搜索当前用户根目录
+alias fa="rg $HOME --files --hidden 2> /dev/null | f"
