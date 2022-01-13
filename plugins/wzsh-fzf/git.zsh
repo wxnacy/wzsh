@@ -14,6 +14,24 @@ gct() {
   git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
 }
 
+gctr() {
+  local branches branch
+  branches=$(git --no-pager branch -vva) &&
+  branch=$(echo "$branches" | fzf +m) &&
+  remove_branch=$(echo "$branch" | awk '{print $1}' | sed "s/.* //g; s/remotes\///g")
+  local_branch=$(echo $remove_branch | awk -F "/" '{print $2}')
+  now_branch=$(git --no-pager branch | grep '*' | awk '{print $2}')
+  echo $remove_branch $local_branch
+  if [[ $local_branch == $now_branch ]]
+  then
+    zinfo "当前分支为: $local_branch 不用重新拉取"
+  else
+    git checkout -b $local_branch $remove_branch
+  fi
+  # git checkout $local_branch
+  # git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
+}
+
 function _log_id() {
     echo $@ | awk '{print $1}'
 }
@@ -55,7 +73,7 @@ function gs() {
 }
 
 cmd=$1
-if [[ $cmd == 'gst' ]]
+if [[ $cmd == 'gctr' ]]
 then
-    gst
+    gctr
 fi
