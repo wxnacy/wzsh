@@ -21,12 +21,16 @@ gctr() {
   remove_branch=$(echo "$branch" | awk '{print $1}' | sed "s/.* //g; s/remotes\///g")
   local_branch=$(echo $remove_branch | awk -F "/" '{print $2}')
   now_branch=$(git --no-pager branch | grep '*' | awk '{print $2}')
-  echo $remove_branch $local_branch
   if [[ $local_branch == $now_branch ]]
   then
     zinfo "当前分支为: $local_branch 不用重新拉取"
   else
-    git checkout -b $local_branch $remove_branch
+    if [[ $(git --no-pager branch | grep ${local_branch} ) ]]
+    then
+        git checkout $local_branch
+    else
+        git checkout -b $local_branch $remove_branch
+    fi
   fi
   # git checkout $local_branch
   # git checkout $(echo "$branch" | awk '{print $1}' | sed "s/.* //")
@@ -75,5 +79,10 @@ function gs() {
 cmd=$1
 if [[ $cmd == 'gctr' ]]
 then
-    gctr
+    if [[ $(git --no-pager branch | grep smaster) ]]
+    then
+        echo 'yes'
+    else
+        echo 'no'
+    fi
 fi

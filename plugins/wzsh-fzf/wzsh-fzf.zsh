@@ -31,7 +31,7 @@ export FZF_DEFAULT_COMMAND='rg --files --hidden'
 # export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -l -g ""'
 export FZF_DEFAULT_OPTS="--height 99% --layout=reverse
     --preview '(highlight -O ansi {} || cat {}) 2> /dev/null | head -500'
-    --bind 'v:execute(vim {})'
+    --bind 'ctrl-v:execute(vim {})'
     "
 
 function fd() {
