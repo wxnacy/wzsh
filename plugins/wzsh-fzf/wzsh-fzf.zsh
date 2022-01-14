@@ -29,10 +29,11 @@ test -f $fzf_key_bind_file && source $fzf_key_bind_file
 
 export FZF_DEFAULT_COMMAND='rg --files --hidden'
 # export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -l -g ""'
-export FZF_DEFAULT_OPTS="--height 99% --layout=reverse"
+export FZF_DEFAULT_OPTS="--height 99% --layout=reverse
+    --bind 'ctrl-y:execute(echo -n {} | pbcopy)'
+    "
     # --preview '(highlight -O ansi {} || cat {}) 2> /dev/null | head -500'
     # --bind 'ctrl-v:execute(vim {})'
-    # "
 
 . ${WZSH_HOME}/plugins/wzsh-fzf/functions.zsh
 . ${WZSH_HOME}/plugins/wzsh-fzf/chrome.zsh
