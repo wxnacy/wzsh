@@ -60,14 +60,36 @@ function pipl() {
     # 搜索 pip list
     local name
     name=$(pip list | awk 'NR > 2 {print $0}' | fzf +m | awk '{print $1}')
-    pip show $name
+    if [[ $name ]]
+    then
+        pip show $name
+    fi
 }
 
 function brewl() {
     # 搜索 brew list
     local name
     name=$(brew list | fzf +m)
-    brew info $name
+    if [[ $name ]]
+    then
+        brew info $name
+    fi
+}
+
+function brews() {
+    # 搜索 brew list
+    brew search $1 2>/dev/null | fzf +m
+}
+
+function brewi() {
+    # 搜索 brew list
+    local name
+    name=$(brew search $1 2>/dev/null | fzf +m)
+    if [[ $name ]]
+    then
+        zdbug "Run comand 'brew install ${name}'"
+        brew install $name
+    fi
 }
 
 function fupdate() {
