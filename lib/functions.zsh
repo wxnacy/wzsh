@@ -55,3 +55,11 @@ function send_kindle() {
     echo "$filename" | mutt ${kindle} -a ${book_path} -s "$filename"
     zinfo "发送完毕"
 }
+
+function p() {
+    # 查看环境变量
+    for _path in $(echo $PATH | sed 's/:/ /g');
+    do;
+        echo $_path;
+    done
+}
