@@ -39,7 +39,7 @@ function fkill() {
     fi
 }
 
-function fbm() {
+function bml() {
     # 搜索书签命令
     local _path
     _path=$(bm list | fzf +m | awk '{print $1}')
@@ -54,6 +54,20 @@ function fbm() {
     then
         open $_path
     fi
+}
+
+function pipl() {
+    # 搜索 pip list
+    local name
+    name=$(pip list | awk 'NR > 2 {print $0}' | fzf +m | awk '{print $1}')
+    pip show $name
+}
+
+function brewl() {
+    # 搜索 brew list
+    local name
+    name=$(brew list | fzf +m)
+    brew info $name
 }
 
 function fupdate() {
