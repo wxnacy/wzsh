@@ -12,5 +12,5 @@ export WZSH_NAME=wZsh
 export WZSH_TEMP=/tmp/wzsh
 # 加载基础命令
 source ${WZSH_HOME}/lib/basic.zsh
-zinfo '开始加载命令'
-zinfo '加载 ~/.zshenv'
+# zinfo '开始加载命令'
+# zinfo '加载 ~/.zshenv'

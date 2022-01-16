@@ -9,7 +9,7 @@
 #===============================
 
 . ${WZSH_HOME}/lib/try-catch.zsh
-. ${WZSH_HOME}/plugins/wzsh-fzf/aliases.zsh
+export WZSH_FZF_HOME=${WZSH_HOME}/plugins/wzsh-fzf
 
 # Setup fzf
 # ---------
@@ -27,22 +27,29 @@ fi
 fzf_key_bind_file="/usr/local/opt/fzf/shell/key-bindings.zsh"
 test -f $fzf_key_bind_file && source $fzf_key_bind_file
 
+
+# 自定义变量
+export FZF_CUSTOM_PREVIEW="
+    --preview '${WZSH_FZF_HOME}/preview.zsh {}'
+"
+    # --preview '(highlight -O ansi {} || cat {}) 2> /dev/null | head -500' \
+export FZF_CUSTOM_BIND="
+    --bind 'ctrl-y:execute(echo -n {} | pbcopy)'
+    --bind 'ctrl-o:execute(${WZSH_FZF_HOME}/open.zsh {})'
+    --bind 'ctrl-O:execute(open {})'
+"
+
 export FZF_DEFAULT_COMMAND='rg --files --hidden'
 # export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -l -g ""'
 export FZF_DEFAULT_OPTS="--height 99% --layout=reverse
-    --bind 'ctrl-y:execute(echo -n {} | pbcopy)'
+    ${FZF_CUSTOM_BIND}
     "
-    # --preview '(highlight -O ansi {} || cat {}) 2> /dev/null | head -500'
-    # --bind 'ctrl-v:execute(vim {})'
+# export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
+export FZF_CTRL_T_OPTS=$FZF_CUSTOM_PREVIEW
 
-. ${WZSH_HOME}/plugins/wzsh-fzf/functions.zsh
-. ${WZSH_HOME}/plugins/wzsh-fzf/chrome.zsh
-. ${WZSH_HOME}/plugins/wzsh-fzf/git.zsh
-# https://github.com/wfxr/forgit
-. ${WZSH_HOME}/plugins/wzsh-fzf/forgit.plugin.zsh
-
-
-function fupdate() {
-    # 更新 fzf 相关信息
-    wget https://raw.githubusercontent.com/wfxr/forgit/master/forgit.plugin.zsh -O ${WZSH_HOME}/plugins/wzsh-fzf/forgit.plugin.zsh
-}
+. ${WZSH_FZF_HOME}/aliases.zsh
+. ${WZSH_FZF_HOME}/functions.zsh
+. ${WZSH_FZF_HOME}/chrome.zsh
+. ${WZSH_FZF_HOME}/git.zsh
+# https:/FZF_/github.com/wfxr/forgit
+. ${WZSH_FZF_HOME}/forgit.plugin.zsh
