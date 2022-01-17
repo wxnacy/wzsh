@@ -38,7 +38,12 @@ function proxy() {
 
 # 更新 wzsh
 function wzshupdate() {
-    cd ~/.wzsh && git pull && cd -
+    cd ~/.wzsh && gpull && cd -
+}
+
+# 更新 wvim
+function wvimupdate() {
+    cd ~/.vim && gpull && cd -
 }
 
 function send_kindle() {
