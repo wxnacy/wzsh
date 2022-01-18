@@ -37,6 +37,7 @@ export FZF_CUSTOM_BIND="
     --bind 'ctrl-y:execute(echo -n {} | pbcopy)'
     --bind 'ctrl-o:execute(${WZSH_FZF_HOME}/open.zsh {})'
     --bind 'ctrl-O:execute(open {})'
+    --bind 'ctrl-v:execute(vim {} < /dev/tty > /dev/tty)'
 "
 
 export FZF_DEFAULT_COMMAND='rg --files --hidden'
