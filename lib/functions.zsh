@@ -77,14 +77,15 @@ function lnsf() {
     if [[ -f $linkpath || -d $linkpath ]]
     then
         zinfo "$linkpath exists"
+        return
+    fi
+
+    if [[ -f $filepath || -d $filepath ]]
+    then
+        ln -sf $filepath $linkpath
+        zinfo "Linked: $filepath ==> $linkpath"
     else
-        if [[ -f $filepath || -d $filepath ]]
-        then
-            ln -sf $filepath $linkpath
-            zinfo "Linked: $filepath ==> $linkpath"
-        else
-            zwarn "$filepath not found"
-        fi
+        zwarn "$filepath not found"
     fi
 }
 
@@ -95,7 +96,7 @@ function dotall() {
     do
 
         # 判断是否 # 开头
-        is_note=$(echo $line | grep "^#")
+        local is_note=$(echo $line | grep "^#")
         if [[ "$is_note" != "" ]]
         then
             zinfo "$line"
@@ -111,10 +112,15 @@ function dotall() {
 
 }
 
-cmd=$1
-if [[ $cmd == 'dotall' ]]
+if [[ $* ]]
 then
-    dotall
+    # shell main 函数
+    # ./xxxx.sh func_name params1 params2
+    # 就是运行 func_name 函数并传入 params1 params2 两个参数
+    local cmd="$1"
+    # 将参数左移一位
+    shift
+    local rc=0
+    $cmd "$@" || rc=$?
+    return $rc
 fi
-
-
