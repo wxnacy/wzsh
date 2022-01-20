@@ -63,8 +63,58 @@ function send_kindle() {
 
 function p() {
     # 查看环境变量
-    for _path in $(echo $PATH | sed 's/:/ /g');
-    do;
+    for _path in $(echo $PATH | sed 's/:/ /g')
+    do
         echo $_path;
     done
 }
+
+function lnsf() {
+    # 软连接
+    filepath=$1
+    linkpath=$2
+
+    if [[ -f $linkpath || -d $linkpath ]]
+    then
+        zinfo "$linkpath exists"
+    else
+        if [[ -f $filepath || -d $filepath ]]
+        then
+            ln -sf $filepath $linkpath
+            zinfo "Linked: $filepath ==> $linkpath"
+        else
+            zwarn "$filepath not found"
+        fi
+    fi
+}
+
+function dotall() {
+    # 安装所有 dotfile
+
+    zsh ${WZSH_HOME}/lib/print_dotfile.zsh | while read line
+    do
+
+        # 判断是否 # 开头
+        is_note=$(echo $line | grep "^#")
+        if [[ "$is_note" != "" ]]
+        then
+            zinfo "$line"
+        else
+            filepath=`echo $line | awk '{print $1}'`
+            linkpath=`echo $line | awk '{print $2}'`
+            if [[ "$filepath" != "" ]]
+            then
+                lnsf "$filepath" $linkpath
+            fi
+        fi
+    done
+
+}
+
+cmd=$1
+if [[ $cmd == 'dotall' ]]
+then
+    dotall
+fi
+
+
