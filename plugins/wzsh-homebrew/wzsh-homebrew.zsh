@@ -33,9 +33,10 @@ function brewinit() {
     # rg 文件查找引擎
     # ag 文件查找引擎
     # highlight 文本高亮工具
+    # autojump 快速跳转目录
     zinfo '开始安装必备工具'
     for name in ack gotop htop ffmpeg tmux ctags ncdu vim w3m node wget watch \
-        taskwarrior-tui jq fzf rg \
+        taskwarrior-tui jq fzf rg autojump highlight \
         yarn ranger trash;
     do
         cmd=$name

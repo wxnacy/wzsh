@@ -5,10 +5,12 @@ export ZSH=${HOME}/.oh-my-zsh
 # https://github.com/robbyrussell/oh-my-zsh/wiki/themes
 ZSH_THEME="bureau"
 # history-substring-search
-plugins=(git python sublime )
+plugins=(git python sublime autojump)
 if [ -f $ZSH/oh-my-zsh.sh ]; then
     source $ZSH/oh-my-zsh.sh
 fi
+# load autojump
+[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
 #
 zinfo "开始加载本地库"
 # load lib
