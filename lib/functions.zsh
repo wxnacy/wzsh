@@ -92,7 +92,7 @@ function lnsf() {
 function dotall() {
     # 安装所有 dotfile
 
-    zsh ${WZSH_HOME}/lib/print_dotfile.zsh | while read line
+    cat data/dotfile_kv | while read line
     do
 
         # 判断是否 # 开头
@@ -101,8 +101,12 @@ function dotall() {
         then
             zinfo "$line"
         else
-            filepath=`echo $line | awk '{print $1}'`
-            linkpath=`echo $line | awk '{print $2}'`
+            local filepath=`echo $line | awk '{print $1}'`
+            filepath=${filepath//\${HOME}/${HOME}}
+            filepath=${filepath//\$HOME/$HOME}
+            local linkpath=`echo $line | awk '{print $2}'`
+            linkpath=${linkpath//\${HOME}/${HOME}}
+            linkpath=${linkpath//\$HOME/$HOME}
             if [[ "$filepath" != "" ]]
             then
                 lnsf "$filepath" $linkpath
