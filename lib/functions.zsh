@@ -38,7 +38,7 @@ function proxy() {
 
 # 更新 wzsh
 function wzshupdate() {
-    cd ~/.wzsh && gpull && gsub && cd -
+    cd ~/.zsh && gpull && gsub && cd - && zsh
 }
 
 # 更新 wvim
