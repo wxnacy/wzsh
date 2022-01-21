@@ -5,6 +5,7 @@
 # Created: 2021-11-21
 # Modified: 2021-12-03
 # Description: python 相关命令
+# https://github.com/eddieantonio/imgcat
 #===============================
 
 . ${WZSH_HOME}/lib/try-catch.zsh

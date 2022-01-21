@@ -34,10 +34,11 @@ function brewinit() {
     # ag 文件查找引擎
     # highlight 文本高亮工具
     # autojump 快速跳转目录
+    # imgcat 在 iterm2 上显示图片
     zinfo '开始安装必备工具'
     for name in ack gotop htop ffmpeg tmux ctags ncdu vim w3m node wget watch \
         taskwarrior-tui jq fzf rg autojump highlight \
-        yarn ranger trash;
+        yarn ranger trash "eddieantonio/eddieantonio/imgcat";
     do
         cmd=$name
         if [[ $name == 'taskwarrior-tui' ]]
