@@ -94,6 +94,14 @@ function gsubr(){
     proxyoff
 }
 
+function gsuba(){
+    # 添加子模块
+    proxyon
+    zinfo '添加子模块'
+    git submodule add --force $@
+    proxyoff
+}
+
 # git clone
 function glone(){
     proxyon

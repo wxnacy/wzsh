@@ -1,2 +1,4 @@
 # bm 书签配置
 ${HOME}/Documents/Configs/.bookmark ${HOME}/.bookmark
+# ranger config
+${HOME}/.zsh/plugins/wzsh-ranger/config ${HOME}/.config/ranger
