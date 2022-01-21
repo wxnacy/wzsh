@@ -10,7 +10,8 @@ do
 done
 
 function test() {
-    echo 'test'
+    local s=$(_color 31 "test")
+    echo -e $s
 }
 
 if [[ $* ]]

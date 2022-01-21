@@ -30,7 +30,7 @@ zinfo "开始加载插件"
 # load zsh plugins
 for name in `ls ${WZSH_HOME}/plugins`
 do
-    zinfo "加载插件 $name"
+    zinfo "加载 $name"
     shfile=${WZSH_HOME}/plugins/${name}/${name}.zsh
 
     if [ -f $shfile ]; then
