@@ -3,12 +3,14 @@ zinfo '加载 ~/.zshrc'
 export ZSH=${HOME}/.oh-my-zsh
 
 # https://github.com/robbyrussell/oh-my-zsh/wiki/themes
-ZSH_THEME="bureau"
+# ZSH_THEME="bureau"
+# 使用 powerlevel10k 主题，详见 plugins/wzsh-p10k/wzsh-p10k.zsh
 # history-substring-search
 plugins=(git python sublime autojump)
 if [ -f $ZSH/oh-my-zsh.sh ]; then
     source $ZSH/oh-my-zsh.sh
 fi
+
 # load autojump
 [ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
 #
