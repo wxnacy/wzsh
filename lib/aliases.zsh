@@ -1,7 +1,9 @@
 # Uage: curl https://raw.githubusercontent.com/wxnacy/wzsh/master/lib/aliases.zsh -o ~/.bash_aliases
 
 # for system
-alias cpwd="echo -n `echo -n $(pwd) | sed 's/ /\\ /g'` | pbcopy"
+
+# see functions.zsh cpwd
+# alias cpwd="echo -n `echo -n $(pwd) | sed 's/ /\\ /g'` | pbcopy"
 alias ll="ls -l"
 alias la="ls -la"
 alias lh="ls -lh"

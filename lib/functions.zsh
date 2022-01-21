@@ -116,6 +116,17 @@ function dotall() {
 
 }
 
+function cpwd() {
+    # 复制当前目录并输出
+    local _pwd=$(pwd)
+    if [[ $(has_command pbcopy) ]]
+    then
+        # echo $_pwd | pbcopy
+        echo -n `echo -n $(pwd) | sed 's/ /\\ /g'` | pbcopy
+    fi
+    echo $_pwd
+}
+
 if [[ $* ]]
 then
     # shell main 函数
