@@ -63,10 +63,7 @@ function send_kindle() {
 
 function p() {
     # 查看环境变量
-    for _path in $(echo $PATH | sed 's/:/ /g')
-    do
-        echo $_path;
-    done
+    echo $PATH | sed 's/:/\n/g' | awk '!a[$0]++'
 }
 
 function lnsf() {

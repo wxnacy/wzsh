@@ -39,6 +39,16 @@ function fkill() {
     fi
 }
 
+function fpath() {
+    # 搜索环境变量 path
+    cd $(p | fzf +m)
+}
+
+function fps() {
+    # 搜索 ps
+    ps $@ | fzf +m
+}
+
 function bml() {
     # 搜索书签命令
     local _path
