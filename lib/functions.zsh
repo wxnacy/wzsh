@@ -127,6 +127,57 @@ function cpwd() {
     echo $_pwd
 }
 
+function dirsize() {
+    # 查看目录大小
+    # 当前目录文件大小
+    # > dirsize
+    # 当前目录文件大小，格式化输出
+    # > dirsize -h
+    # ~/Downloads 文件大小，格式化输出
+    # > dirsize -h ~/Downloads
+    local first=$1
+    local second=$2
+    local dir=$first
+    local is_fmt=''
+    if [[ $first == '-h' ]]
+    then
+        dir=''
+        is_fmt=true
+        if [[ $second ]]
+        then
+            dir=$second
+        fi
+    fi
+
+    if [[ $second == '-h' ]]
+    then
+        is_fmt=true
+    fi
+
+    if [[ $dir ]]
+    then
+        if [[ ! -d $dir ]]
+        then
+            echo 'no such directory:' $dir
+            return
+        fi
+        cd $dir
+    fi
+    local _dirsize=$(du -d 1 | awk '{sum += $1} END {print sum}' 2>/dev/null)
+    local _filesize=$(ls -l | awk '{sum += $5} END {print sum}' 2>/dev/null)
+    local total=$(( _dirsize + _filesize ))
+    if [[ $is_fmt ]]
+    then
+        format_size $total
+    else
+        echo $total
+    fi
+    if [[ $dir ]]
+    then
+        cd - > /dev/null
+    fi
+}
+
 if [[ $* ]]
 then
     # shell main 函数
