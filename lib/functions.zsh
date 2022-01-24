@@ -87,12 +87,23 @@ function lnsf() {
 }
 
 function dotall() {
+    # 加载全部 dotfile
+    for dotfile in ${WZSH_HOME}/data/dotfile_kv ${HOME}/Documents/Configs/dotfile
+    do
+        if [[ -f $dotfile ]]
+        then
+            dot $dotfile
+        fi
+    done
+
+}
+function dot() {
     # 安装所有 dotfile
     local dotfile=$1
-    if [[ ! $dotfile ]]
-    then
-        dotfile=${WZSH_HOME}/data/dotfile_kv
-    fi
+    # if [[ ! $dotfile ]]
+    # then
+        # dotfile=${WZSH_HOME}/data/dotfile_kv
+    # fi
     zinfo "使用 dotfile: ${dotfile}"
 
     cat ${dotfile} | while read line
@@ -116,7 +127,6 @@ function dotall() {
             fi
         fi
     done
-
 }
 
 function cpwd() {
