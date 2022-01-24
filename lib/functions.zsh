@@ -88,8 +88,14 @@ function lnsf() {
 
 function dotall() {
     # 安装所有 dotfile
+    local dotfile=$1
+    if [[ ! $dotfile ]]
+    then
+        dotfile=${WZSH_HOME}/data/dotfile_kv
+    fi
+    zinfo "使用 dotfile: ${dotfile}"
 
-    cat data/dotfile_kv | while read line
+    cat ${dotfile} | while read line
     do
 
         # 判断是否 # 开头
