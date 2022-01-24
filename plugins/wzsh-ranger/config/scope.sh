@@ -115,6 +115,11 @@ handle_extension() {
             mediainfo "${FILE_PATH}" && exit 5
             exiftool "${FILE_PATH}" && exit 5
             ;; # Continue with next handler on failure
+        # custom
+        # other
+        *)
+            (highlight -O ansi "${FILE_PATH}" || cat "${FILE_PATH}") 2> /dev/null && exit 5
+            ;;
     esac
 }
 
