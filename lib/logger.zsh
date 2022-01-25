@@ -45,6 +45,8 @@
 # 　　\33[?25l 隐藏光标
 # 　　\33[?25h 显示光标
 
+source ${WZSH_HOME}/lib/color.zsh
+
 function _log() {
     # 日志输出基础函数
     args=($@)

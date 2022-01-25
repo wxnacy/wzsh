@@ -66,6 +66,32 @@ function format_size() {
     echo "$(python -c "import sys; sys.path.append('${WZSH_HOME}/lib/pythonx'); import utils; print(utils.format_size($1))")"
 }
 
+function proxyon() {
+    # 开启代理
+    zdbug "代理地址：${PROXY}"
+    export no_proxy=${no_proxy}
+    export http_proxy=${PROXY}
+    export https_proxy=$http_proxy
+    zinfo "已开启代理"
+}
+
+function proxyoff(){
+    # 关闭代理
+    unset http_proxy
+    unset https_proxy
+    zinfo "已关闭代理"
+}
+
+function proxy() {
+    # 查看当前代理开启状态
+    if [ $http_proxy ]
+    then
+        zinfo "当前已开启代理"
+    else
+        zinfo "当前已关闭代理"
+    fi
+}
+
 # if [[ $* ]]
 # then
     # # shell main 函数

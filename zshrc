@@ -55,6 +55,10 @@ do
     fi
 done
 
+# 设置环境变量 PATH
+export PATH="${WZSH_HOME}/bin:${PATH}"
+
+
 # prompt spaceship
 # colorls_sh=$(dirname $(gem which colorls))/tab_complete.sh
 # if [ -f $colorls_sh ]; then
