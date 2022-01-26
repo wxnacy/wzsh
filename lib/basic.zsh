@@ -66,6 +66,24 @@ function format_size() {
     echo "$(python -c "import sys; sys.path.append('${WZSH_HOME}/lib/pythonx'); import utils; print(utils.format_size($1))")"
 }
 
+function weekdate() {
+    # 运行 python 的 datetimes.get_weekdate 模块函数
+    # 获取当前星期的某一天
+    # weekdate 0 周一的日期
+    # weekdate 6 周日的日期
+    echo "$(python -c "import sys; sys.path.append('${WZSH_HOME}/lib/pythonx'); import datetimes; print(datetimes.get_weekdate($1))")"
+}
+
+function monday() {
+    # 返回周一的日期
+    weekdate 0
+}
+
+function sunday() {
+    # 返回周日的日期
+    weekdate 6
+}
+
 function proxyon() {
     # 开启代理
     zdbug "代理地址：${PROXY}"
@@ -91,6 +109,7 @@ function proxy() {
         zinfo "当前已关闭代理"
     fi
 }
+
 
 # if [[ $* ]]
 # then
