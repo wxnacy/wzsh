@@ -74,6 +74,16 @@ function weekdate() {
     echo "$(python -c "import sys; sys.path.append('${WZSH_HOME}/lib/pythonx'); import datetimes; print(datetimes.get_weekdate($1))")"
 }
 
+# date +%V 第几周
+# date +%j 第几天
+# date +%G 年份
+# date +%Y%m01 当月第一天
+
+function weeknum() {
+    # 第几周
+    date +%V
+}
+
 function monday() {
     # 返回周一的日期
     weekdate 0
