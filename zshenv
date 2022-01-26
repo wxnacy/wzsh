@@ -10,6 +10,7 @@
 export WZSH_HOME=${HOME}/.zsh
 export WZSH_NAME=wZsh
 export WZSH_TEMP=/tmp/wzsh
+export WZSH_LOG=${HOME}/.wzsh.log
 # 加载基础命令
 source ${WZSH_HOME}/lib/basic.zsh
 # zinfo '开始加载命令'

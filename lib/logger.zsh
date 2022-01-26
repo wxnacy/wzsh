@@ -47,10 +47,39 @@
 
 source ${WZSH_HOME}/lib/color.zsh
 
+function _split_file() {
+    # 分割文件
+    filepath=$1
+    maxsize=$2
+    maxcount=$3
+
+    # 默认大小 50 M
+    [[ $maxsize ]] || maxsize=52428800
+    # 默认最多分割 10 个文件
+    [[ $maxcount ]] || maxcount=10
+
+    filesize=$(cat $filepath | wc -c)
+    filesize=$((filesize + 0))
+
+    # 如果没到文件上限，直接返回
+    [[ $filesize -lt $maxsize ]] && return
+
+    # 将文件后缀一次后移
+    for i in {9..1}
+    do
+        splitfile=$filepath.$i
+        newsplitfile=$filepath.$((i+1))
+        [[ -f $splitfile ]] && mv $splitfile $newsplitfile
+    done
+    mv $filepath $filepath.1
+}
+
 function _log() {
     # 日志输出基础函数
     args=($@)
     echo -e "[$(now)] \033[${1}m[${2}]\033[0m" "${args[@]:2}"
+    _split_file ${WZSH_LOG}
+    echo -e "[$(now)] \033[${1}m[${2}]\033[0m" "${args[@]:2}" >> $WZSH_LOG
 }
 
 function zdebug() {
