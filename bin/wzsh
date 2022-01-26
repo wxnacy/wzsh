@@ -7,6 +7,21 @@ function update() {
     proxyoff && cd - && zsh
 }
 
+function env() {
+    # 设置获取 wzsh 环境
+    local envfile=~/.wzshenv
+    if [[ -f $envfile ]]
+    then
+        cat $envfile
+    fi
+}
+
+function setenv() {
+    # 设置 wzsh 环境
+    local envfile=~/.wzshenv
+    echo $1 > $envfile
+}
+
 if [[ $* ]]
 then
     # shell main 函数
