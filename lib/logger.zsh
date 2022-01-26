@@ -58,8 +58,7 @@ function _split_file() {
     # 默认最多分割 10 个文件
     [[ $maxcount ]] || maxcount=10
 
-    filesize=$(cat $filepath | wc -c)
-    filesize=$((filesize + 0))
+    filesize=$(wc -c $filepath | awk '{print $1}')
 
     # 如果没到文件上限，直接返回
     [[ $filesize -lt $maxsize ]] && return
