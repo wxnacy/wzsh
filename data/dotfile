@@ -1,2 +1,4 @@
 # ranger config
 ${HOME}/.zsh/plugins/wzsh-ranger/config ${HOME}/.config/ranger
+# taskwarrior config
+${HOME}/.zsh/plugins/wzsh-taskwarrior/taskrc ${HOME}/.taskrc
