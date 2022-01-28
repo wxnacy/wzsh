@@ -10,11 +10,6 @@
 PROXY="http://127.0.0.1:1080"
 no_proxy="baidu.com,wxnacy.com,localhost"
 
-# 更新 wzsh
-# function wzshupdate() {
-    # cd ~/.zsh && gpull && gsub && cd - && zsh
-# }
-
 # 更新 wvim
 function wvimupdate() {
     cd ~/.vim && gpull && gsub && cd -
