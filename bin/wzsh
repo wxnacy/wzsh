@@ -22,6 +22,18 @@ function setenv() {
     echo $1 > $envfile
 }
 
+function make_plugin() {
+    # 创建插件
+    name=$1
+    dirname=${WZSH_HOME}/plugins/wzsh-${name}
+    zinfo "创建插件 wzsh-${name}"
+    [[ -d $dirname ]] || mkdir $dirname
+    touch $dirname/aliases.zsh
+    zinfo "Create $dirname/aliases.zsh"
+    echo '. ${WZSH_HOME}/plugins/wzsh-'${name}'/aliases.zsh' > $dirname/wzsh-${name}.zsh
+    zinfo "Create $dirname/wzsh-${name}.zsh"
+}
+
 if [[ $* ]]
 then
     # shell main 函数
