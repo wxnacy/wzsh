@@ -34,6 +34,24 @@ function make_plugin() {
     zinfo "Create $dirname/wzsh-${name}.zsh"
 }
 
+function plugin_debug() {
+    # 调试插件程序
+    local name=$1
+    shift
+    local filepath=${WZSH_HOME}/plugins/wzsh-${name}/wzsh-${name}.zsh
+    if [[ ! -f $filepath ]]
+    then
+        filepath=${WZSH_HOME}/plugins/zsh-${name}/zsh-${name}.zsh
+        if [[ ! -f $filepath ]]
+        then
+            zerror "${name} 插件不存在"
+            return
+        fi
+    fi
+
+    /bin/zsh ${filepath} $@
+}
+
 if [[ $* ]]
 then
     # shell main 函数
