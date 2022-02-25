@@ -7,6 +7,13 @@ function update() {
     proxyoff && cd - && zsh
 }
 
+function conf() {
+    # 打开配置文件
+    cd ${WZSH_HOME}
+    vim
+    cd -
+}
+
 function env() {
     # 设置获取 wzsh 环境
     local envfile=~/.wzshenv
