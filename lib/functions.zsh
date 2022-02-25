@@ -87,9 +87,13 @@ function dot() {
             local filepath=`echo $line | awk '{print $1}'`
             filepath=${filepath//\${HOME}/${HOME}}
             filepath=${filepath//\$HOME/$HOME}
+            filepath=${filepath//\${WZSH_HOME}/${WZSH_HOME}}
+            filepath=${filepath//\$WZSH_HOME/$WZSH_HOME}
             local linkpath=`echo $line | awk '{print $2}'`
             linkpath=${linkpath//\${HOME}/${HOME}}
             linkpath=${linkpath//\$HOME/$HOME}
+            linkpath=${linkpath//\${WZSH_HOME}/${WZSH_HOME}}
+            linkpath=${linkpath//\$WZSH_HOME/$WZSH_HOME}
             if [[ "$filepath" != "" ]]
             then
                 lnsf "$filepath" $linkpath
