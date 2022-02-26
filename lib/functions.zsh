@@ -164,6 +164,25 @@ function dirsize() {
     fi
 }
 
+function funcs() {
+    # 列举方法
+
+    # print -l ${(ok)functions} | while read line
+    # do
+        # # type $line
+        # # echo $line
+        # # local match=$(type $line | grep "${HOME}/.zsh")
+        # if [[ $(type $line | rg "/\.zsh") ]]
+        # then
+            # echo $line 
+            # # echo ''
+        # fi
+    # done | fzf +m
+
+    print -l ${(ok)functions} | fzf +m --preview "${WZSH_HOME}/lib/_which.zsh {}"
+
+}
+
 if [[ $* ]]
 then
     # shell main 函数
