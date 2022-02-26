@@ -59,6 +59,20 @@ function plugin_debug() {
     /bin/zsh ${filepath} $@
 }
 
+function debug() {
+    # 调试程序
+    local name=$1
+    shift
+    local filepath=${WZSH_HOME}/lib/${name}.zsh
+    if [[ ! -f $filepath ]]
+    then
+        zerror "${name} 插件不存在"
+        return
+    fi
+
+    /bin/zsh ${filepath} $@
+}
+
 if [[ $* ]]
 then
     # shell main 函数
