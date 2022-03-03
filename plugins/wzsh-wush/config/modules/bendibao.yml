@@ -1,0 +1,15 @@
+name: 'bendibao'
+domain: 'sou.bj.bendibao.com'
+protocol: 'http'
+url_prefix: ''
+
+doc: 'http://sou.bj.bendibao.com/'
+requests:
+  - name: 'search'
+    title: '搜索文章'
+    path: '/cse/search'
+    method: GET
+    params:
+      click: 1
+      s: '7051554220027203607'
+      q: ''
