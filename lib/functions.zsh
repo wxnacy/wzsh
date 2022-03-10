@@ -179,8 +179,22 @@ function funcs() {
         # fi
     # done | fzf +m
 
-    print -l ${(ok)functions} | fzf +m --preview "${WZSH_HOME}/lib/_which.zsh {}"
+    # print -l ${(ok)functions} | fzf +m --preview "${WZSH_HOME}/lib/_which.zsh {}"
+    # local _functions=$(print -l ${(ok)functions} | while read line; do; type $line ;done)
+    # echo $_functions | rg '/Users/wxnacy/.zsh/plugins/wzsh' | awk '{print $1}' | fzf +m --preview 'which {}'
 
+}
+
+function help() {
+    # 显示方法和帮助文档
+
+    local help_files=$(zsh ${WZSH_HOME}/lib/preview_fzf.zsh __get_help_files)
+    local line=$(zsh -c "cat $help_files | jq -s '.[0] * .[1]'" \
+            | jq -r 'keys[] as $k | "\($k)\t\(.[$k] | .doc)"' \
+            | fzf +m --preview "/bin/zsh $WZSH_HOME/lib/preview_fzf.zsh preview_help {}"
+        )
+
+    echo $line | awk '{print $1}'
 }
 
 if [[ $* ]]

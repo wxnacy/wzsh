@@ -1,0 +1,6 @@
+{
+    "weather": {
+        "doc": "查询天气",
+        "help": "weather {location}\n\n\t- location: 地名，默认当前位置"
+    }
+}
