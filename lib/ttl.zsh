@@ -53,7 +53,6 @@ function ttl() {
     fi
 
     local is_ttl=$(__is_ttl $name $ttl)
-    echo $is_ttl
 
     if [[ $is_ttl == 'true' ]]
     then
