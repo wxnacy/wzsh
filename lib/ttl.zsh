@@ -56,3 +56,27 @@ function ttl() {
     fi
     cat $(__get_ttl_path $name)
 }
+
+function ttl_clear() {
+    # 清理 ttl 数据
+    local name=$1
+    for _name in `ls ${WZSH_TEMP} | grep $name`
+    do
+        zinfo "清理缓存文件 $_name"
+        rm ${WZSH_TEMP}/$_name
+    done
+}
+
+
+if [[ $* ]]
+then
+    # shell main 函数
+    # ./xxxx.sh func_name params1 params2
+    # 就是运行 func_name 函数并传入 params1 params2 两个参数
+    local cmd="$1"
+    # 将参数左移一位
+    shift
+    local rc=0
+    $cmd "$@" || rc=$?
+    return $rc
+fi
