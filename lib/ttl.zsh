@@ -4,12 +4,12 @@ function __is_ttl() {
     local name=$1
     local ttl=$2
     local ts=$(date "+%s")
-    local old_filepath=$(ls -l ${WZSH_TEMP} | grep ${name} | awk '{print $NF}')
+    local old_filepath=$(ls ${WZSH_TEMP} | grep ${name} | awk 'NR < 2 {print $NF}')
     if [[ ! $old_filepath ]]
     then
-        echo 'true'
         return
     fi
+
     local old_ts=$(echo $old_filepath | awk -vFS='.' '{print $NF}')
     # 时间差
     local td=$((ts - old_ts))
@@ -27,7 +27,10 @@ function __ttl_save_data() {
     local data=$2
     local ts=$(date "+%s")
     local new_filepath=${WZSH_TEMP}/${name}.$ts
-    test $(ls $WZSH_TEMP | grep ${name}) && rm $WZSH_TEMP/${name}.* 2>/dev/null
+    for _name in `ls $WZSH_TEMP | grep "$name\."`
+    do
+        rm $WZSH_TEMP/$_name
+    done
     echo $data > $new_filepath
 }
 
@@ -44,8 +47,15 @@ function ttl() {
     name="ttl_${name}"
     local cmd=$2
     local ttl=$3
+    if [[ ! $ttl ]]
+    then
+        ttl=0
+    fi
 
-    if [[ $(__is_ttl $name $ttl) == 'true' ]]
+    local is_ttl=$(__is_ttl $name $ttl)
+    echo $is_ttl
+
+    if [[ $is_ttl == 'true' ]]
     then
 
         local pyenv_ver=$(pyenv version | awk '{print $1}')
