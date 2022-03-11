@@ -185,16 +185,39 @@ function funcs() {
 
 }
 
-function help() {
+function __wzsh_help() {
     # 显示方法和帮助文档
-
     local help_files=$(zsh ${WZSH_HOME}/lib/preview_fzf.zsh __get_help_files)
-    local line=$(zsh -c "cat $help_files | jq -s '.[0] * .[1]'" \
+    file_list=(${(@s: :)help_files})
+    index=1
+    jq_param=".[0]"
+    for name in {1..${#file_list[@]}}
+    do
+        jq_param="$jq_param * .[$index]"
+        index=$((index + 1))
+        if [[ $index == ${#file_list[@]} ]]
+        then
+            break
+        fi
+    done
+    local line=$(zsh -c "cat $help_files | jq -s '$jq_param'" \
             | jq -r 'keys[] as $k | "\($k)\t\(.[$k] | .doc)"' \
-            | fzf +m --preview "/bin/zsh $WZSH_HOME/lib/preview_fzf.zsh preview_help {}"
+            | fzf +m --query="${LBUFFER}" \
+            --preview "/bin/zsh $WZSH_HOME/lib/preview_fzf.zsh preview_help {}"
         )
 
     echo $line | awk '{print $1}'
+    local ret=$?
+    return $ret
+}
+
+function wzsh-help-widget() {
+    # 显示方法和帮助文档
+    # LBUFFER="${LBUFFER}$(__help)"
+    LBUFFER="$(__wzsh_help)"
+    local ret=$?
+    zle reset-prompt
+    return $ret
 }
 
 if [[ $* ]]
