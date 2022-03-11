@@ -7,6 +7,7 @@ function __is_ttl() {
     local old_filepath=$(ls ${WZSH_TEMP} | grep ${name} | awk 'NR < 2 {print $NF}')
     if [[ ! $old_filepath ]]
     then
+        echo 'true'
         return
     fi
 
@@ -76,16 +77,19 @@ function ttl_clear() {
     done
 }
 
-
 if [[ $* ]]
 then
     # shell main 函数
     # ./xxxx.sh func_name params1 params2
     # 就是运行 func_name 函数并传入 params1 params2 两个参数
     local cmd="$1"
+    if [[ ! $cmd ]]
+    then
+        return
+    fi
     # 将参数左移一位
     shift
     local rc=0
     $cmd "$@" || rc=$?
-    return $rc
+    # return $rc
 fi
