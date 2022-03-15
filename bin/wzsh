@@ -73,6 +73,11 @@ function debug() {
     /bin/zsh ${filepath} $@
 }
 
+function plugin_home() {
+    # 插件 home 目录
+    echo ${WZSH_HOME}/plugins/wzsh-$1
+}
+
 if [[ $* ]]
 then
     # shell main 函数
