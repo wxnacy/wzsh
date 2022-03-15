@@ -25,6 +25,29 @@ function bjb_jinchujing() {
     fi
 }
 
+function yiqing() {
+    # 查看进出京
+    local city=$1
+    local isCaseIn=0
+    local target=''
+    for _city in 北京 天津
+    do
+        if [[ `echo $_city | grep $city` ]]
+        then
+            isCaseIn=1
+            target='trend'
+        fi
+    done
+    local line=$(wush run --module newpneumonia --name get_by_city --params area=${city} --params isCaseIn=$isCaseIn --params target=$target --config ${WZSH_WUSH_HOME}/config/config.yml --no-browser)
+    echo $line
+    # if [[ $line ]]
+    # then
+        # local url=$(echo $line | awk '{print $2}')
+        # zinfo "打开文章 $url"
+        # open $url
+    # fi
+}
+
 if [[ $* ]]
 then
     # shell main 函数

@@ -1,0 +1,17 @@
+name: 'newpneumonia'
+domain: 'voice.baidu.com'
+protocol: 'https'
+url_prefix: ''
+
+doc: 'https://voice.baidu.com/act/newpneumonia/newpneumonia/'
+requests:
+  - name: 'get_by_city'
+    title: '获取城市的疫情'
+    path: '/newpneumonia/getv2'
+    method: GET
+    params:
+      from: 'mola-virus'
+      stage: 'publish'
+      target: 'trendCity'
+      isCaseIn: 0
+      area: '河北-廊坊'
