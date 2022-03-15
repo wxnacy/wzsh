@@ -1,8 +1,6 @@
 . ${WZSH_HOME}/plugins/wzsh-taskwarrior/aliases.zsh
 
 
-
-
 function __get_wzsh_dir() {
     # 获取项目目录
     taskrc_path=$(wzsh plugin_home taskwarrior)/taskrc
@@ -14,6 +12,11 @@ function __get_wzsh_dir() {
 function task_project() {
     # 设置项目任务
     local name=$1
+    if [[ ! $name ]]
+    then
+        zerror "缺少参数 {project_name}"
+        return
+    fi
     project_path=$(__get_wzsh_dir)/project_${name}
     # echo $project_path
     local log_path=$(__get_wzsh_dir)/task.log
