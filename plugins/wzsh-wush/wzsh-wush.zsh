@@ -28,8 +28,14 @@ function bjb_jinchujing() {
 function yiqing() {
     # 查看进出京
     local city=$1
+    local type=$2
+    if [[ ! $city ]]
+    then
+        zerror "缺少参数 $city"
+        return
+    fi
     local isCaseIn=0
-    local target=''
+    local target='trendCity'
     for _city in 北京 天津
     do
         if [[ `echo $_city | grep $city` ]]
@@ -38,14 +44,7 @@ function yiqing() {
             target='trend'
         fi
     done
-    local line=$(wush run --module newpneumonia --name get_by_city --params area=${city} --params isCaseIn=$isCaseIn --params target=$target --config ${WZSH_WUSH_HOME}/config/config.yml --no-browser)
-    echo $line
-    # if [[ $line ]]
-    # then
-        # local url=$(echo $line | awk '{print $2}')
-        # zinfo "打开文章 $url"
-        # open $url
-    # fi
+    wush run --module newpneumonia --name get_by_city --params area=${city} --params isCaseIn=$isCaseIn --params target=$target --config ${WZSH_WUSH_HOME}/config/config.yml --attr "{\"type\": \"${type}\"}"
 }
 
 if [[ $* ]]
