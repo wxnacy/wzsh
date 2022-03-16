@@ -29,9 +29,36 @@ function setenv() {
     echo $1 > $envfile
 }
 
-function make_plugin() {
+function __get_plugin_dir() {
+    # 获取插件目录
+    local name=$1
+    dirname=${WZSH_HOME}/plugins/wzsh-${name}
+    echo $dirname
+}
+
+function __conf_plugin() {
+    # 编辑插件
+    local name=$1
+    dirname=$(__get_plugin_dir $name)
+    if [[ -d ${dirname} ]]
+    then
+    else
+        zwarn "插件 $name 不存在"
+        return
+    fi
+    cd $dirname
+    vim
+    cd -
+}
+
+function __create_plugin() {
     # 创建插件
     name=$1
+    if [[ ! $name ]]
+    then
+        zerror "缺少参数 {name}"
+        return
+    fi
     dirname=${WZSH_HOME}/plugins/wzsh-${name}
     zinfo "创建插件 wzsh-${name}"
     [[ -d $dirname ]] || mkdir $dirname
@@ -41,7 +68,34 @@ function make_plugin() {
     zinfo "Create $dirname/wzsh-${name}.zsh"
 }
 
-function plugin_debug() {
+function __remove_plugin() {
+    # 移除插件
+    local name=$1
+    dirname=$(__get_plugin_dir $name)
+    if [[ -d ${dirname} ]]
+    then
+    else
+        zwarn "插件 $name 不存在"
+        return
+    fi
+    case $action in
+        [yY][eE][sS]|[yY])
+            echo "Yes"
+            ;;
+
+        [nN][oO]|[nN])
+            echo "No"
+            ;;
+
+        *)
+            echo "Invalid input..."
+            exit 1
+            ;;
+    esac
+    # rm -rf $dirname
+}
+
+function __debug_plugin() {
     # 调试插件程序
     local name=$1
     shift
@@ -59,6 +113,62 @@ function plugin_debug() {
     /bin/zsh ${filepath} $@
 }
 
+function __home_plugin() {
+    # 插件 home 目录
+    echo $(__get_plugin_dir $1)
+}
+
+function __init_plugin() {
+    # 插件 home 目录
+    local init_path=$(__get_plugin_dir $1)/init.zsh
+    if [[ ! -f $init_path ]]
+    then
+        zerror "缺少脚本 ${init_path}" ;
+        return;
+    fi
+
+    zsh $init_path
+}
+
+function plugin() {
+    # 插件相关操作
+    # create 创建插件
+    # conf 编辑插件
+    # debug 调试插件
+    # remove 移除插件
+    # home 插件目录
+    # init 初始化目录
+
+    local action=$1
+    shift
+    case $action in
+        'create')
+            __create_plugin $@
+            ;;
+
+        'conf')
+            __conf_plugin $@
+            ;;
+        'remove')
+            __remove_plugin $@
+            ;;
+        'debug')
+            __debug_plugin $@
+            ;;
+        'home')
+            __home_plugin $@
+            ;;
+        'init')
+            __init_plugin $@
+            ;;
+
+        *)
+            zwarn "暂不支持 $action 指令"
+            return
+            ;;
+    esac
+}
+
 function debug() {
     # 调试程序
     local name=$1
@@ -73,10 +183,6 @@ function debug() {
     /bin/zsh ${filepath} $@
 }
 
-function plugin_home() {
-    # 插件 home 目录
-    echo ${WZSH_HOME}/plugins/wzsh-$1
-}
 
 if [[ $* ]]
 then
