@@ -32,7 +32,7 @@ function gpush(){
     fi
     try
     (   # open a subshell !!!
-        git pull origin $bname && throw $GitException
+        git pull origin $bname --rebase && throw $GitException
     )
     catch || {
         # case $ex_code in
@@ -74,7 +74,7 @@ function gpull(){
     bname=`git branch | grep '*' | awk '{print $2}'`
     zinfo "当前分支名称: ${bname}"
     proxyon
-    git pull origin $bname $@
+    git pull origin $bname $@ --rebase
     proxyoff
 }
 
