@@ -29,6 +29,10 @@ function yiqing() {
     # 查看进出京
     local city=$1
     local type=$2
+    if [[ ! $type ]]
+    then
+        type='fzf'
+    fi
     if [[ ! $city ]]
     then
         zerror "缺少参数 $city"
@@ -36,7 +40,7 @@ function yiqing() {
     fi
     local isCaseIn=0
     local target='trendCity'
-    for _city in 北京 天津
+    for _city in 北京 天津 上海 重庆 香港 台湾
     do
         if [[ `echo $_city | grep $city` ]]
         then
@@ -45,6 +49,15 @@ function yiqing() {
         fi
     done
     wush run --module newpneumonia --name get_by_city --params area=${city} --params isCaseIn=$isCaseIn --params target=$target --config ${WZSH_WUSH_HOME}/config/config.yml --attr "{\"type\": \"${type}\"}"
+
+    local query_city=$(echo $city | sed 's/-//g')
+    local line=$(wush run --module baidu --name inner --env query_city=$query_city --config ${WZSH_WUSH_HOME}/config/config.yml --attr "{\"type\": \"${type}\"}" | fzf-tmux +m)
+    if [[ $line ]]
+    then
+        local url=$(echo $line | awk '{print $4}')
+        echo $line
+        open $url
+    fi
 }
 
 if [[ $* ]]

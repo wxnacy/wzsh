@@ -1,0 +1,17 @@
+name: 'baidu'
+domain: ''
+url_prefix: ''
+
+requests:
+  - name: 'inner'
+    title: '获取城市的疫情'
+    url: 'https://opendata.baidu.com/data/inner'
+    doc: 'https://voice.baidu.com/act/newpneumonia/newpneumonia/'
+    method: GET
+    params:
+      tn: reserved_all_res_tn
+      dspName: iphone
+      from_sf: 1
+      dsp: iphone
+      resource_id: 28565
+      query: '{query_city}新型肺炎最新动态'
