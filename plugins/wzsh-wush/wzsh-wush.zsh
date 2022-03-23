@@ -48,10 +48,11 @@ function yiqing() {
             target='trend'
         fi
     done
+    zinfo "信息来源：https://voice.baidu.com/act/newpneumonia/newpneumonia"
     wush run --module newpneumonia --name get_by_city --params area=${city} --params isCaseIn=$isCaseIn --params target=$target --config ${WZSH_WUSH_HOME}/config/config.yml --attr "{\"type\": \"${type}\"}"
 
     local query_city=$(echo $city | sed 's/-//g')
-    local line=$(wush run --module baidu --name inner --env query_city=$query_city --config ${WZSH_WUSH_HOME}/config/config.yml --attr "{\"type\": \"${type}\"}" | fzf-tmux +m)
+    local line=$(wush run --module baidu --name inner --env query_city=$query_city --config ${WZSH_WUSH_HOME}/config/config.yml --attr "{\"type\": \"${type}\"}" | fzf +m --height 30%)
     if [[ $line ]]
     then
         local url=$(echo $line | awk '{print $4}')
