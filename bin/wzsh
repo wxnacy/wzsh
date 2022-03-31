@@ -102,7 +102,7 @@ function __debug_plugin() {
     local filepath=${WZSH_HOME}/plugins/wzsh-${name}/wzsh-${name}.zsh
     if [[ ! -f $filepath ]]
     then
-        filepath=${WZSH_HOME}/plugins/zsh-${name}/zsh-${name}.zsh
+        filepath=${WZSH_HOME}/plugins/wzsh-${name}/zshrc
         if [[ ! -f $filepath ]]
         then
             zerror "${name} 插件不存在"
@@ -176,8 +176,12 @@ function debug() {
     local filepath=${WZSH_HOME}/lib/${name}.zsh
     if [[ ! -f $filepath ]]
     then
-        zerror "${name} 插件不存在"
-        return
+        filepath=${WZSH_HOME}/lib/zshrc
+        if [[ ! -f $filepath ]]
+        then
+            zerror "${name} 插件不存在"
+            return
+        fi
     fi
 
     /bin/zsh ${filepath} $@

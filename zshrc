@@ -38,6 +38,16 @@ do
     fi
 done
 
+for name in `ls ${WZSH_HOME}/plugins`
+do
+    shfile=${WZSH_HOME}/plugins/${name}/zshrc
+
+    if [ -f $shfile ]; then
+        zinfo "加载 $name"
+        source $shfile
+    fi
+done
+
 
 # 作者机器才会默认加载 .bashrc
 # if [[ ${USER} == 'wenxiaoning' ]]; then
