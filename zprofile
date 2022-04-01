@@ -19,13 +19,6 @@ if [ -d "${HOME}/.pyenv" ]; then
     export PYTHON_CONFIGURE_OPTS="--enable-framework"
     # config for vim plugin YouComplateMe
     export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-    # if [[ `sw_vers | awk 'NR==2 {print $2}'` == 11.2.3 ]]
-    # if [[ -f ~/.wxnacy ]]
-    # then
-        # eval "$(pyenv init -)"
-    # else
-        # eval "$(pyenv init --path)"
-    # fi
 
     eval "$(pyenv init --path)"
     eval "$(pyenv virtualenv-init -)";
@@ -48,6 +41,17 @@ fi
 
 # for iterm2
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+# 加载插件
+for name in `ls ${WZSH_HOME}/plugins`
+do
+    shfile=${WZSH_HOME}/plugins/${name}/zprofile
+
+    if [ -f $shfile ]; then
+        zinfo "加载 zprofile $name"
+        source $shfile
+    fi
+done
 
 # for python
 # source /usr/local/opt/autoenv/activate.sh

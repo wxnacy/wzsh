@@ -15,3 +15,13 @@ export WZSH_LOG=${HOME}/.wzsh.log
 source ${WZSH_HOME}/lib/basic.zsh
 # zinfo '开始加载命令'
 # zinfo '加载 ~/.zshenv'
+
+for name in `ls ${WZSH_HOME}/plugins`
+do
+    shfile=${WZSH_HOME}/plugins/${name}/zshenv
+
+    if [ -f $shfile ]; then
+        # zinfo "加载 zshenv $name"
+        source $shfile
+    fi
+done

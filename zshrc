@@ -19,9 +19,9 @@ zinfo "开始加载本地库"
 for name in `ls ${WZSH_HOME}/lib`
 do
     shfile=${WZSH_HOME}/lib/${name}
-    zinfo "加载 $shfile"
 
     if [ -f $shfile ]; then
+        zinfo "加载 $name"
         source $shfile
     fi
 done
