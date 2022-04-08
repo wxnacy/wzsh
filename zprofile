@@ -51,6 +51,13 @@ do
         zinfo "加载 zprofile $name"
         source $shfile
     fi
+
+    bindir=${WZSH_HOME}/plugins/${name}/bin
+    if [[ -d $bindir ]]
+    then
+        zinfo "加载 bin $name"
+        export PATH="$bindir:${PATH}"
+    fi
 done
 
 # for python
