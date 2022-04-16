@@ -115,7 +115,7 @@ function __debug_plugin() {
         fi
     fi
 
-    /bin/zsh ${filepath} $@
+    /bin/zsh ${WZSH_HOME}/lib/__debug.zsh ${filepath} $@
 }
 
 function __home_plugin() {
@@ -189,7 +189,7 @@ function debug() {
         fi
     fi
 
-    /bin/zsh ${filepath} $@
+    /bin/zsh ${WZSH_HOME}/lib/__debug.zsh ${filepath} $@
 }
 
 
