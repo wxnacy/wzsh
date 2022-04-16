@@ -57,7 +57,7 @@ function lnsf() {
 
 function dotall() {
     # 加载全部 dotfile
-    for dotfile in ${WZSH_HOME}/data/dotfile ${HOME}/Documents/Configs/dotfile
+    for dotfile in ${WZSH_HOME}/config/dotfile ${HOME}/Documents/Configs/dotfile
     do
         if [[ -f $dotfile ]]
         then

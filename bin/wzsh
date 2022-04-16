@@ -59,7 +59,12 @@ function __create_plugin() {
         zerror "缺少参数 {name}"
         return
     fi
-    dirname=${WZSH_HOME}/plugins/wzsh-${name}
+    local plugin_root=$2
+    if [[ ! $plugin_root ]]
+    then
+        plugin_root=${WZSH_HOME}/plugins
+    fi
+    dirname=${plugin_root}/wzsh-${name}
     zinfo "创建插件 wzsh-${name}"
     [[ -d $dirname ]] || mkdir $dirname
     touch $dirname/aliases.zsh
