@@ -48,6 +48,8 @@ do
     fi
 done
 
+# 加载 nvm 补全脚本，在 zprofile 中不生效
+[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"
 
 # 作者机器才会默认加载 .bashrc
 # if [[ ${USER} == 'wenxiaoning' ]]; then
