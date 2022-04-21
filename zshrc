@@ -18,6 +18,10 @@ zinfo "开始加载本地库"
 # load lib
 for name in `ls ${WZSH_HOME}/lib`
 do
+    if [[ `echo $name | grep '__'` ]]
+    then
+        continue
+    fi
     shfile=${WZSH_HOME}/lib/${name}
 
     if [ -f $shfile ]; then
