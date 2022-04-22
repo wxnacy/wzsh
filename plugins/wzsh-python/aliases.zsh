@@ -7,5 +7,5 @@
 # Description: python 相关改写命令
 #===============================
 
-alias pipi="pip install -i https://pypi.tuna.tsinghua.edu.cn/simple"
+# alias pipi="pip install -i https://pypi.tuna.tsinghua.edu.cn/simple"
 alias pydb="python -m pdb"

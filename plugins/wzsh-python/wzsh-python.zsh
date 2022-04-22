@@ -12,6 +12,12 @@
 
 export GitException=100
 
+function pipi() {
+    # 使用国内源下载
+    pip install -i https://pypi.tuna.tsinghua.edu.cn/simple $@
+    pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple $@
+}
+
 function pypush() {
     # 发布 python 包
     TAG_NAME=$1
@@ -25,7 +31,7 @@ function pypush() {
         zinfo "开始上传"
         proxyon
         twine upload dist/*
-        # TODO 检查环境变量
+        # TODO 检查环境变量 TWINE_USERNAME TWINE_PASSWORD
         # twine upload dist/* --verbose
         proxyoff
 
