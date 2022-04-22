@@ -1,0 +1,45 @@
+#!/usr/bin/env zsh
+#
+
+function __pipi() {
+    # function_body
+    pip install -i https://pypi.tuna.tsinghua.edu.cn/simple $@
+    pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple $@
+}
+
+function install() {
+    # 执行 poetry install 并将包同步安装在当前 pyenv 环境中
+    poetry install
+    for name in `poetry show | awk '{print $1}'`
+    do
+        __pipi $name
+    done
+}
+
+function add() {
+    # 执行 poetry add 并将包同步安装在当前 pyenv 环境
+    poetry add $@
+    local name=$1
+    if [[ `echo $name | grep '-'` ]]
+    then
+        name=$2
+    fi
+    __pipi $name
+}
+
+if [[ $* ]]
+then
+    # shell main 函数
+    # ./xxxx.sh func_name params1 params2
+    # 就是运行 func_name 函数并传入 params1 params2 两个参数
+    local cmd="$1"
+    if [[ ! $cmd ]]
+    then
+        return
+    fi
+    # 将参数左移一位
+    shift
+    local rc=0
+    $cmd "$@" || rc=$?
+    # return $rc
+fi
