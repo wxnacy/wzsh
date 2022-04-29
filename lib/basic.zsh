@@ -95,7 +95,7 @@ function sunday() {
 }
 
 # PROXY=""
-no_proxy="baidu.com,wxnacy.com,localhost"
+# NO_PROXY="baidu.com,wxnacy.com,localhost"
 
 function proxyon() {
     # 开启代理
@@ -105,7 +105,13 @@ function proxyon() {
         return
     fi
     zdbug "代理地址：${PROXY}"
-    export no_proxy=${no_proxy}
+
+    unset no_proxy
+    unset http_proxy
+    unset https_proxy
+    unset all_proxy
+
+    export no_proxy=${NO_PROXY}
     export http_proxy=${PROXY}
     export https_proxy=$http_proxy
     export all_proxy=$http_proxy
