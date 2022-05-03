@@ -5,10 +5,10 @@ function __pipi() {
     # function_body
     pip install -i https://pypi.tuna.tsinghua.edu.cn/simple $@
     pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple $@
-    if [[ `has_command pip3.10` == 'true' ]]
-    then
-        pip3.10 install -i https://pypi.tuna.tsinghua.edu.cn/simple $@
-    fi
+    # if [[ `has_command pip3.10` == 'true' ]]
+    # then
+        # pip3.10 install -i https://pypi.tuna.tsinghua.edu.cn/simple $@
+    # fi
 }
 
 function install() {
