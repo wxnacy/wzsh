@@ -31,6 +31,14 @@ function add() {
     __pipi $name
 }
 
+function all_dev() {
+    # 安装所有开发包
+    for name in pytest Sphinx sphinx-rtd-theme pytest-cov pytest-html
+    do
+        pt add -D $name
+    done
+}
+
 if [[ $* ]]
 then
     # shell main 函数
