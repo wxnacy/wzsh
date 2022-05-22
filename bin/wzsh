@@ -67,9 +67,15 @@ function __create_plugin() {
     dirname=${plugin_root}/wzsh-${name}
     zinfo "创建插件 wzsh-${name}"
     [[ -d $dirname ]] || mkdir $dirname
-    touch $dirname/aliases.zsh
-    zinfo "Create $dirname/aliases.zsh"
-    echo '. ${WZSH_HOME}/plugins/wzsh-'${name}'/aliases.zsh' > $dirname/wzsh-${name}.zsh
+    [[ -d $dirname/bin ]] || mkdir $dirname/bin
+    [[ -d $dirname/config ]] || mkdir $dirname/config
+    echo '{}' > $dirname/config/help.json
+    for _name in aliases.zsh zprofile zshenv zshrc zprofile
+    do
+        touch $dirname/$_name
+        zinfo "Create $dirname/$_name"
+        echo '. ${WZSH_HOME}/plugins/wzsh-'${name}'/'$_name >> $dirname/wzsh-${name}.zsh
+    done
     zinfo "Create $dirname/wzsh-${name}.zsh"
 }
 
