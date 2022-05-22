@@ -39,7 +39,7 @@ function k() {
     local grep_name="grep $name"
     shift
     # 获取运行中的进程，并过滤掉当前的进程、父进程、子进程
-    local process=$(ps -ef | grep "$name" | grep -v $$ | grep -v $PPID | grep -v $grep_name)
+    local process=$(ps -ef | grep "$name" | grep -v $$ | grep -v $PPID | grep -v "$grep_name")
     if [[ ! $process ]]
     then
         zinfo "没有相关进程"
@@ -52,7 +52,7 @@ function k() {
         zinfo "进程：" $line
     done
     echo -n $process | awk '{print $2}' | xargs kill $@
-    local process=$(ps -ef | grep "$name" | grep -v $$ | grep -v $PPID | grep -v $grep_name)
+    local process=$(ps -ef | grep "$name" | grep -v $$ | grep -v $PPID | grep -v "$grep_name")
     if [[ ! $process ]]
     then
         zinfo "全部停止成功"
