@@ -33,6 +33,35 @@ function p() {
     echo $PATH | sed 's/:/\n/g' | awk '!a[$0]++'
 }
 
+function k() {
+    # kill 掉指定程序
+    local name=$1
+    local grep_name="grep $name"
+    shift
+    # 获取运行中的进程，并过滤掉当前的进程、父进程、子进程
+    local process=$(ps -ef | grep "$name" | grep -v $$ | grep -v $PPID | grep -v $grep_name)
+    if [[ ! $process ]]
+    then
+        zinfo "没有相关进程"
+        return
+    fi
+    local total=$(echo $process | wc -l | sed 's/ //g')
+    zinfo "尝试停止 $total 个进程"
+    echo $process | while read line
+    do
+        zinfo "进程：" $line
+    done
+    echo -n $process | awk '{print $2}' | xargs kill $@
+    local process=$(ps -ef | grep "$name" | grep -v $$ | grep -v $PPID | grep -v $grep_name)
+    if [[ ! $process ]]
+    then
+        zinfo "全部停止成功"
+        return
+    fi
+    local total=$(echo $process | wc -l | sed 's/ //g')
+    zinfo "剩余 $total 个进程"
+}
+
 function lnsf() {
     # 软连接
     filepath=$1
