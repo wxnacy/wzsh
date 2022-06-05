@@ -1,2 +1,6 @@
 # 设置变量， go get 命令可以将代码拉取到 src 目录中
-export GO111MODULE=off
+# export GO111MODULE=off
+# 
+# export GO111MODULE=on
+#
+export GOPROXY="https://goproxy.io,direct"
