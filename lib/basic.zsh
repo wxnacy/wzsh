@@ -99,12 +99,17 @@ function sunday() {
 
 function proxyon() {
     # 开启代理
-    if [[ ! ${PROXY} ]]
+    local proxy=$1
+    if [[ ! ${proxy} ]]
+    then
+	    proxy=${PROXY}
+    fi
+    if [[ ! ${proxy} ]]
     then
         zerror '代理地址 $PROXY 为空，开始代理失败'
         return
     fi
-    zdbug "代理地址：${PROXY}"
+    zdbug "代理地址：${proxy}"
 
     unset no_proxy
     unset http_proxy
@@ -112,7 +117,7 @@ function proxyon() {
     unset all_proxy
 
     export no_proxy=${NO_PROXY}
-    export http_proxy=${PROXY}
+    export http_proxy=${proxy}
     export https_proxy=$http_proxy
     export all_proxy=$http_proxy
     zinfo "已开启代理"
