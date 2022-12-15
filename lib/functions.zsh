@@ -248,5 +248,7 @@ function wzsh-help-widget() {
 }
 
 function fjson () {
-    python -c "import json; f = open('${1}', 'r') ; print(json.dumps(eval(''.join(f.readlines())), indent=4))"
+    python -c "import json; \
+        f = open('${1}', 'r'); \
+        print(json.dumps(eval(''.join(f.readlines())), indent=4, ensure_ascii=False))"
 }
