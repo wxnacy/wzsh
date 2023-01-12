@@ -10,14 +10,6 @@ if [ -d "${HOME}/.wshell" ]; then
     export PATH=$PATH:${WS_HOME}/bin
 fi
 
-# for nvm
-zinfo "初始化 nvm 环境"
-if [ -d "${HOME}/.nvm" ]; then
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh"  ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-    [ -s "$NVM_DIR/bash_completion"  ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-fi
-
 # for homebrew
 zinfo "初始化 homebrew 环境"
 if [ -d "/usr/local/Homebrew" ]; then

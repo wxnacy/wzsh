@@ -52,8 +52,6 @@ do
     fi
 done
 
-# 加载 nvm 补全脚本，在 zprofile 中不生效
-[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"
 
 # 作者机器才会默认加载 .bashrc
 # if [[ ${USER} == 'wenxiaoning' ]]; then
@@ -73,7 +71,6 @@ done
 
 # 设置环境变量 PATH
 export PATH="${WZSH_HOME}/bin:${PATH}"
-
 
 # prompt spaceship
 # colorls_sh=$(dirname $(gem which colorls))/tab_complete.sh
