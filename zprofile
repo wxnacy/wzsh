@@ -10,20 +10,6 @@ if [ -d "${HOME}/.wshell" ]; then
     export PATH=$PATH:${WS_HOME}/bin
 fi
 
-# for pyenv
-zinfo "初始化 pyenv 环境"
-if [ -d "${HOME}/.pyenv" ]; then
-    # https://github.com/pyenv/pyenv#basic-github-checkout
-    export PYENV_ROOT="$HOME/.pyenv"
-    export PATH="${PYENV_ROOT}/bin:${PATH}"
-    export PYTHON_CONFIGURE_OPTS="--enable-framework"
-    # config for vim plugin YouComplateMe
-    export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-
-    eval "$(pyenv init --path)"
-    eval "$(pyenv virtualenv-init -)";
-fi
-
 # for nvm
 zinfo "初始化 nvm 环境"
 if [ -d "${HOME}/.nvm" ]; then
