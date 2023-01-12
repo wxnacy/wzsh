@@ -1,3 +1,4 @@
+# 本文件不在做 wzsh 本身不相干代码插入
 zinfo '加载 ~/.zshrc'
 
 export ZSH=${HOME}/.oh-my-zsh
@@ -36,18 +37,12 @@ for name in `ls ${WZSH_HOME}/plugins`
 do
     zinfo "加载 $name"
     shfile=${WZSH_HOME}/plugins/${name}/${name}.zsh
-
     if [ -f $shfile ]; then
         source $shfile
     fi
-done
 
-for name in `ls ${WZSH_HOME}/plugins`
-do
     shfile=${WZSH_HOME}/plugins/${name}/zshrc
-
     if [ -f $shfile ]; then
-        zinfo "加载 $name"
         source $shfile
     fi
 done
@@ -69,11 +64,3 @@ do
     fi
 done
 
-# 设置环境变量 PATH
-export PATH="${WZSH_HOME}/bin:${PATH}"
-
-# prompt spaceship
-# colorls_sh=$(dirname $(gem which colorls))/tab_complete.sh
-# if [ -f $colorls_sh ]; then
-    # source $colorls_sh
-# fi
