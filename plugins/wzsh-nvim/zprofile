@@ -1,7 +1,0 @@
-bindir=${HOME}/.config/nvim/bin
-if [[ -d $bindir ]]; then
-    if [[ -d $bindir ]]
-    then
-        export PATH="$bindir:${PATH}"
-    fi
-fi
