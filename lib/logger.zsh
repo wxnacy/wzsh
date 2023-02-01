@@ -83,12 +83,18 @@ function _log() {
 
 function zdebug() {
     # debug 日志输出
-    _log 34 DBUG $@
+    if [[ $WZSH_LOG_LEVEL == 'debug' ]]
+    then
+        _log 34 DBUG $@
+    fi
 }
 
 function zinfo() {
     # info 日志输出
-    _log 36 INFO $@
+    if [[ $WZSH_LOG_LEVEL == 'debug' || $WZSH_LOG_LEVEL == 'info' ]]
+    then
+        _log 36 INFO $@
+    fi
 }
 
 function zerror() {

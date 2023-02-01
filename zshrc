@@ -1,5 +1,5 @@
 # 本文件不在做 wzsh 本身不相干代码插入
-zinfo '加载 ~/.zshrc'
+zdebug '加载 ~/.zshrc'
 
 export ZSH=${HOME}/.oh-my-zsh
 
@@ -15,7 +15,7 @@ fi
 # load autojump
 [ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
 #
-zinfo "开始加载本地库"
+zdebug "开始加载本地库"
 # load lib
 for name in `ls ${WZSH_HOME}/lib`
 do
@@ -26,16 +26,16 @@ do
     shfile=${WZSH_HOME}/lib/${name}
 
     if [ -f $shfile ]; then
-        zinfo "加载 $name"
+        zdebug "加载 $name"
         source $shfile
     fi
 done
 
-zinfo "开始加载插件"
+zdebug "开始加载插件"
 # load zsh plugins
 for name in `ls ${WZSH_HOME}/plugins`
 do
-    zinfo "加载 $name"
+    zdebug "加载 $name"
     shfile=${WZSH_HOME}/plugins/${name}/${name}.zsh
     if [ -f $shfile ]; then
         source $shfile
@@ -52,14 +52,14 @@ done
 # if [[ ${USER} == 'wenxiaoning' ]]; then
 # fi
 # load local bashrc
-zinfo "开始加载本地环境"
+zdebug "开始加载本地环境"
 for name in .bash_profile .bashrc
 do
     # echo $name
     shfile=${HOME}/${name}
 
     if [ -f $shfile ]; then
-        zinfo "加载 $shfile"
+        zdebug "加载 $shfile"
         source $shfile
     fi
 done

@@ -13,24 +13,24 @@ export PATH="${WZSH_HOME}/bin:${PATH}"
 export WZSH_NAME=wZsh
 export WZSH_TEMP=/tmp/wzsh
 export WZSH_LOG=${HOME}/.wzsh.log
+export WZSH_LOG_LEVEL=info
 # 加载基础命令
 source ${WZSH_HOME}/lib/basic.zsh
 # zinfo '开始加载命令'
-zinfo '加载 ~/.zshenv'
+zdebug '加载 ~/.zshenv'
 
 for name in `ls ${WZSH_HOME}/plugins`
 do
     bindir=${WZSH_HOME}/plugins/${name}/bin
     if [[ -d $bindir ]]
     then
-        zinfo "加载 bin $name"
+        zdebug "加载 bin $name"
         export PATH="$bindir:${PATH}"
     fi
 
     shfile=${WZSH_HOME}/plugins/${name}/zshenv
 
     if [ -f $shfile ]; then
-        # zinfo "加载 zshenv $name"
         source $shfile
     fi
 
