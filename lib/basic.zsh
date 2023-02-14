@@ -37,12 +37,14 @@ function is_debug() {
 function debugon() {
     # 开始 wzsh debug 模式
     export WZSH_DEBUG=true
+    export WZSH_LOG_LEVEL=debug
     zinfo "${WZSH_NAME} DEBUG 模式开启"
 }
 
 function debugoff() {
     # 关闭 wzsh debug 模式
     unset WZSH_DEBUG
+    export WZSH_LOG_LEVEL=info
     zinfo "${WZSH_NAME} DEBUG 模式关闭"
 }
 
