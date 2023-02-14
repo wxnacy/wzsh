@@ -116,3 +116,13 @@ function gconf(){
     git config user.name "wxnacy"
     git config user.email "371032668@qq.com"
 }
+
+# 增加 .gitlint
+function gitlint-config(){
+    name=.gitlint
+cat > $name <<EOF
+[general]
+ignore=B6
+contrib=CT1
+EOF
+}
