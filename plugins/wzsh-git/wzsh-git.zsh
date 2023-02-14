@@ -62,9 +62,12 @@ function gptag(){
 # 添加并提交
 function gcmit(){
     file=$1
-    zinfo '提交文件:' $file
-    msg=${@/$1/}
-    zinfo '提交信息:' $msg
+    zinfo '提交文件:' ${file}
+    # 只匹配开头替换 file 内容
+    msg=${@/#$1/}
+    # 去掉开头空格
+    msg=${msg/# /}
+    zinfo '提交信息:' ${msg}
     git add $file
     git commit -m "$msg"
 }
