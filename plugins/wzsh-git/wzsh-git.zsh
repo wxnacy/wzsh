@@ -15,21 +15,10 @@ export WZSH_GIT_PY=${WZSH_HOME}/plugins/wzsh-git/git.py
 
 # 推送
 function gpush(){
+    proxyon
     bname=`git branch | grep '*' | awk '{print $2}'`
     zinfo '当前分支:' $bname
-    file=$1
-    zinfo '提交文件:' $file
-    msg=${@/$1/}
-    zinfo '提交信息:' $msg
-    proxyon
-    if [ $file ]
-    then
-        git add $file
-    fi
-    if [ $msg ]
-    then
-        git commit -m "$msg"
-    fi
+    gcmit $@
     try
     (   # open a subshell !!!
         git pull origin $bname && throw $GitException
@@ -62,14 +51,22 @@ function gptag(){
 # 添加并提交
 function gcmit(){
     file=$1
-    zinfo '提交文件:' ${file}
+    if [ $file ]
+    then
+        zinfo '提交文件:' ${file}
+        git add $file
+    else
+        zwarn '无提交文件'
+    fi
     # 只匹配开头替换 file 内容
     msg=${@/#$1/}
     # 去掉开头空格
     msg=${msg/# /}
-    zinfo '提交信息:' ${msg}
-    git add $file
-    git commit -m "$msg"
+    if [ $msg ]
+    then
+        zinfo '提交信息:' ${msg}
+        git commit -m "$msg"
+    fi
 }
 
 # 拉取
