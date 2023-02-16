@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+# 对 git add . && git cz && git push 得简化操作
+
+function main(){
+    proxyon
+    bname=`git branch | grep '*' | awk '{print $2}'`
+    zinfo '当前分支:' $bname
+    gcz $@
+    git pull origin $bname
+    git push origin $bname
+    proxyoff
+}
+
+main $@

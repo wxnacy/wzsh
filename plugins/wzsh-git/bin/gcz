@@ -1,0 +1,21 @@
+#!/usr/bin/env zsh
+# 对 git add . && git cz 得简化操作
+
+function main(){
+    if [[ $(has_command cz) ]]
+    then
+        files=( "${@:1}" )
+        if [[ $files == "" ]]
+        then
+            zerror "没有指定提交文件"
+            return
+        fi
+        zinfo '提交文件:' ${files}
+        git add $files
+        cz
+    else
+        zerror "请先安装 commitizen(https://github.com/commitizen/cz-cli)"
+    fi
+}
+
+main $@
