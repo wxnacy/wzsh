@@ -1,6 +1,11 @@
 # 设置变量， go get 命令可以将代码拉取到 src 目录中
 # export GO111MODULE=off
-# 
+#
 # export GO111MODULE=on
 #
 export GOPROXY="https://goproxy.io,direct"
+# go: downloading github.com/wxnacy/gotool v0.0.0-20230226103005-16eaae6bc470
+# go get: github.com/wxnacy/gotool@v0.0.0-20230226103005-16eaae6bc470: verifying module: github.com/wxnacy/gotool@v0.0.0-20230226103005-16eaae6bc470: checking tree#15888428 against tree#15973619: reading https://goproxy.io/sumdb/sum.golang.org/tile/8/1/242: 404 Not Found
+        # server response: not found
+# 如上报错是 github 项目还没有同步到 goproxy.io 可以使用下面的方式修复
+# export GOPROXY="github.com/goproject,direct"
