@@ -1,0 +1,7 @@
+. ${WZSH_HOME}/plugins/wzsh-direnv/aliases.zsh
+
+if [[ $(has_command direnv) ]]
+then
+    zdebug 'Run command: eval "$(direnv hook zsh)"'
+    eval "$(direnv hook zsh)"
+fi
