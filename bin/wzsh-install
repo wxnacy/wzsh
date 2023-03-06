@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+#安装插件或软件
+
+# 插件名称
+name=$1
+# 安装器文件地址
+shfile=${WZSH_HOME}/plugins/wzsh-${name}/bin/installer.sh
+if [[ -f $shfile ]]
+then
+    $shfile
+else
+    zerror $name "插件安装脚本不存在"
+fi
+
