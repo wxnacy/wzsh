@@ -1,5 +1,7 @@
 # 本文件不在做 wzsh 本身不相干代码插入
-zdebug '加载 ~/.zshrc'
+zdbug $(blue "###############################################")
+zdbug $(blue "加载 ~/.zshrc")
+zdbug $(blue "###############################################")
 
 export ZSH=${HOME}/.oh-my-zsh
 
@@ -15,7 +17,7 @@ fi
 # load autojump
 [ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
 #
-zdebug "开始加载本地库"
+zdbug $(yellow "开始加载本地库")
 # load lib
 for name in `ls ${WZSH_HOME}/lib`
 do
@@ -31,7 +33,7 @@ do
     fi
 done
 
-zdebug "开始加载插件"
+zdebug $(yellow "开始加载插件")
 # load zsh plugins
 for name in `ls ${WZSH_HOME}/plugins`
 do
@@ -48,11 +50,7 @@ do
 done
 
 
-# 作者机器才会默认加载 .bashrc
-# if [[ ${USER} == 'wenxiaoning' ]]; then
-# fi
-# load local bashrc
-zdebug "开始加载本地环境"
+zdebug $(yellow "开始加载本地环境")
 for name in .bash_profile .bashrc
 do
     # echo $name

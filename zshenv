@@ -13,11 +13,19 @@ export PATH="${WZSH_HOME}/bin:${PATH}"
 export WZSH_NAME=wZsh
 export WZSH_TEMP=/tmp/wzsh
 export WZSH_LOG=${HOME}/.wzsh.log
-export WZSH_LOG_LEVEL=info
+# debug 模式设置日志级别为 debug
+if [ $WZSH_DEBUG ]
+then
+    export WZSH_LOG_LEVEL=debug
+else
+    export WZSH_LOG_LEVEL=info
+fi
 # 加载基础命令
 source ${WZSH_HOME}/lib/basic.zsh
-# zinfo '开始加载命令'
-zdebug '加载 ~/.zshenv'
+zdbug $(blue "###############################################")
+zdbug $(blue "加载 ~/.zshenv")
+zdbug $(blue "###############################################")
+
 
 for name in `ls ${WZSH_HOME}/plugins`
 do
