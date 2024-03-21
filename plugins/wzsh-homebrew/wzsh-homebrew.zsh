@@ -37,7 +37,7 @@ function brewinit() {
     # imgcat 在 iterm2 上显示图片
     zinfo '开始安装必备工具'
     for name in ack gotop htop ffmpeg tmux ctags ncdu vim w3m node wget watch \
-        taskwarrior-tui jq fzf rg autojump highlight \
+        taskwarrior-tui jq fzf rg autojump highlight gitlint \
         yarn ranger trash "eddieantonio/eddieantonio/imgcat";
     do
         cmd=$name
