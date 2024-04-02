@@ -19,23 +19,24 @@ function gpush(){
     bname=`git branch | grep '*' | awk '{print $2}'`
     zinfo '当前分支:' $bname
     gcmit $@
-    try
-    (   # open a subshell !!!
-        git pull origin $bname && throw $GitException
-    )
-    catch || {
-        # case $ex_code in
-            # $GitException)
-                # echo "GitException was thrown"
-            # ;;
-            # *)
-                # echo "An unexpected exception was thrown"
-                # throw $ex_code # you can rethrow the "exception" causing the script to exit if not caught
-            # ;;
-        # esac
-        # echo -e "\033[31mPull Error \033[0m"
-        zerror "git pull failed"
-    }
+    git pull origin $bname
+    # try
+    # (   # open a subshell !!!
+        # git pull origin $bname && throw $GitException
+    # )
+    # catch || {
+        # # case $ex_code in
+            # # $GitException)
+                # # echo "GitException was thrown"
+            # # ;;
+            # # *)
+                # # echo "An unexpected exception was thrown"
+                # # throw $ex_code # you can rethrow the "exception" causing the script to exit if not caught
+            # # ;;
+        # # esac
+        # # echo -e "\033[31mPull Error \033[0m"
+        # zerror "git pull failed"
+    # }
     git push origin $bname
     proxyoff
 }
