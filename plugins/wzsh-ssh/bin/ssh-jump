@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+env_name=$1
+
+source "${HOME}/.config/wzsh/plugins/ssh/${env_name}"
+
+ssh-jump.exp
