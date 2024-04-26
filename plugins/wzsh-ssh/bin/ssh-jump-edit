@@ -2,4 +2,6 @@
 
 env_name=$1
 
-vim "${HOME}/.config/wzsh/plugins/ssh/${env_name}"
+conf_dir="${HOME}/.config/wzsh/plugins/ssh"
+mkdir -p $conf_dir
+vim "${conf_dir}/${env_name}"
