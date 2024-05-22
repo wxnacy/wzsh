@@ -7,8 +7,23 @@ set jump_password $env(JUMP_PASSWORD)
 set server_host $env(SERVER_HOST)
 
 spawn sh -c "ssh -p${jump_port} ${jump_username}@${jump_host}"
-expect "*password:*"
-send "${jump_password}\r"
-expect "Opt>"
-send "${server_host}\r"
+expect {
+    "*password:*" {
+        send "${jump_password}\r"
+        exp_continue
+    }
+    "Opt>" {
+        send "${server_host}\r"
+        expect {
+            "ID>" {
+                send "2\r"
+                interact
+            }
+        }
+    }
+    timeout {
+        send_user "Timeout occurred while waiting for password prompt or Opt> prompt.\n"
+        exit 1
+    }
+}
 interact
