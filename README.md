@@ -26,6 +26,31 @@ ln -sf $(pwd)/zshrc ${HOME}/.zshrc
 zsh
 ```
 
+## 本人全环境安装
+
+```bash
+# install brew from https://mirrors.tuna.tsinghua.edu.cn/help/homebrew/
+# install ohmyzsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# install and init zsh
+curl -L https://raw.githubusercontent.com/wxnacy/wzsh/master/installer.sh | bash
+brewinit
+ssh-keygen -t rsa -C "wxnacy"
+ggconf
+git-set-ssh-url
+
+# install wnvim
+curl -L https://raw.githubusercontent.com/wxnacy/wnvim/master/bin/nvim-install | bash
+
+# install and init tmux
+# prefix + $ 修改 session 名称
+# prefix + c 创建窗口
+# prefix + , 修改窗口名称
+# tmux a -t [session-name] 跳转指定 session
+curl -L https://raw.githubusercontent.com/wxnacy/wtmux/master/install | bash
+```
+
 ## 方法
 
 | 名称       | 描述                                                                                                                           | 样例                                           |
