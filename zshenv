@@ -17,6 +17,7 @@ export WZSH_LOG=${WZSH_TEMP}/wzsh.log
 if [[ ! -d ${WZSH_TEMP} ]]; then
     mkdir ${WZSH_TEMP}
 fi
+echo '' > ${WZSH_LOG}
 # debug 模式设置日志级别为 debug
 if [ $WZSH_DEBUG ]
 then
