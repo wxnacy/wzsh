@@ -11,7 +11,6 @@
 . ${WZSH_HOME}/plugins/wzsh-git/aliases.zsh
 
 export GitException=100
-export WZSH_GIT_PY=${WZSH_HOME}/plugins/wzsh-git/git.py
 
 # 推送
 function gpush(){
@@ -106,7 +105,7 @@ function gsuba(){
 # git clone
 function glone(){
     proxyon
-    params=$(python $WZSH_GIT_PY conver_clone_url $@)
+    params=$(python3 $WZSH_GIT_PY conver_clone_url $@)
     zinfo "解析参数 $params"
     git clone $params
     proxyoff
@@ -114,8 +113,22 @@ function glone(){
 
 # 配置
 function gconf(){
-    git config user.name "wxnacy"
-    git config user.email "371032668@qq.com"
+    git config user.name "${WZSH_GIT_NAME}"
+    git config user.email "${WZSH_GIT_EMAIL}"
+}
+
+# 全局配置
+function ggconf(){
+    git config --global user.name "${WZSH_GIT_NAME}"
+    git config --global user.email "${WZSH_GIT_EMAIL}"
+}
+
+# 修改 remove url 到 ssh
+function git-set-ssh-url(){
+    name="origin"
+    url=$(git remote get-url ${name})
+    ssh_url=$(python3 $WZSH_GIT_PY conver_clone_url ${url})
+    git remote set-url ${name} ${ssh_url}
 }
 
 # 增加 .gitlint
