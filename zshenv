@@ -12,7 +12,11 @@ export WZSH_HOME=${HOME}/.zsh
 export PATH="${WZSH_HOME}/bin:${PATH}"
 export WZSH_NAME=wZsh
 export WZSH_TEMP=/tmp/wzsh
-export WZSH_LOG=${HOME}/.wzsh.log
+export WZSH_LOG=${WZSH_TEMP}/wzsh.log
+# 创建临时文件目录
+if [[ ! -d ${WZSH_TEMP} ]]; then
+    mkdir ${WZSH_TEMP}
+fi
 # debug 模式设置日志级别为 debug
 if [ $WZSH_DEBUG ]
 then
@@ -43,3 +47,4 @@ do
     fi
 
 done
+. "$HOME/.cargo/env"
