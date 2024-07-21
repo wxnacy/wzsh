@@ -37,9 +37,10 @@ function brewinit() {
     # imgcat 在 iterm2 上显示图片
     # gitlint git 提交规范校验工具
     # tree 目录树状展示
+    # direnv 自动加载环境变量
     zinfo '开始安装必备工具'
     for name in ack gotop htop ffmpeg tmux ctags ncdu vim w3m node wget watch \
-        taskwarrior-tui jq fzf rg autojump highlight gitlint tree \
+        taskwarrior-tui jq fzf rg autojump highlight gitlint tree direnv \
         yarn ranger trash "eddieantonio/eddieantonio/imgcat";
     do
         cmd=$name
