@@ -36,9 +36,6 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 # install and init zsh
 curl -L https://raw.githubusercontent.com/wxnacy/wzsh/master/installer.sh | bash
 brewinit
-ssh-keygen -t rsa -C "wxnacy"
-ggconf
-git-set-ssh-url
 
 # install wnvim
 curl -L https://raw.githubusercontent.com/wxnacy/wnvim/master/bin/nvim-install | bash
@@ -49,7 +46,137 @@ curl -L https://raw.githubusercontent.com/wxnacy/wnvim/master/bin/nvim-install |
 # prefix + , 修改窗口名称
 # tmux a -t [session-name] 跳转指定 session
 curl -L https://raw.githubusercontent.com/wxnacy/wtmux/master/install | bash
+
+# git config
+ssh-keygen -t rsa -C "wxnacy"
+ggconf
+cd ~/.zsh
+git-set-ssh-url
+cd ~/.config/nvim
+git-set-ssh-url
+cd ~/.tmux
+git-set-ssh-url
+
+# install karabiner
+brew install --cask karabiner-elements
 ```
+
+### karabiner config
+
+<!--fold-->
+```json
+{
+    "description": "Change Command + o to Enter",
+    "manipulators": [
+        {
+            "from": {
+                "key_code": "o",
+                "modifiers": {
+                    "mandatory": [
+                        "command"
+                    ],
+                    "optional": [
+                        "any"
+                    ]
+                }
+            },
+            "to": [
+                {
+                    "key_code": "return_or_enter"
+                }
+            ],
+            "type": "basic"
+        }
+    ]
+}
+```
+<!--/fold-->
+
+<!--fold-->
+```json
+{
+    "description": "Change Right Command + h/j/k/l to Arrows",
+    "manipulators": [
+        {
+            "from": {
+                "key_code": "h",
+                "modifiers": {
+                    "mandatory": [
+                        "right_command"
+                    ],
+                    "optional": [
+                        "any"
+                    ]
+                }
+            },
+            "to": [
+                {
+                    "key_code": "left_arrow"
+                }
+            ],
+            "type": "basic"
+        },
+        {
+            "from": {
+                "key_code": "j",
+                "modifiers": {
+                    "mandatory": [
+                        "right_command"
+                    ],
+                    "optional": [
+                        "any"
+                    ]
+                }
+            },
+            "to": [
+                {
+                    "key_code": "down_arrow"
+                }
+            ],
+            "type": "basic"
+        },
+        {
+            "from": {
+                "key_code": "k",
+                "modifiers": {
+                    "mandatory": [
+                        "right_command"
+                    ],
+                    "optional": [
+                        "any"
+                    ]
+                }
+            },
+            "to": [
+                {
+                    "key_code": "up_arrow"
+                }
+            ],
+            "type": "basic"
+        },
+        {
+            "from": {
+                "key_code": "l",
+                "modifiers": {
+                    "mandatory": [
+                        "right_command"
+                    ],
+                    "optional": [
+                        "any"
+                    ]
+                }
+            },
+            "to": [
+                {
+                    "key_code": "right_arrow"
+                }
+            ],
+            "type": "basic"
+        }
+    ]
+}
+```
+<!--/fold-->
 
 ## 方法
 
