@@ -59,6 +59,22 @@ git-set-ssh-url
 
 # install karabiner
 brew install --cask karabiner-elements
+
+# 配置 mac
+# 重启电脑 command + r
+# csrutil disable
+
+# install mongo
+brew tap mongodb/brew
+brew install mongodb-community
+brew services start mongodb-community
+brew services start mongodb/brew/mongodb-community
+mongo --eval "db.version()"
+# 修改绑定ip,然后重启
+vim /usr/local/etc/mongod.conf
+net:
+  port: 27017
+  bindIp: 0.0.0.0
 ```
 
 ### karabiner config
