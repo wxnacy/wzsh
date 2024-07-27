@@ -1,0 +1,74 @@
+#!/usr/bin/env python3
+# -*- coding:utf-8 -*-
+
+import sqlite3
+import os
+
+
+class Sqlite3Manager:
+
+    def __init__(self, db_path: str):
+        self.db_path = os.path.expanduser(db_path)
+
+    def __enter__(self):
+        self.conn = sqlite3.connect(self.db_path)
+        self.cursor = self.conn.cursor()
+        return self.conn, self.cursor
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.cursor.close()
+        self.conn.close()
+        if isinstance(exc_value, sqlite3.OperationalError):
+            if str(exc_value) == "database is locked":
+                print("请退出浏览器重新操作")
+                exit(0)
+        #  print(exc_type, type(exc_type))
+        #  print(exc_value, type(exc_value))
+        #  print(traceback, type(traceback))
+
+        # 可以在这里处理异常
+        if exc_value:
+            return exc_value
+
+
+class BrowserHistory():
+    def __init__(self, keyword: str = None):
+        self.history_db = "~/Library/Application Support/Google/Chrome/Default/History"
+        self.history_db = "/tmp/h"
+        self.keyword = keyword
+
+    def query(self):
+        with Sqlite3Manager(self.history_db) as (_, c):
+            c.execute("select * from urls limit 10")
+            rows = c.fetchall()
+            for row in rows:
+                print(row)
+
+    def delete(self):
+        if not self.keyword:
+            print("请输入关键字")
+            exit(0)
+        with Sqlite3Manager(self.history_db) as (conn, cursor):
+            sql = f"select * from urls where url like '%{self.keyword}%'"
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            for row in rows:
+                print(row)
+            sql = f"delete from urls where url like '%{self.keyword}%';"
+            cursor.execute(sql)
+            conn.commit()
+
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="操作浏览器")
+    parser.add_argument('action', type=str, help='操作类型')
+    parser.add_argument('-k', '--keyword', dest='keyword', type=str, default=None, help='关键字')
+
+    args = parser.parse_args()
+    args_dict = vars(args)
+    print(args_dict)
+    action = args_dict.pop('action')
+    bh = BrowserHistory(**args_dict)
+    func = getattr(bh, action)
+    func()
