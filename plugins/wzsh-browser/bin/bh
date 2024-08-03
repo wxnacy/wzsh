@@ -3,6 +3,8 @@
 
 import sqlite3
 import os
+from collections import defaultdict
+from urllib.parse import urlparse
 
 
 class Sqlite3Manager:
@@ -34,15 +36,48 @@ class Sqlite3Manager:
 class BrowserHistory():
     def __init__(self, keyword: str = None):
         self.history_db = "~/Library/Application Support/Google/Chrome/Default/History"
-        self.history_db = "/tmp/h"
+        #  self.history_db = "/tmp/h"
         self.keyword = keyword
+        self.url_count_map = defaultdict(int)
+
+    def analyze(self):
+        sql = "select * from urls"
+        with Sqlite3Manager(self.history_db) as (_, c):
+            c.execute(sql)
+            rows = c.fetchall()
+
+        for row in rows:
+            url = row[1]
+            parse = urlparse(url)
+            netloc = parse.netloc
+            self.url_count_map[netloc] += 1
+
+        items = []
+        for netloc, count in self.url_count_map.items():
+            items.append((netloc, count))
+        items.sort(key=lambda o: o[1], reverse=True)
+        for i, item in enumerate(items):
+            if i >= 10:
+                break
+            print(item)
 
     def query(self):
+        params = ""
+        if self.keyword:
+            params = f"where url like '%{self.keyword}%'"
+        sql = f"select * from urls {params} limit 10"
+        count_sql = f"select count(0) from urls {params}"
+        c: sqlite3.Cursor
         with Sqlite3Manager(self.history_db) as (_, c):
-            c.execute("select * from urls limit 10")
+            c.execute(sql)
             rows = c.fetchall()
-            for row in rows:
-                print(row)
+
+            c.execute(count_sql)
+            count = c.fetchone()[0]
+
+        for row in rows:
+            print(row)
+        print(f"总数: {count}")
 
     def delete(self):
         if not self.keyword:
