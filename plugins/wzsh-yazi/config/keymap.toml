@@ -2,6 +2,8 @@
 prepend_keymap = [
     # for plugins
     # for smart-enter
-	{ on = "l", run = 'plugin smart-enter' },
-	{ on = "<Enter>", run = 'plugin smart-enter' },
+	{ on = "l", run = 'plugin smart-enter', desc = 'Enter the child directory, or open the file' },
+	{ on = "<Enter>", run = 'plugin smart-enter', desc = 'Enter the child directory, or open the file' },
+    # for diff https://github.com/yazi-rs/plugins/tree/main/diff.yazi
+	{ on = "<C-d>", run = 'plugin diff', desc = 'Diff the selected with the hovered file' },
 ]
