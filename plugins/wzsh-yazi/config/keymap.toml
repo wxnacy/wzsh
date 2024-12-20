@@ -6,4 +6,6 @@ prepend_keymap = [
 	{ on = "<Enter>", run = 'plugin smart-enter', desc = 'Enter the child directory, or open the file' },
     # for diff https://github.com/yazi-rs/plugins/tree/main/diff.yazi
 	{ on = "<C-d>", run = 'plugin diff', desc = 'Diff the selected with the hovered file' },
+    # for chmod https://github.com/yazi-rs/plugins/tree/main/chmod.yazi
+	{ on = ["c", "m"], run = 'plugin chmod', desc = 'Chmod on selected files' },
 ]
