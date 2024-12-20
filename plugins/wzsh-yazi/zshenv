@@ -1,0 +1,2 @@
+export YAZI_CONFIG_HOME="${WZSH_HOME}/plugins/wzsh-yazi/config"
+# export YAZI_EDITOR=nvim
