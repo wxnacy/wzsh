@@ -1,0 +1,7 @@
+[manager]
+prepend_keymap = [
+    # for plugins
+    # for smart-enter
+	{ on = "l", run = 'plugin smart-enter' },
+	{ on = "<Enter>", run = 'plugin smart-enter' },
+]
