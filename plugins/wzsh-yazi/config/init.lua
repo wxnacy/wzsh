@@ -7,3 +7,5 @@ require("smart-enter"):setup {
 }
 -- https://github.com/yazi-rs/plugins/tree/main/full-border.yazi
 require("full-border"):setup()
+-- https://github.com/Rolv-Apneseth/starship.yazi?tab=readme-ov-file
+require("starship"):setup()
