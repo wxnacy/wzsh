@@ -5,3 +5,5 @@ require("git"):setup()
 require("smart-enter"):setup {
 	open_multi = true,
 }
+-- https://github.com/yazi-rs/plugins/tree/main/full-border.yazi
+require("full-border"):setup()
