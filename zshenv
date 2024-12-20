@@ -48,4 +48,6 @@ do
     fi
 
 done
-. "$HOME/.cargo/env"
+
+# basic
+export EDITOR="nvim"
