@@ -140,6 +140,10 @@ keymap = [
 	{ on = [ "g", "c" ],       run = "cd ~/.config",     desc = "Goto ~/.config" },
 	{ on = [ "g", "d" ],       run = "cd ~/Downloads",   desc = "Goto ~/Downloads" },
 	{ on = [ "g", "<Space>" ], run = "cd --interactive", desc = "Jump interactively" },
+    # Goto custom
+    { on = ["g", "p"], run = "cd ~/Projects", desc = "Go to the Project directory" },
+    { on = ["g", "z"], run = "cd ~/.zsh", desc = "Go to the zsh config directory" },
+    { on = ["g", "v"], run = "cd ~/.config/nvim", desc = "Go to the nvim config directory" },
 
 	# Tabs
 	{ on = "t", run = "tab_create --current", desc = "Create a new tab with CWD" },
