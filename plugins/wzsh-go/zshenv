@@ -9,4 +9,5 @@ export GOPROXY="https://goproxy.io,direct"
         # server response: not found
 # 如上报错是 github 项目还没有同步到 goproxy.io 可以使用下面的方式修复
 # export GOPROXY="github.com/goproject,direct"
-export PATH="$(go env GOPATH)/bin:${PATH}"
+# move to zshrc
+# export PATH="$(go env GOPATH)/bin:${PATH}"
