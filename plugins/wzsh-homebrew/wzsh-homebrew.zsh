@@ -47,22 +47,23 @@ function brewinit() {
         font-hack-nerd-font \
         yarn ranger trash "eddieantonio/eddieantonio/imgcat";
     do
-        cmd=$name
-        if [[ $name == 'taskwarrior-tui' ]]
-        then
-            cmd=task
-        fi
-        if [ $(has_command $cmd) ]
-        then
-            zinfo "$name 已安装"
-        else
-            zinfo "$name 开始安装"
-            brew install $name
-            # if [[ $name == 'fzf' ]]
-            # then
-                # $(brew --prefix)/opt/fzf/install
-            # fi
-        fi
+        wzsh-brew install $name
+        # cmd=$name
+        # if [[ $name == 'taskwarrior-tui' ]]
+        # then
+            # cmd=task
+        # fi
+        # if [ $(has_command $cmd) ]
+        # then
+            # zinfo "$name 已安装"
+        # else
+            # zinfo "$name 开始安装"
+            # wzsh-brew install $name
+            # # if [[ $name == 'fzf' ]]
+            # # then
+                # # $(brew --prefix)/opt/fzf/install
+            # # fi
+        # fi
     done
 
     echo '---------'
