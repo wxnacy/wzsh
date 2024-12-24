@@ -1,0 +1,120 @@
+#!/usr/bin/env zsh
+# homebrew
+
+function _get_package_name() {
+    # 获取真正的包名
+    name=$1
+    case $name in
+        eddieantonio/eddieantonio/imgcat)
+            echo imgcat
+            ;;
+        *)
+            echo "${name}"
+            ;;
+    esac
+}
+
+function _is_cask() {
+    # 是否是 cask 程序
+    name=$1
+    case $name in
+        # vim yazi 等需要的字体
+        font-hack-nerd-font)
+            echo true
+            ;;
+        # 万能效率工具
+        raycast)
+            echo true
+            ;;
+        # 虚拟机
+        vagrant|virtualbox|orbstack)
+            echo true
+            ;;
+        # terminal
+        iterm2)
+            echo true
+            ;;
+        # 密码管理工具
+        keepassxc)
+            echo true
+            ;;
+        # 键位记录
+        keycastr)
+            echo true
+            ;;
+        # 修改键位
+        karabiner-elements)
+            echo true
+            ;;
+        *)
+            echo ""
+            ;;
+    esac
+}
+
+function _get_install_path() {
+    # 获取软件的下载位置
+    name=$1
+    pkg=$(_get_package_name $name)
+    # 检测命令行目录
+    home_opt="${WZSH_BREW_HOME_OPT}/${pkg}"
+    # 检测软件目录
+    home_cask="${WZSH_BREW_HOME_CASK}/${pkg}"
+    # 检测自主安装文件
+    # 首字母大写
+    # raycast => Raycast.app
+    # karabiner-elements => Karabiner-Elements.app
+    app1="/Applications/${(C)name}.app"
+    # another-redis-desktop-manager => Another Redis Desktop Manager.app
+    # 将连字符替换为空格
+    words=${name//-/ }
+    # 将每个单词的首字母转换为大写
+    title_case=$(echo $words | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2))}1')
+    # 添加 ".app" 后缀
+    converted="${title_case}.app"
+    app2="/Applications/${converted}"
+
+    for dir in "$home_opt" "$home_cask" "${app1}" "${app2}";do
+        if [[ -d "${dir}" ]]; then
+            echo $dir
+            return
+        fi
+    done
+
+}
+
+function _install() {
+    name=$1
+    pkg=$(_get_package_name $name)
+    home_install=$(_get_install_path $name)
+    if [[ -d "${home_install}" ]]; then
+        zinfo "已安装 ${pkg} ==> ${home_install}"
+        return
+    fi
+
+    if [[ $(_is_cask "${name}") ]]; then
+        brew install --cask "${name}"
+    else
+        brew install "$name"
+    fi
+}
+
+function install() {
+    # 判断是否已经安装过，如果已安装不会重复安装
+    for name in "$@"; do
+        _install "${name}"
+    done
+}
+
+if [[ $* ]]
+then
+    # shell main 函数
+    # ./xxxx.sh func_name params1 params2
+    # 就是运行 func_name 函数并传入 params1 params2 两个参数
+    local cmd="$1"
+    # 将参数左移一位
+    shift
+    local rc=0
+    $cmd "$@" || rc=$?
+    return $rc
+fi

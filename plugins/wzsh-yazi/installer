@@ -2,4 +2,5 @@
 # Author: wxnacy(wxnacy@gmail.com)
 # Description:
 
-brew install yazi ffmpeg sevenzip jq poppler fd ripgrep fzf zoxide imagemagick font-symbols-only-nerd-font
+wzsh-brew install yazi ffmpeg sevenzip jq poppler fd ripgrep fzf zoxide imagemagick font-symbols-only-nerd-font
+wzsh-brew install font-hack-nerd-font
