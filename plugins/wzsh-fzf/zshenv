@@ -3,8 +3,8 @@ export WZSH_FZF_HOME=${WZSH_HOME}/plugins/wzsh-fzf
 # 加载环境变量
 # Setup fzf
 # ---------
-if [[ ! "$PATH" == *${WZSH_BREW_OPT}/fzf/bin* ]]; then
-    export PATH="${PATH:+${PATH}:}${WZSH_BREW_OPT}/fzf/bin"
+if [[ ! "$PATH" == *${WZSH_BREW_HOME_OPT}/fzf/bin* ]]; then
+    export PATH="${PATH:+${PATH}:}${WZSH_BREW_HOME_OPT}/fzf/bin"
 fi
 
 # 自定义变量

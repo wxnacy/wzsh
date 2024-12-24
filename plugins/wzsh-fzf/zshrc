@@ -3,12 +3,12 @@
 
 # Auto-completion
 # ---------------
-[[ $- == *i* ]] && source "${WZSH_BREW_OPT}/fzf/shell/completion.zsh" 2> /dev/null
+[[ $- == *i* ]] && source "${WZSH_BREW_HOME_OPT}/fzf/shell/completion.zsh" 2> /dev/null
 
 # Key bindings
 # ------------
 # source "/usr/local/opt/fzf/shell/key-bindings.zsh"
-fzf_key_bind_file="${WZSH_BREW_OPT}/fzf/shell/key-bindings.zsh"
+fzf_key_bind_file="${WZSH_BREW_HOME_OPT}/fzf/shell/key-bindings.zsh"
 test -f $fzf_key_bind_file && source $fzf_key_bind_file
 
 . ${WZSH_FZF_HOME}/aliases.zsh
