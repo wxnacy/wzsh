@@ -1,0 +1,20 @@
+
+. ${WZSH_HOME}/lib/try-catch.zsh
+
+# Auto-completion
+# ---------------
+[[ $- == *i* ]] && source "${WZSH_BREW_OPT}/fzf/shell/completion.zsh" 2> /dev/null
+
+# Key bindings
+# ------------
+# source "/usr/local/opt/fzf/shell/key-bindings.zsh"
+fzf_key_bind_file="${WZSH_BREW_OPT}/fzf/shell/key-bindings.zsh"
+test -f $fzf_key_bind_file && source $fzf_key_bind_file
+
+. ${WZSH_FZF_HOME}/aliases.zsh
+. ${WZSH_FZF_HOME}/functions.zsh
+. ${WZSH_FZF_HOME}/chrome.zsh
+. ${WZSH_FZF_HOME}/git.zsh
+. ${WZSH_FZF_HOME}/taskwarrior-tui.zsh
+# https:/FZF_/github.com/wfxr/forgit
+. ${WZSH_FZF_HOME}/forgit.plugin.zsh
