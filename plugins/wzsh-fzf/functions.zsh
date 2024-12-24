@@ -91,7 +91,7 @@ function brews() {
     brew search $1 2>/dev/null | fzf +m
 }
 
-function brewi() {
+function fbrew() {
     # 搜索 brew list
     local name
     name=$(brew search $1 2>/dev/null | fzf +m)
