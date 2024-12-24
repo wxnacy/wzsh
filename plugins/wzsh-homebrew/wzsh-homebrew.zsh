@@ -44,9 +44,7 @@ function brewinit() {
     zinfo '开始安装必备工具'
     for name in ack gotop htop ffmpeg tmux ctags ncdu vim w3m node wget watch \
         taskwarrior-tui jq fzf rg autojump highlight gitlint tree direnv \
-        pyenv pyenv-virtualenv \
         font-hack-nerd-font \
-        yazi sevenzip poppler fd ripgrep zoxide imagemagick font-symbols-only-nerd-font \
         yarn ranger trash "eddieantonio/eddieantonio/imgcat";
     do
         cmd=$name
