@@ -31,6 +31,9 @@ alias zshrcs="source ~/.zshrc"
 alias c="clear"
 alias h="history"
 
+# for wzsh-brew
+alias brewi="wzsh-brew install"
+
 # for docker
 # alias docker="sudo docker"
 
