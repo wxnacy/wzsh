@@ -34,6 +34,26 @@ function is_debug() {
     fi
 }
 
+function is_apple_arm() {
+    # 是否为苹果m芯片
+    if [[ "$(uname -s) $(uname -m)" == "Darwin arm64" ]]
+    then
+        echo true
+    else
+        echo ''
+    fi
+}
+
+function is_apple_intel() {
+    # 是否为苹果intel芯片
+    if [[ "$(uname -s) $(uname -m)" == "Darwin x86_64" ]]
+    then
+        echo true
+    else
+        echo ''
+    fi
+}
+
 function debugon() {
     # 开始 wzsh debug 模式
     export WZSH_DEBUG=true
