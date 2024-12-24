@@ -3,12 +3,26 @@
 
 # 插件名称
 name=$1
-# 安装器文件地址
-shfile=${WZSH_HOME}/plugins/wzsh-${name}/bin/installer.sh
-if [[ -f $shfile ]]
-then
-    $shfile
-else
-    zerror $name "插件安装脚本不存在"
-fi
 
+function _install() {
+    _name=$1
+    # 安装器文件地址
+    shfile=${WZSH_HOME}/plugins/${_name}/installer
+    if [[ -f $shfile ]]
+    then
+        zinfo $_name "插件安装脚本执行"
+        $shfile
+    else
+        zwarn $_name "插件安装脚本不存在"
+    fi
+}
+
+
+if [[ ! "${name}" ]]; then
+    for _name in `ls ${WZSH_HOME}/plugins`
+    do
+        _install "${_name}"
+    done
+else
+    _install "wzsh-${name}"
+fi
