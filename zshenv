@@ -25,6 +25,15 @@ then
 else
     export WZSH_LOG_LEVEL=info
 fi
+# 命令安装基础信息
+export WZSH_BREW_HOME_OPT=/opt/homebrew/opt
+export WZSH_BREW_HOME_CASK=/opt/homebrew/Caskroom
+export WZSH_BREW_HOME_BIN=/opt/homebrew/bin
+if [[ $(uname -m) == "x86_64" ]]; then
+    export WZSH_BREW_HOME_OPT=/usr/local/opt
+    export WZSH_BREW_HOME_CASK=/usr/local/Caskroom
+    export WZSH_BREW_HOME_BIN=/usr/local/bin
+fi
 # 加载基础命令
 source ${WZSH_HOME}/lib/basic.zsh
 zdbug $(blue "###############################################")
