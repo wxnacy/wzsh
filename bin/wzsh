@@ -71,13 +71,14 @@ function __create_plugin() {
     [[ -d $dirname/bin ]] || mkdir $dirname/bin
     [[ -d $dirname/config ]] || mkdir $dirname/config
     echo '{}' > $dirname/config/help.json
-    for _name in aliases.zsh zprofile zshenv zshrc
+    for _name in aliases.zsh zprofile zshenv zshrc installer
     do
         touch $dirname/$_name
         zinfo "Create $dirname/$_name"
         # echo '. ${WZSH_HOME}/plugins/wzsh-'${name}'/'$_name >> $dirname/wzsh-${name}.zsh
     done
     echo '. ${WZSH_HOME}/plugins/wzsh-'${name}'/aliases.zsh' >> $dirname/zshrc
+    chmod +x "${dirname}/installer"
     zinfo "wzsh-${name} 开始成功"
 }
 
