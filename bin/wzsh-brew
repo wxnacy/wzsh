@@ -31,7 +31,7 @@ function _is_cask() {
             echo true
             ;;
         # terminal
-        iterm2)
+        iterm2|warp)
             echo true
             ;;
         # 密码管理工具
