@@ -46,6 +46,10 @@ function _is_cask() {
         karabiner-elements)
             echo true
             ;;
+        # 笔记本
+        obsidian)
+            echo true
+            ;;
         *)
             echo ""
             ;;
