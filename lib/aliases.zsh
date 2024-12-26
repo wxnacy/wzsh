@@ -30,6 +30,7 @@ alias zshrc="vim ~/.zshrc"
 alias zshrcs="source ~/.zshrc"
 alias c="clear"
 alias h="history"
+alias n="nvim"
 
 # for wzsh-brew
 alias brewi="wzsh-brew install"
