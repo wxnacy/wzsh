@@ -2,4 +2,6 @@
 # Author: wxnacy(wxnacy@gmail.com)
 # Description:
 
-wzsh-brew install pyenv pyenv-virtualenv poetry miniconda
+wzsh-brew install pyenv pyenv-virtualenv poetry
+# miniconda 和 自动补全
+wzsh-brew install miniconda conda-zsh-completion
