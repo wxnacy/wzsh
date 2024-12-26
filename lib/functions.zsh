@@ -109,7 +109,7 @@ function dot() {
         local is_note=$(echo $line | grep "^#")
         if [[ "$is_note" != "" ]]
         then
-            zinfo "$line"
+            zdebug "$line"
         else
             local filepath=`echo $line | awk '{print $1}'`
             filepath=${filepath//\${HOME}/${HOME}}
