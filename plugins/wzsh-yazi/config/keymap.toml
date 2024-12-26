@@ -144,6 +144,8 @@ keymap = [
     { on = ["g", "p"], run = "cd ~/Projects", desc = "Go to the Project directory" },
     { on = ["g", "z"], run = "cd ~/.zsh", desc = "Go to the zsh config directory" },
     { on = ["g", "v"], run = "cd ~/.config/nvim", desc = "Go to the nvim config directory" },
+    { on = ["g", "D", "c"], run = "cd ~/Documents/Configs", desc = "Go to the local Configs directory" },
+    { on = ["g", "D", "t"], run = "cd ~/Documents/TablePlus", desc = "Go to the TablePlus directory" },
 
 	# Tabs
 	{ on = "t", run = "tab_create --current", desc = "Create a new tab with CWD" },
