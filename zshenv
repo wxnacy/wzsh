@@ -34,6 +34,7 @@ if [[ $(uname -m) == "x86_64" ]]; then
     export WZSH_BREW_HOME_CASK=/usr/local/Caskroom
     export WZSH_BREW_HOME_BIN=/usr/local/bin
 fi
+export WZSH_BREW="${WZSH_BREW_HOME_BIN}/brew"
 # 加载基础命令
 source ${WZSH_HOME}/lib/basic.zsh
 zdbug $(blue "###############################################")
