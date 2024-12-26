@@ -47,7 +47,7 @@ function __conf_plugin() {
         return
     fi
     cd $dirname
-    vim
+    eval ${EDITOR}
     cd -
 }
 
