@@ -17,8 +17,8 @@ if [ -f ~/.bash_profile ];then
     alias bpc="vim ~/.bash_profile"
 fi
 if [ -f ~/.profile ];then
-    alias bps="source ~/.profile"
-    alias bpc="vim ~/.profile"
+    alias ps="source ~/.profile"
+    alias pc="vim ~/.profile"
 fi
 alias bashrcs="source ~/.bashrc"
 alias bashrc="vim ~/.bashrc"
