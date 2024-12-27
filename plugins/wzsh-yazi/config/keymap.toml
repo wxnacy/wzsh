@@ -142,6 +142,7 @@ keymap = [
 	{ on = [ "g", "<Space>" ], run = "cd --interactive", desc = "Jump interactively" },
     # Goto custom
     { on = ["g", "p"], run = "cd ~/Projects", desc = "Go to the Project directory" },
+    { on = ["g", "P"], run = "cd ~/Pictures", desc = "Go to the Pictures directory" },
     { on = ["g", "z"], run = "cd ~/.zsh", desc = "Go to the zsh config directory" },
     { on = ["g", "v"], run = "cd ~/.config/nvim", desc = "Go to the nvim config directory" },
     { on = ["g", "D", "c"], run = "cd ~/Documents/Configs", desc = "Go to the local Configs directory" },
