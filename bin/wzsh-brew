@@ -50,6 +50,10 @@ function _is_cask() {
         obsidian)
             echo true
             ;;
+        # 阅读
+        calibre)
+            echo true
+            ;;
         *)
             echo ""
             ;;
