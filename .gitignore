@@ -158,3 +158,8 @@ local_*
 zsh-local/
 *zsh-local*
 tmp/
+
+#=================== for plugins begin
+# mpv
+plugins/wzsh-mpv/config/watch_later/
+#=================== for plugins end
