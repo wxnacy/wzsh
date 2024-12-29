@@ -1,0 +1,1 @@
+export EZA_CONFIG_DIR="${WZSH_HOME}/plugins/wzsh-eza/config"
