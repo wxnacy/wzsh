@@ -41,10 +41,12 @@ function brewinit() {
     # pyenv for python env manager
     # font-hack-nerd-font 客户端中的icon展示 iterm2 配置 https://blog.csdn.net/SmallTeddy/article/details/124850597
     # brew install yazi ffmpeg sevenzip jq poppler fd ripgrep fzf zoxide imagemagick font-symbols-only-nerd-font
+    # eza   取代 ls
     zinfo '开始安装必备工具'
     for name in ack gotop htop ffmpeg tmux ctags ncdu vim w3m node wget watch \
         taskwarrior-tui jq fzf rg autojump highlight gitlint tree direnv \
         font-hack-nerd-font \
+        eza \
         yarn ranger trash "eddieantonio/eddieantonio/imgcat";
     do
         wzsh-brew install $name
