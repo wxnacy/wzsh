@@ -109,9 +109,11 @@ function _install() {
 
 function install() {
     # 判断是否已经安装过，如果已安装不会重复安装
+    proxyon
     for name in "$@"; do
         _install "${name}"
     done
+    proxyoff
 }
 
 if [[ $* ]]
