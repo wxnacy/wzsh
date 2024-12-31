@@ -2,3 +2,5 @@
 ${HOME}/.zsh/plugins/wzsh-ranger/config ${HOME}/.config/ranger
 # taskwarrior config
 ${HOME}/.zsh/plugins/wzsh-taskwarrior/taskrc ${HOME}/.taskrc
+# kitty config
+${HOME}/.zsh/plugins/wzsh-kitty/config ${HOME}/.config/kitty
