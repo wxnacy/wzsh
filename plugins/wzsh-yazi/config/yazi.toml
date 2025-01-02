@@ -6,7 +6,8 @@ show_hidden    = true
 [open]
 rules = [
 	# Folder
-	{ name = "*/", use = [ "edit", "open", "reveal" ] },
+    # custom add play
+	{ name = "*/", use = [ "edit", "play", "open", "reveal" ] },
 	# Text
 	{ mime = "text/*", use = [ "edit", "reveal" ] },
 	# Image
