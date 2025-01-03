@@ -3,9 +3,9 @@
 # Description:
 source "${WZSH_HOME}/lib/basic.zsh"
 
-wzsh-brew install pyenv pyenv-virtualenv poetry
+z brew install pyenv pyenv-virtualenv poetry
 # miniconda 和 自动补全
-wzsh-brew install miniconda conda-zsh-completion
+z brew install miniconda conda-zsh-completion
 
 # 安装 poetry 自动补全
 # zfunc="${WZSH_HOME}/plugins/wzsh-python/zfunc"

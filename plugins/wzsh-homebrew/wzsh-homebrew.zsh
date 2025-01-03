@@ -49,7 +49,7 @@ function brewinit() {
         eza \
         yarn ranger trash "eddieantonio/eddieantonio/imgcat";
     do
-        wzsh-brew install $name
+        z brew install $name
         # cmd=$name
         # if [[ $name == 'taskwarrior-tui' ]]
         # then
@@ -60,7 +60,7 @@ function brewinit() {
             # zinfo "$name 已安装"
         # else
             # zinfo "$name 开始安装"
-            # wzsh-brew install $name
+            # z brew install $name
             # # if [[ $name == 'fzf' ]]
             # # then
                 # # $(brew --prefix)/opt/fzf/install

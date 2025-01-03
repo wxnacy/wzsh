@@ -1,5 +1,5 @@
 #!/bin/bash
-wzsh-brew install superfile
+z brew install superfile
 
 tdir="${HOME}/Library/Application Support/superfile"
 sdir="${WZSH_HOME}/plugins/wzsh-superfile/config"
