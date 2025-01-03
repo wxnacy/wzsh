@@ -1,18 +1,33 @@
+#!/bin/bash
 wzsh-brew install superfile
 
-for name in hotkeys.toml config.toml vimHotkeys.toml
-do
-    tpath="${HOME}/Library/Application Support/superfile/${name}"
+tdir="${HOME}/Library/Application Support/superfile"
+sdir="${WZSH_HOME}/plugins/wzsh-superfile/config"
+
+
+
+function _lnsf() {
+    spath=$1
+    tpath=$2
     if [[ -f "$tpath" ]]
     then
         mv "$tpath" "${tpath}.bak"
         echo  "move $tpath => ${tpath}.bak"
     fi
-    spath="${WZSH_HOME}/plugins/wzsh-superfile/config/${name}"
     if [[ -f "$spath" ]]
     then
         mv "$tpath" "${tpath}.bak"
         ln -sf "${spath}" "${tpath}"
         echo "${spath} => ${tpath}"
     fi
+}
+
+for name in config.toml
+do
+    spath="${sdir}/${name}"
+    tpath="${tdir}/${name}"
+    _lnsf "${spath}" "${tpath}"
 done
+
+_lnsf "${sdir}/vimHotkeys.toml" "${tdir}/hotkeys.toml"
+_lnsf "${HOME}/Documents/Configs/wzsh/superfile/pinned.json" "${tdir}/pinned.json"
