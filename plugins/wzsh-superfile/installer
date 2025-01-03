@@ -1,0 +1,18 @@
+wzsh-brew install superfile
+
+for name in hotkeys.toml config.toml vimHotkeys.toml
+do
+    tpath="${HOME}/Library/Application Support/superfile/${name}"
+    if [[ -f "$tpath" ]]
+    then
+        mv "$tpath" "${tpath}.bak"
+        echo  "move $tpath => ${tpath}.bak"
+    fi
+    spath="${WZSH_HOME}/plugins/wzsh-superfile/config/${name}"
+    if [[ -f "$spath" ]]
+    then
+        mv "$tpath" "${tpath}.bak"
+        ln -sf "${spath}" "${tpath}"
+        echo "${spath} => ${tpath}"
+    fi
+done
