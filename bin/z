@@ -1,0 +1,42 @@
+#!/usr/bin/env zsh
+
+function __get_plugin_name() {
+    # 获取真正的包名
+    name=$1
+    case $name in
+        brew|homebrew)
+            echo homebrew
+            ;;
+        *)
+            echo "${name}"
+            ;;
+    esac
+}
+
+main() {
+    # 代替插件执行指定脚本
+    name=$1
+    bname=$2
+
+    pname=$(__get_plugin_name ${name})
+    phome=$(wzsh plugin home ${pname})
+
+    if [[ ! -d "${phome}" ]]
+    then
+        echo "插件 ${pname} 不存在"
+        exit 1
+    fi
+
+    bpath="${phome}/bin/wzsh-${pname}-${bname}"
+    if [[ ! -f "${bpath}" ]]
+    then
+        echo "命令 ${bpath} 不存在"
+        exit 1
+    fi
+
+    # 执行插件中的指定脚本
+    ${bpath} "${@:3}"
+}
+
+
+main $@
