@@ -7,3 +7,4 @@
 # Description: homebrew 相关改写命令
 #===============================
 
+alias bi="z brew install"

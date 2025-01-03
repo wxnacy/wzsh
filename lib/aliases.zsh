@@ -32,9 +32,6 @@ alias c="clear"
 alias h="history"
 alias n="nvim"
 
-# for wzsh-brew
-alias brewi="wzsh-brew install"
-
 # for docker
 # alias docker="sudo docker"
 
