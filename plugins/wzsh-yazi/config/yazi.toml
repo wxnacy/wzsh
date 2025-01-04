@@ -3,6 +3,14 @@
 [manager]
 show_hidden    = true
 
+[opener]
+# custom update mpv to wzsh-mpv-play
+play = [
+	{ run = 'wzsh-mpv-play "$@"', orphan = true, for = "unix" },
+	{ run = 'wzsh-mpv-play %*', orphan = true, for = "windows" },
+	{ run = '''mediainfo "$1"; echo "Press enter to exit"; read _''', block = true, desc = "Show media info", for = "unix" },
+]
+
 [open]
 rules = [
 	# Folder
