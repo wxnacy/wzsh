@@ -1,1 +1,1 @@
-alias m="mpv"
+alias m="wzsh-mpv-play"
