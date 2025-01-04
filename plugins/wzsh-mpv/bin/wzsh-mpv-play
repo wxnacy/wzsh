@@ -1,0 +1,32 @@
+#!/bin/zsh
+
+function main() {
+    home="${WZSH_CACHE_HOME}/mpv"
+    [ -d ${home} ] || mkdir -p $home
+    _h="${home}/history"
+
+    # 查找参数中存在的地址
+    _path=""
+    for arg in "$@"; do
+        if [[ -d "$arg" || -f "$arg" ]]; then
+            _path="$arg"
+        fi
+    done
+
+    if [[ -z "$_path"  ]]
+    then
+        zerror "请输入合规的文件参数: $@"
+        exit 1
+    fi
+
+    # 使用绝对路径
+    _path=$(realpath $_path)
+    if [[ -f "$_h" && -n $(grep "${_path}" "$_h") ]]; then
+
+    else
+        echo "${_path}" >> $_h
+    fi
+    mpv $@
+}
+
+main $@
