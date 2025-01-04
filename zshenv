@@ -11,6 +11,7 @@
 export WZSH_HOME=${HOME}/.zsh
 export PATH="${WZSH_HOME}/bin:${PATH}"
 export WZSH_NAME=wZsh
+export WZSH_CACHE_HOME="${HOME}/Documents/Configs/wzsh"
 export WZSH_TEMP=/tmp/wzsh
 export WZSH_LOG=${WZSH_TEMP}/wzsh.log
 # 创建临时文件目录
