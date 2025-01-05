@@ -1,1 +1,9 @@
 . ${WZSH_HOME}/plugins/wzsh-mpv/aliases.zsh
+
+
+# 使用 fzf 列举播放历史，搜索后播放
+function ml () {
+    p=$(cat ${MPV_HISTORY} | fzf +m)
+    after_colon=$(echo "$p" | awk -F: '{print $2}')
+    z mpv play $after_colon
+}
