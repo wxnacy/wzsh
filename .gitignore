@@ -158,6 +158,7 @@ local_*
 zsh-local/
 *zsh-local*
 tmp/
+*-E
 
 #=================== for plugins begin
 # mpv
