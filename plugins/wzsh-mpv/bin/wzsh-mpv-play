@@ -1,9 +1,34 @@
 #!/bin/zsh
 
+
+function play_add_one() {
+    file_path="$1"  # 指定文件路径
+    path_to_search="$2"  # 传入的路径参数
+
+    # 读取文件内容
+    file_content=$(<"$file_path")
+    echo $file_content
+
+    # 使用正则表达式匹配包含路径的行，并提取行首的数字
+    if [[ $file_content =~ "([0-9]+):$path_to_search" ]]; then
+        current_number=${match[1]}  # 获取当前数字
+        new_number=$((current_number + 1))  # 递增数字
+        # 更新后的字符串
+        new_string="${new_number}:${path_to_search}"
+
+        # 替换文件中的原始字符串
+        updated_content=${file_content//${current_number}:${path_to_search}/$new_string}
+        # 将更新后的内容写回文件
+        echo "$updated_content" > "$file_path"
+        # echo "Updated file with new string: $new_string"
+    else
+        # echo "String not found in the file."
+    fi
+}
+
 function main() {
-    home="${WZSH_CACHE_HOME}/mpv"
-    [ -d ${home} ] || mkdir -p $home
-    _h="${home}/history"
+    [ -d ${MPV_CACHE_HOME} ] || mkdir -p ${MPV_CACHE_HOME}
+    _h="${MPV_HISTORY}"
 
     # 查找参数中存在的地址
     _path=""
@@ -22,11 +47,13 @@ function main() {
     # 使用绝对路径
     _path=$(realpath $_path)
     if [[ -f "$_h" && -n $(grep "${_path}" "$_h") ]]; then
-
+        play_add_one $_h $_path
     else
-        echo "${_path}" >> $_h
+        echo "0:${_path}" >> $_h
     fi
     mpv $@
 }
 
 main $@
+
+# play_add_one $@
