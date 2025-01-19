@@ -51,7 +51,9 @@ function main() {
     else
         echo "0:${_path}" >> $_h
     fi
-    mpv $@
+    # 截图模板
+    # https://mpv.io/manual/master/#options-screenshot-template
+    mpv --screenshot-template="%F_%04n" $@
 }
 
 main $@
