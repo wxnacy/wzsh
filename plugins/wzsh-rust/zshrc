@@ -1,1 +1,8 @@
 . ${WZSH_HOME}/plugins/wzsh-rust/aliases.zsh
+
+cb ()
+{
+    name=$1
+    cargo build --release
+    mv target/release/${name} ~/.cargo/bin
+}
