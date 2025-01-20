@@ -7,3 +7,8 @@ function ml () {
     after_colon=$(echo "$p" | awk -F: '{print $2}')
     z mpv play $after_colon
 }
+
+# 测试窗口
+function mt () {
+    mpv --input-test --force-window --idle
+}
