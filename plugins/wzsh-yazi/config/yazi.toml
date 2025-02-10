@@ -22,8 +22,8 @@ rules = [
 	{ mime = "image/*", use = [ "open", "reveal" ] },
 	# Media
 	{ mime = "{audio,video}/*", use = [ "play", "reveal" ] },
-    # custom add octet-stream
-    { mime = "application/octet-stream", use = [ "play", "reveal" ] },
+    # custom add media application
+    { mime = "application/{octet-stream,vnd.rn-realmedia}", use = [ "play", "reveal" ] },
 	# Archive
 	{ mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", use = [ "extract", "reveal" ] },
 	# JSON
