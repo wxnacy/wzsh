@@ -1,0 +1,33 @@
+#!/bin/zsh
+# 列出外部硬盘，选择并弹出
+
+# 使用 eza 命令获取输出，并逐行处理
+selected=$(eza -lM | while read -r line; do
+    # 提取目录名
+    dir_name=$(echo "$line" | awk '{print $7}')
+    if [[ "$line" == *\'*\'* ]]; then
+        dir_name=$(echo "$line" | awk -F"'" '{print $2}')
+    fi
+    # 提取设备路径
+    device_path=$(echo "$line" | grep -o '/dev/disk[0-9]\+')
+    # echo "${dir_name}-${device_path}"
+
+    # 如果目录名和设备路径都存在，则输出
+    if [[ -n "$dir_name" && -n "$device_path" && "$dir_name" != "Macintosh HD" ]]; then
+        # 去掉设备路径中的分区号（如 s1, s2 等）
+        device_path=$(echo "$device_path" | sed 's/s[0-9]\+$//')
+        echo "'$dir_name' $device_path"
+    fi
+done | fzf --prompt="选择要弹出的磁盘: ")  # 使用 fzf 进行交互式选择
+
+# 如果用户选择了条目
+if [[ -n "$selected" ]]; then
+    # 提取设备路径（如 /dev/disk5）
+    device_path=$(echo "$selected" | awk '{print $NF}')
+
+    # 弹出选中的磁盘
+    echo "正在弹出磁盘: $device_path"
+    diskutil eject "$device_path"
+else
+    echo "未选择任何磁盘。"
+fi
