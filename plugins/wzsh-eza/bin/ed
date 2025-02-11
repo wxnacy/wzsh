@@ -2,7 +2,7 @@
 # 列出外部硬盘，选择并弹出
 
 # 使用 eza 命令获取输出，并逐行处理
-selected=$(eza -lM | while read -r line; do
+selected=$(eza -lM /Volumes | while read -r line; do
     # 提取目录名
     dir_name=$(echo "$line" | awk '{print $7}')
     if [[ "$line" == *\'*\'* ]]; then
