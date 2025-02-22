@@ -17,7 +17,8 @@ rules = [
     # custom add play
 	{ name = "*/", use = [ "edit", "play", "open", "reveal" ] },
 	# Text
-	{ mime = "text/*", use = [ "edit", "reveal" ] },
+    # custom m3u8 add play
+	{ mime = "text/*", use = [ "edit", "play", "reveal" ] },
 	# Image
 	{ mime = "image/*", use = [ "open", "reveal" ] },
 	# Media
@@ -32,7 +33,7 @@ rules = [
 	# Empty file
 	{ mime = "inode/empty", use = [ "edit", "reveal" ] },
 	# Fallback
-    # 所有文件类型都加上 play 备用操作
+    # custom 所有文件类型都加上 play 备用操作
 	{ name = "*", use = [ "open", "play", "reveal" ] },
 ]
 
