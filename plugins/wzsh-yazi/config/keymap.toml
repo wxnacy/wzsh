@@ -15,14 +15,14 @@ prepend_keymap = [
     # for max-preview https://github.com/yazi-rs/plugins/tree/main/max-preview.yazi
 	{ on = "T", run = 'plugin max-preview', desc = 'Maximize or restore preview' },
     # for yamb plugin
-    { on = ["b", "a"], run = 'plugin yamb --args=save', desc = 'Add bookmark' },
-    { on = ["b", "g"], run = 'plugin yamb --args=jump_by_key', desc = 'Jump bookmark by key' },
-    { on = ["b", "f"], run = 'plugin yamb --args=jump_by_fzf', desc = 'Jump bookmark by fzf' },
-    { on = ["b", "d"], run = 'plugin yamb --args=delete_by_key', desc = 'Delete bookmark by key' },
-    { on = ["b", "D"], run = 'plugin yamb --args=delete_by_fzf', desc = 'Delete bookmark by fzf' },
-    { on = ["b", "A"], run = 'plugin yamb --args=delete_all', desc = 'Delete all bookmarks' },
-    { on = ["b", "r"], run = 'plugin yamb --args=rename_by_key', desc = 'Rename bookmark by key' },
-    { on = ["b", "R"], run = 'plugin yamb --args=rename_by_fzf', desc = 'Rename bookmark by fzf' },
+    { on = ["b", "a"], run = 'plugin yamb save', desc = 'Add bookmark' },
+    { on = ["b", "g"], run = 'plugin yamb jump_by_key', desc = 'Jump bookmark by key' },
+    { on = ["b", "f"], run = 'plugin yamb jump_by_fzf', desc = 'Jump bookmark by fzf' },
+    { on = ["b", "d"], run = 'plugin yamb delete_by_key', desc = 'Delete bookmark by key' },
+    { on = ["b", "D"], run = 'plugin yamb delete_by_fzf', desc = 'Delete bookmark by fzf' },
+    { on = ["b", "A"], run = 'plugin yamb delete_all', desc = 'Delete all bookmarks' },
+    { on = ["b", "r"], run = 'plugin yamb rename_by_key', desc = 'Rename bookmark by key' },
+    { on = ["b", "R"], run = 'plugin yamb rename_by_fzf', desc = 'Rename bookmark by fzf' },
     # for mount https://github.com/yazi-rs/plugins/tree/main/mount.yazi
     { on = ["M"], run = 'plugin mount', desc = 'Manage mount' },
 ]

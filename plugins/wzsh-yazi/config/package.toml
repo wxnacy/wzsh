@@ -1,5 +1,42 @@
-[plugin]
-deps = [{ use = "yazi-rs/plugins:git", rev = "7afba3a" }, { use = "yazi-rs/plugins:smart-enter", rev = "7afba3a" }, { use = "yazi-rs/plugins:full-border", rev = "7afba3a" }, { use = "yazi-rs/plugins:diff", rev = "7afba3a" }, { use = "yazi-rs/plugins:chmod", rev = "7afba3a" }, { use = "yazi-rs/plugins:max-preview", rev = "7afba3a" }, { use = "Rolv-Apneseth/starship", rev = "247f49d" }, { use = "h-hg/yamb", rev = "108347b" }]
+[[plugin.deps]]
+use = "yazi-rs/plugins:git"
+rev = "7afba3a"
+hash = "47d8513034b81ee8ae814e36e455bfa7"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:smart-enter"
+rev = "7afba3a"
+hash = "c1a2739e9ef2d837030ccb4267be3ed1"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:full-border"
+rev = "7afba3a"
+hash = "3a73613fc702a5f8369791b3401f52f1"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:diff"
+rev = "7afba3a"
+hash = "284f6694e3b1a4afd686acf1052acd90"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:chmod"
+rev = "7afba3a"
+hash = "36c82bb433078e8e752351d961cac777"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:max-preview"
+rev = "7afba3a"
+hash = "9bc26d10d2f6e2aa93b10905b1b76979"
+
+[[plugin.deps]]
+use = "Rolv-Apneseth/starship"
+rev = "247f49d"
+hash = "f450a5f0b5d067f1a749dcec92293615"
+
+[[plugin.deps]]
+use = "h-hg/yamb"
+rev = "108347b"
+hash = "faf1b817347b5b46c96039dab538694b"
 
 [flavor]
 deps = []
