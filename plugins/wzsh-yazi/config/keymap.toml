@@ -158,6 +158,7 @@ keymap = [
     { on = ["g", "z"], run = "cd ~/.zsh", desc = "Go to the zsh config directory" },
     { on = ["g", "v"], run = "cd /Volumes", desc = "Go to the Volumes directory" },
     { on = ["g", "m"], run = "cd ~/Movies", desc = "Go to the Movies directory" },
+    { on = ["g", "D"], run = "cd ~/Documents", desc = "Go to the Documents directory" },
 
 	# Tabs
 	{ on = "t", run = "tab_create --current", desc = "Create a new tab with CWD" },
