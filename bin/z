@@ -30,6 +30,14 @@ main() {
     bpath="${phome}/bin/wzsh-${pname}-${bname}"
     if [[ ! -f "${bpath}" ]]
     then
+        # 使用基础命令
+        bpath="${phome}/bin/wzsh-${pname}"
+        if [[ -f "${bpath}" ]]
+        then
+            # 执行插件中的指定脚本
+            ${bpath} "${@:2}"
+            exit 0
+        fi
         echo "命令 ${bpath} 不存在"
         exit 1
     fi
