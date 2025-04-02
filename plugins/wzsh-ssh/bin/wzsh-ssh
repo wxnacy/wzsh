@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+env_name=$1
+
+source $(z ssh path ${env_name})
+
+ssh -i "${IDENTITY_FILE}" "${USERNAME}@${HOST}"
+
+unset USERNAME
+unset HOST
+unset IDENTITY_FILE
