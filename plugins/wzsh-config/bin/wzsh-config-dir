@@ -1,0 +1,12 @@
+#!/bin/bash
+
+function get_wzsh_config() {
+    if [[ ! ${WZSH_CONFIG_DIR} ]]
+    then
+        echo "${HOME}/.config/wzsh"
+    else
+        echo "${WZSH_CONFIG_DIR}"
+    fi
+}
+
+get_wzsh_config
