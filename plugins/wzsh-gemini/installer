@@ -1,0 +1,11 @@
+#!/bin/zsh
+
+PLUGIN_CONFIG_DIR="${WZSH_HOME}/plugins/wzsh-gemini/config"
+GEMINI_CONFIG_DIR="${HOME}/.gemini"
+
+if [ ! -d "${GEMINI_CONFIG_DIR}" ]; then
+  mkdir -p "${GEMINI_CONFIG_DIR}"
+fi
+
+zinfo "Link ${PLUGIN_CONFIG_DIR}/GEMINI.md => ${GEMINI_CONFIG_DIR}/GEMINI.md"
+ln -sf "${PLUGIN_CONFIG_DIR}/GEMINI.md" "${GEMINI_CONFIG_DIR}/GEMINI.md"
