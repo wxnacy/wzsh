@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Find version file
+VERSION_FILE=""
+if [ -f "version.go" ]; then
+    VERSION_FILE="version.go"
+elif [ -f "cmd/version.go" ]; then
+    VERSION_FILE="cmd/version.go"
+elif [ -f "cli/version.go" ]; then
+    VERSION_FILE="cli/version.go"
+else
+    echo "错误：未找到 version.go, cmd/version.go, 或 cli/version.go 文件" >&2
+    exit 1
+fi
+
+echo "$VERSION_FILE"
