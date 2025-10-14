@@ -23,11 +23,17 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
+VERSION_FILE=$(wzsh-go-version-file)
+if [ -z "$VERSION_FILE" ]; then
+    exit 1
+fi
+print_info "找到版本文件: $VERSION_FILE"
+
 # 获取当前版本号
-CURRENT_VERSION=$(grep -E 'var Version = "([^"]+)"' version.go | sed -E 's/.*"([^"]+)".*/\1/')
+CURRENT_VERSION=$(grep -E 'var Version = "([^"]+)"' "$VERSION_FILE" | sed -E 's/.*"([^"]+)".*/\1/')
 
 if [ -z "$CURRENT_VERSION" ]; then
-    print_error "无法从 version.go 文件中提取版本号"
+    print_error "无法从 $VERSION_FILE 文件中提取版本号"
     exit 1
 fi
 
@@ -60,10 +66,10 @@ echo
 
 case $REPLY in
 1)
-    NEW_VERSION="$((MAJOR + 1)).0.0"
+    NEW_VERSION="$((MAJOR + 1))).0.0"
     ;;
 2)
-    NEW_VERSION="$MAJOR.$((MINOR + 1)).0"
+    NEW_VERSION="$MAJOR.$((MINOR + 1))).0"
     ;;
 3)
     NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
@@ -90,11 +96,11 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 # 更新 version.go 文件
-print_info "正在更新 version.go 文件..."
-sed -i.bak "s/var Version = \"$CURRENT_VERSION\"/var Version = \"$NEW_VERSION\"/" version.go
+print_info "正在更新 $VERSION_FILE 文件..."
+sed -i.bak "s/var Version = \"$CURRENT_VERSION\"/var Version = \"$NEW_VERSION\"/" "$VERSION_FILE"
 
 # 删除备份文件
-rm version.go.bak
+rm "$VERSION_FILE.bak"
 
 # 显示更改
 echo ""
@@ -105,7 +111,7 @@ echo "  到: $NEW_VERSION"
 # 提示提交更改
 echo ""
 print_info "请记得提交更改:"
-echo "  git add version.go"
+echo "  git add $VERSION_FILE"
 echo "  git commit -m \"chore(version): Incr version to $NEW_VERSION\""
 echo "  git push origin $CURRENT_BRANCH"
 echo ""
@@ -120,9 +126,9 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     print_info "正在执行git操作..."
     
     # 检查是否有未提交的更改
-    if ! git diff --quiet version.go || ! git diff --cached --quiet version.go; then
-        print_info "添加 version.go 到暂存区..."
-        git add version.go
+    if ! git diff --quiet "$VERSION_FILE" || ! git diff --cached --quiet "$VERSION_FILE"; then
+        print_info "添加 $VERSION_FILE 到暂存区..."
+        git add "$VERSION_FILE"
         
         print_info "提交更改..."
         git commit -m "chore(version): Incr version to $NEW_VERSION"
@@ -132,11 +138,11 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         
         print_info "Git操作已完成!"
     else
-        print_warning "version.go 文件没有更改，无需提交"
+        print_warning "$VERSION_FILE 文件没有更改，无需提交"
     fi
 else
     print_info "请手动执行以下命令提交更改:"
-    echo "  git add version.go"
+    echo "  git add $VERSION_FILE"
     echo "  git commit -m \"chore(version): Incr version to $NEW_VERSION\""
     echo "  git push origin $CURRENT_BRANCH"
 fi

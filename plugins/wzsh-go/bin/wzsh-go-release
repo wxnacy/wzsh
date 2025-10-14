@@ -29,11 +29,17 @@ if ! git rev-parse --git-dir > /dev/null 2>&1; then
     exit 1
 fi
 
+VERSION_FILE=$(wzsh-go-version-file)
+if [ -z "$VERSION_FILE" ]; then
+    exit 1
+fi
+print_info "找到版本文件: $VERSION_FILE"
+
 # 获取当前版本号
-VERSION=$(grep -E 'var Version = "([^"]+)"' version.go | sed -E 's/.*"([^"]+)".*/\1/')
+VERSION=$(grep -E 'var Version = "([^"]+)"' "$VERSION_FILE" | sed -E 's/.*"([^"]+)".*/\1/')
 
 if [ -z "$VERSION" ]; then
-    print_error "无法从 version.go 文件中提取版本号"
+    print_error "无法从 $VERSION_FILE 文件中提取版本号"
     exit 1
 fi
 
