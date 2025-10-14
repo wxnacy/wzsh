@@ -61,13 +61,10 @@ do
     fi
 done
 
-
 zdebug $(yellow "开始加载本地环境")
-for name in .bash_profile .bashrc
+for name in .local/zshrc
 do
-    # echo $name
     shfile=${HOME}/${name}
-
     if [ -f $shfile ]; then
         zdebug "加载 $shfile"
         source $shfile

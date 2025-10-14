@@ -16,3 +16,13 @@ do
         source $shfile
     fi
 done
+
+# 加载 bash 登录配置
+for name in .local/zprofile
+do
+    shfile=${HOME}/${name}
+    if [ -f $shfile ]; then
+        zdebug "加载 $shfile"
+        source $shfile
+    fi
+done

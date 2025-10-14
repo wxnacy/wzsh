@@ -60,5 +60,12 @@ do
 
 done
 
-# basic
-export EDITOR="nvim"
+# 加载 bash 登录配置
+for name in .local/zshenv
+do
+    shfile=${HOME}/${name}
+    if [ -f $shfile ]; then
+        zdebug "加载 $shfile"
+        source $shfile
+    fi
+done
