@@ -75,6 +75,7 @@ do
 done
 
 # 懒加载
+fpath=(${WZSH_HOME}/completions $fpath) # 命令补全目录
 fpath+="${WZSH_HOME}/zfunc";
 fpath+=~/.zfunc; autoload -Uz compinit; compinit
 zstyle ':completion:*' menu select
