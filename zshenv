@@ -8,6 +8,8 @@
 # 本文件不在做 wzsh 本身不相干代码插入
 #===============================
 
+export ZSH_START_TIME=$(/usr/bin/python3 -c 'import time; print(int(time.time() * 1000))')
+
 export WZSH_HOME=${HOME}/.zsh
 export PATH="${WZSH_HOME}/bin:${PATH}"
 export WZSH_NAME=wZsh

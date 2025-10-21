@@ -76,3 +76,9 @@ fpath=(${WZSH_HOME}/completions $fpath) # 命令补全目录
 fpath+="${WZSH_HOME}/zfunc";
 fpath+=~/.zfunc; autoload -Uz compinit; compinit
 zstyle ':completion:*' menu select
+
+if [ -n "$ZSH_START_TIME" ]; then
+    ZSH_END_TIME=$(/usr/bin/python3 -c 'import time; print(int(time.time() * 1000))')
+    ZSH_LOAD_TIME=$(printf "%.3f\n" $(echo "($ZSH_END_TIME - $ZSH_START_TIME)/1000" | bc -l))
+    zdebug "Zsh load time: ${ZSH_LOAD_TIME}ms"
+fi
