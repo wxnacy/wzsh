@@ -2,4 +2,39 @@
 # Author: wxnacy(wxnacy@gmail.com)
 # Description:
 
-z brew install go
+system=$(uname -s)
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+fi
+
+case "${system}" in
+    Darwin)
+        echo "macOS 安装命令: brew install go"
+        z brew install go
+        ;;
+    Linux)
+        case "${ID:-}" in
+            ubuntu|debian)
+                echo "Ubuntu/Debian 安装命令: sudo apt update && sudo apt install -y golang-go"
+                ;;
+            centos|rhel)
+                echo "CentOS/RHEL 安装命令: sudo yum install -y golang"
+                ;;
+            fedora)
+                echo "Fedora 安装命令: sudo dnf install -y golang"
+                ;;
+            arch|manjaro)
+                echo "Arch/Manjaro 安装命令: sudo pacman -S --needed go"
+                ;;
+            opensuse-leap|opensuse-tumbleweed|sles)
+                echo "openSUSE/SLES 安装命令: sudo zypper install -y go"
+                ;;
+            *)
+                echo "通用 Linux 安装命令: 使用发行版的软件包管理器安装 go"
+                ;;
+        esac
+        ;;
+    *)
+        echo "请使用系统的软件包管理器安装: go"
+        ;;
+esac
