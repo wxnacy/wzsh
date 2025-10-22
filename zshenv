@@ -44,22 +44,22 @@ zdbug $(blue "###############################################")
 zdbug $(blue "加载 ~/.zshenv")
 zdbug $(blue "###############################################")
 
+export WZSH_PLUGINS=(python direnv eza fzf gemini git go homebrew kitty mpv nvim p10k poetry rust ssh yazi)
 
-for name in `ls ${WZSH_HOME}/plugins`
-do
+# 加载插件
+for plugin in "${WZSH_PLUGINS[@]}"; do
+    name="wzsh-${plugin}"
     bindir=${WZSH_HOME}/plugins/${name}/bin
     if [[ -d $bindir ]]
     then
         zdebug "加载 bin $name"
         export PATH="$bindir:${PATH}"
     fi
-
     shfile=${WZSH_HOME}/plugins/${name}/zshenv
 
     if [ -f $shfile ]; then
         source $shfile
     fi
-
 done
 
 # 加载 bash 登录配置

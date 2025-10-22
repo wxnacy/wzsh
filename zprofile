@@ -7,8 +7,8 @@ zdbug $(blue "###############################################")
 test -d $WZSH_TEMP || mkdir $WZSH_TEMP && zdebug '创建临时文件目录'
 
 # 加载插件
-for name in `ls ${WZSH_HOME}/plugins`
-do
+for plugin in "${WZSH_PLUGINS[@]}"; do
+    name="wzsh-${plugin}"
     shfile=${WZSH_HOME}/plugins/${name}/zprofile
 
     if [ -f $shfile ]; then
