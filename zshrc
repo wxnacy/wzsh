@@ -9,7 +9,7 @@ export ZSH=${HOME}/.oh-my-zsh
 # ZSH_THEME="bureau"
 # 使用 powerlevel10k 主题，详见 plugins/wzsh-p10k/zshrc
 # history-substring-search
-plugins=(git python sublime autojump poetry)
+plugins=(git python autojump poetry)
 if [ -f $ZSH/oh-my-zsh.sh ]; then
     source $ZSH/oh-my-zsh.sh
 fi
@@ -32,35 +32,12 @@ done
 zdebug $(yellow "开始加载插件")
 # load zsh plugins
 for plugin in "${WZSH_PLUGINS[@]}"; do
-    #start_time=0
-    #if [ $(is_debug) ]
-    #then
-        #start_time=$(/usr/bin/python3 -c 'import time; print(int(time.time() * 1000))')
-    #fi
     name="wzsh-${plugin}"
     # 加载 zshrc
     shfile=${WZSH_HOME}/plugins/${name}/zshrc
     if [ -f $shfile ]; then
         source $shfile
     fi
-
-    # 加载 zfunc
-    #zfunc_dir=${WZSH_HOME}/plugins/${name}/zfunc
-    #if [[ -d "$zfunc_dir" ]]; then
-        #for zfunc_name in `ls ${zfunc_dir}`
-        #do
-            #zfunc=${zfunc_dir}/${zfunc_name}
-            #zfunc_link="${HOME}/.zfunc/${zfunc_name}"
-            #zdebug "${zfunc} ==> ${zfunc_link}"
-            #ln -sf "${zfunc}" "${zfunc_link}"
-        #done
-    #fi
-    #if [ $(is_debug) ]
-    #then
-        #end_time=$(/usr/bin/python3 -c 'import time; print(int(time.time() * 1000))')
-        #load_time=$(printf "%.3f\n" $(echo "($end_time - $start_time)/1000" | bc -l))
-        #zdebug "加载插件 ${name} load time: ${load_time}s"
-    #fi
 done
 
 zdebug $(yellow "开始加载本地环境")
