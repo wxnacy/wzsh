@@ -42,6 +42,18 @@ install:
 
 	@echo ""
 	@echo "wzsh installation complete!"
+	@if [ "$$(uname -s)" = "Linux" ]; then \
+		current_shell="$${SHELL:-}"; \
+		zsh_path="$$(command -v zsh 2>/dev/null)"; \
+		if [ -n "$$zsh_path" ] && [ "$$current_shell" != "$$zsh_path" ]; then \
+			if command -v chsh >/dev/null 2>&1; then \
+				echo "正在将默认 shell 切换为 zsh ($$zsh_path)"; \
+				chsh -s "$$zsh_path"; \
+			else \
+				echo "请手动执行: chsh -s $$zsh_path"; \
+			fi; \
+		fi; \
+	fi
 	@echo "Starting zsh..."
 	@zsh
 

@@ -57,7 +57,6 @@ if [[ -d "${W_HOME}" ]]; then
     exit 0
 fi
 
-# echo "${W_HOME}"
 
 test -d "${W_HOME}" || git clone --recursive --depth=1 https://github.com/wxnacy/wzsh "${W_HOME}"
 test -d "${W_HOME}/completions" || mkdir "${W_HOME}/completions"

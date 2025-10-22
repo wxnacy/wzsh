@@ -11,6 +11,8 @@
 export ZSH_START_TIME=$(/usr/bin/python3 -c 'import time; print(int(time.time() * 1000))')
 
 export WZSH_HOME=${HOME}/.zsh
+# 加载基础命令
+source ${WZSH_HOME}/lib/basic.zsh
 export PATH="${WZSH_HOME}/bin:${PATH}"
 export WZSH_NAME=wZsh
 export WZSH_CACHE_HOME="${HOME}/Documents/Configs/wzsh"
@@ -29,17 +31,24 @@ else
     export WZSH_LOG_LEVEL=info
 fi
 # 命令安装基础信息
-export WZSH_BREW_HOME_OPT=/opt/homebrew/opt
-export WZSH_BREW_HOME_CASK=/opt/homebrew/Caskroom
-export WZSH_BREW_HOME_BIN=/opt/homebrew/bin
-if [[ $(uname -m) == "x86_64" ]]; then
-    export WZSH_BREW_HOME_OPT=/usr/local/opt
-    export WZSH_BREW_HOME_CASK=/usr/local/Caskroom
-    export WZSH_BREW_HOME_BIN=/usr/local/bin
+export WZSH_BREW_HOME=/opt/homebrew
+if [ $(is_apple_intel) ]
+then
+    export WZSH_BREW_HOME=/usr/local
 fi
+if [ $(is_linux) ]
+then
+    if [[ -d "${HOME}/.linuxbrew/bin/brew" ]]; then
+        export WZSH_BREW_HOME=${HOME}/.linuxbrew/bin/brew
+    fi
+    if [[ -d "/home/linuxbrew/.linuxbrew" ]]; then
+        export WZSH_BREW_HOME=/home/linuxbrew/.linuxbrew
+    fi
+fi
+export WZSH_BREW_HOME_OPT=${WZSH_BREW_HOME}/opt
+export WZSH_BREW_HOME_CASK=${WZSH_BREW_HOME}/Caskroom
+export WZSH_BREW_HOME_BIN=${WZSH_BREW_HOME}/bin
 export WZSH_BREW="${WZSH_BREW_HOME_BIN}/brew"
-# 加载基础命令
-source ${WZSH_HOME}/lib/basic.zsh
 zdbug $(blue "###############################################")
 zdbug $(blue "加载 ~/.zshenv")
 zdbug $(blue "###############################################")
