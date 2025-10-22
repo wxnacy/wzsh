@@ -62,5 +62,7 @@ test -d "${W_HOME}" || git clone --recursive --depth=1 https://github.com/wxnacy
 test -d "${W_HOME}/completions" || mkdir "${W_HOME}/completions"
 test -d "${W_HOME}/zfunc" || mkdir "${W_HOME}/zfunc"
 test -d "~/.zfunc" || mkdir "~/.zfunc"
+cd $W_HOME
 make install
+cd -
 
