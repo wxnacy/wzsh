@@ -54,6 +54,26 @@ function is_apple_intel() {
     fi
 }
 
+function is_apple() {
+    # 是否是苹果系统
+    if [[ "$(uname -s)" == "Darwin" ]]
+    then
+        echo true
+    else
+        echo ''
+    fi
+}
+
+function is_linux() {
+    # 是否是 Linux 系统
+    if [[ "$(uname -s)" == "Linux" ]]
+    then
+        echo true
+    else
+        echo ''
+    fi
+}
+
 function debugon() {
     # 开始 wzsh debug 模式
     export WZSH_DEBUG=true
