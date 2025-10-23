@@ -13,6 +13,8 @@ plugins=(git python autojump poetry)
 if [ -f $ZSH/oh-my-zsh.sh ]; then
     source $ZSH/oh-my-zsh.sh
 fi
+source ${WZSH_HOME}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source ${WZSH_HOME}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 zdbug $(yellow "开始加载本地库")
 # load lib
