@@ -1,0 +1,2 @@
+chat-language: zh-CN
+model: "ollama_chat/qwen2.5-coder:7b"  # 可同时指定默认使用的中文模型

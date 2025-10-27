@@ -1,0 +1,5 @@
+
+# for aider begin
+export AIDER_EDITOR=nvim
+export OLLAMA_API_BASE=http://127.0.0.1:11434
+# for aider end

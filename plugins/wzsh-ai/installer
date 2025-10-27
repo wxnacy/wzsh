@@ -1,0 +1,37 @@
+#!/bin/zsh
+
+# for aider begin
+if ! command -v aider >/dev/null 2>&1; then
+  echo "Installing aider via aider-install..."
+  python -m pip install aider-install && aider-install
+else
+  echo "aider already installed."
+fi
+
+link_config() {
+  local source=$1
+  local target=$2
+
+  if [[ -L "${target}" && $(readlink "${target}") == ${source} ]]; then
+    echo "${target} already linked to ${source}."
+  else
+    ln -sf "${source}" "${target}"
+    echo "Linked ${target} -> ${source}."
+  fi
+}
+
+link_config "${WZSH_HOME}/plugins/wzsh-ai/config/aider.conf.yml" "${HOME}/.aider.conf.yml"
+link_config "${WZSH_HOME}/plugins/wzsh-ai/config/aider.model.settings" "${HOME}/.aider.model.settings"
+# for aider end
+
+# for droid begin
+# https://app.factory.ai/settings/billing
+if ! command -v droid >/dev/null 2>&1; then
+  echo "Installing droid..."
+  curl -fsSL https://app.factory.ai/cli | sh
+else
+  echo "droid already installed."
+fi
+
+link_config "${WZSH_HOME}/plugins/wzsh-ai/config/factory/AGENTS.md" "${HOME}/.factory/AGENTS.md"
+# for droid end

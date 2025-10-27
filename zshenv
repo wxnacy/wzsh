@@ -9,6 +9,8 @@
 #===============================
 
 export ZSH_START_TIME=$(/usr/bin/python3 -c 'import time; print(int(time.time() * 1000))')
+# 需要加载的插件列表
+export WZSH_PLUGINS=(ai python direnv eza fzf gemini git go homebrew kitty mpv nvim p10k poetry rust ssh yazi)
 
 export WZSH_HOME=${HOME}/.zsh
 # 加载基础命令
@@ -52,8 +54,6 @@ export WZSH_BREW="${WZSH_BREW_HOME_BIN}/brew"
 zdbug $(blue "###############################################")
 zdbug $(blue "加载 ~/.zshenv")
 zdbug $(blue "###############################################")
-
-export WZSH_PLUGINS=(python direnv eza fzf gemini git go homebrew kitty mpv nvim p10k poetry rust ssh yazi)
 
 # 加载插件
 for plugin in "${WZSH_PLUGINS[@]}"; do
