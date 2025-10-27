@@ -23,6 +23,21 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
+# 选项解析
+AUTO_CONFIRM=false
+while getopts ":y" opt; do
+    case $opt in
+        y)
+            AUTO_CONFIRM=true
+            ;;
+        ?)
+            print_error "未知选项: -$OPTARG"
+            exit 1
+            ;;
+    esac
+done
+shift $((OPTIND - 1))
+
 # 检查是否在 Git 仓库中
 if ! git rev-parse --git-dir > /dev/null 2>&1; then
     print_error "当前目录不是 Git 仓库"
@@ -59,8 +74,13 @@ if [ -n "$(git status --porcelain)" ]; then
     print_warning "存在未提交的更改:"
     git status --porcelain
     echo ""
-    read -p "是否继续发布? (y/N): " -n 1 -r
-    echo
+    if [ "$AUTO_CONFIRM" = true ]; then
+        print_info "检测到 -y 参数，自动继续发布"
+        REPLY="y"
+    else
+        read -p "是否继续发布? (y/N): " -n 1 -r
+        echo
+    fi
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         print_info "已取消发布"
         exit 0
@@ -81,8 +101,13 @@ print_info "成功创建并推送标签 $TAG"
 
 # 可选：询问是否推送所有标签
 echo ""
-read -p "是否同时推送所有标签到 GitHub? (y/N): " -n 1 -r
-echo
+if [ "$AUTO_CONFIRM" = true ]; then
+    print_info "检测到 -y 参数，自动推送所有标签"
+    REPLY="y"
+else
+    read -p "是否同时推送所有标签到 GitHub? (y/N): " -n 1 -r
+    echo
+fi
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     print_info "正在推送所有标签到 GitHub..."
     git push origin --tags

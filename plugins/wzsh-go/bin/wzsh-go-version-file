@@ -8,8 +8,10 @@ elif [ -f "cmd/version.go" ]; then
     VERSION_FILE="cmd/version.go"
 elif [ -f "cli/version.go" ]; then
     VERSION_FILE="cli/version.go"
+elif [ -f "internal/cli/version.go" ]; then
+    VERSION_FILE="internal/cli/version.go"
 else
-    echo "错误：未找到 version.go, cmd/version.go, 或 cli/version.go 文件" >&2
+    echo "错误：未找到 version.go, cmd/version.go, internal/cli/version.go, 或 cli/version.go 文件" >&2
     exit 1
 fi
 

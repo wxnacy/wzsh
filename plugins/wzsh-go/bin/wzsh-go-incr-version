@@ -23,6 +23,21 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
+# 选项解析
+AUTO_CONFIRM=false
+while getopts ":y" opt; do
+    case $opt in
+        y)
+            AUTO_CONFIRM=true
+            ;;
+        ?)
+            print_error "未知选项: -$OPTARG"
+            exit 1
+            ;;
+    esac
+done
+shift $((OPTIND - 1))
+
 VERSION_FILE=$(wzsh-go-version-file)
 if [ -z "$VERSION_FILE" ]; then
     exit 1
@@ -66,10 +81,10 @@ echo
 
 case $REPLY in
 1)
-    NEW_VERSION="$((MAJOR + 1))).0.0"
+    NEW_VERSION="$((MAJOR + 1)).0.0"
     ;;
 2)
-    NEW_VERSION="$MAJOR.$((MINOR + 1))).0"
+    NEW_VERSION="$MAJOR.$((MINOR + 1)).0"
     ;;
 3)
     NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
@@ -88,8 +103,13 @@ print_info "新版本号: $NEW_VERSION"
 
 # 确认更新
 echo ""
-read -p "确认更新版本号到 $NEW_VERSION? (y/N): " -n 1 -r
-echo
+if [ "$AUTO_CONFIRM" = true ]; then
+    print_info "检测到 -y 参数，自动确认更新版本号"
+    REPLY="y"
+else
+    read -p "确认更新版本号到 $NEW_VERSION? (y/N): " -n 1 -r
+    echo
+fi
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     print_info "已取消操作"
     exit 0
@@ -120,8 +140,13 @@ echo "  ./bin/release.sh"
 
 # 询问是否自动执行git命令
 echo ""
-read -p "是否自动执行git提交和推送操作? (y/N): " -n 1 -r
-echo
+if [ "$AUTO_CONFIRM" = true ]; then
+    print_info "检测到 -y 参数，自动执行 git 提交与推送"
+    REPLY="y"
+else
+    read -p "是否自动执行git提交和推送操作? (y/N): " -n 1 -r
+    echo
+fi
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     print_info "正在执行git操作..."
     
