@@ -159,8 +159,11 @@ zsh-local/
 *zsh-local*
 tmp/
 *-E
+completions/
+zfunc/
 
 #=================== for plugins begin
 # mpv
 plugins/wzsh-mpv/config/watch_later/
 #=================== for plugins end
+.aider*
