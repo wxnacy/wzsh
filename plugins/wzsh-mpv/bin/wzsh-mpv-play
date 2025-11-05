@@ -1,61 +1,420 @@
 #!/bin/zsh
+# 使用 mpv 播放并记录视频地址
+#
+# 实现逻辑：
+#
+# - 检测历史目录 ${MPV_SHARE_HOME} 是否存在，否则创建，用于存放播放数据
+#   - 已经在 plugins/wzsh-mpv/zshenv 中定义，不需要重复定义该字段
+# - 检测缓存目录 ${MPV_CACHE_HOME} 是否存在，否则创建，用于存放截图等临时数据
+#   - 已经在 plugins/wzsh-mpv/zshenv 中定义，不需要重复定义该字段
+# - 检测参数是否存在可以播放的地址
+#   - 存在。则记录地址的绝对路径、播放次数、最后播放时间、地址拼音
+#     - 播放参数为 mpv --screenshot-template="%F_%04n" $@
+#     - 通过 `"${WZSH_HOME}/plugins/wzsh-mpv/to_pinyin/to_pinyin" "$path"` 脚本生成拼音
+#   - 不存在。则使用 fzf 列出所有播放记录，按照播放时间倒序，可搜索
+#     - 列表字段：播放时间，播放次数，地址
+#     - 选中条目时，使用上面的播放逻辑进行播放。
+#     - ctrl+p 触发预览，展示视频截图，使用 ffmpeg 生成存放在 MPV_CACHE_HOME 中，如果有截图直接使用
+#     - 搜索可以触发地址和拼音
+#
+# 生成要求：
+# - 使用中文回答并编写注释
+# - 每个关键步骤生成函数，编写详细注释
+#
+# 资料:
+# 截图模板
+# https://mpv.io/manual/master/#options-screenshot-template
 
+# 关闭调试输出，避免干扰脚本执行
+# 如果DEBUG环境变量未设置，保持原样；否则临时设置为空
+if [[ -n "$DEBUG" ]]; then
+    _WZSH_MPV_OLD_DEBUG="$DEBUG"
+    DEBUG=""
+fi
 
-function play_add_one() {
-    file_path="$1"  # 指定文件路径
-    path_to_search="$2"  # 传入的路径参数
+# 设置默认的缓存目录和历史文件路径
+# 为了防御性编程，添加MPV_SHARE_HOME的默认值，即使zshenv未定义也能工作
+MPV_SHARE_HOME="${MPV_SHARE_HOME:="$HOME/.local/share/wzsh/mpv"}"
+MPV_CACHE_HOME="${MPV_CACHE_HOME:="$HOME/.cache/wzsh/mpv"}"
+WZSH_MPV_HISTORY_FILE="${WZSH_MPV_HISTORY_FILE:="${MPV_SHARE_HOME}/history"}"
+MPV_THUMBNAIL_DIR="${MPV_THUMBNAIL_DIR:="${MPV_CACHE_HOME}/thumbnails"}"
 
-    # 读取文件内容
-    file_content=$(<"$file_path")
-    echo $file_content
-
-    # 使用正则表达式匹配包含路径的行，并提取行首的数字
-    if [[ $file_content =~ "([0-9]+):$path_to_search" ]]; then
-        current_number=${match[1]}  # 获取当前数字
-        new_number=$((current_number + 1))  # 递增数字
-        # 更新后的字符串
-        new_string="${new_number}:${path_to_search}"
-
-        # 替换文件中的原始字符串
-        updated_content=${file_content//${current_number}:${path_to_search}/$new_string}
-        # 将更新后的内容写回文件
-        echo "$updated_content" > "$file_path"
-        # echo "Updated file with new string: $new_string"
-    else
-        # echo "String not found in the file."
+# 检查是否安装了pypinyin包，如果没有安装则提示用户
+function check_pypinyin_installed() {
+    if ! python3 -c "import pypinyin" 2>/dev/null; then
+        # 只在stderr输出提示，避免干扰正常功能
+        echo "提示：未安装pypinyin包，拼音生成功能将使用有限的内置映射。" >&2
+        echo "建议安装pypinyin以获得更好的拼音支持：pip install pypinyin" >&2
     fi
 }
 
-function main() {
-    [ -d ${MPV_CACHE_HOME} ] || mkdir -p ${MPV_CACHE_HOME}
-    _h="${MPV_HISTORY}"
+#
+# 获取文件路径的拼音
+#
+# @param $1 原始路径
+# @return 拼音字符串（无空格）
+#
+# 极简版拼音生成函数
+get_path_pinyin() {
+    local path="$1"
+    # 直接使用Python脚本生成拼音
+    "${WZSH_HOME}/plugins/wzsh-mpv/to_pinyin/to_pinyin" "$path"
+}
 
-    # 查找参数中存在的地址
-    _path=""
+#
+# 初始化缓存目录和历史文件
+#
+# @noargs
+#
+function setup_environment() {
+    # 创建所有必要的目录
+    mkdir -p "${MPV_SHARE_HOME}" "${MPV_CACHE_HOME}" "${MPV_THUMBNAIL_DIR}"
+
+    # 如果历史文件不存在，则创建它
+    if [[ ! -f "${WZSH_MPV_HISTORY_FILE}" ]]; then
+        touch "${WZSH_MPV_HISTORY_FILE}"
+    fi
+}
+
+#
+# 更新历史记录
+#
+# @param $1 要更新的路径
+#
+function update_history() {
+    local path_arg="$1"
+    local history_dir="$(dirname "$WZSH_MPV_HISTORY_FILE")"
+
+    # 确保历史记录目录存在
+    if [[ ! -d "$history_dir" ]]; then
+        mkdir -p "$history_dir" || {
+            echo "错误: 无法创建历史记录目录: $history_dir"
+            return 1
+        }
+    fi
+
+    local history_key
+    if [[ "$path_arg" =~ ^https?:// ]]; then
+        history_key="$path_arg"
+    else
+        history_key=$(realpath "$path_arg" 2>/dev/null) || {
+            echo "错误: 无法获取文件的绝对路径: $path_arg"
+            return 1
+        }
+    fi
+
+    # 更新历史记录
+    local timestamp=$(date +%s)
+    local temp_history=$(mktemp 2>/dev/null) || {
+        echo "错误: 无法创建临时文件"
+        return 1
+    }
+    local found=0
+    local pinyin=$(get_path_pinyin "$history_key")
+
+    # 读取当前历史记录
+    if [[ -f "$WZSH_MPV_HISTORY_FILE" ]]; then
+        while IFS= read -r line; do
+            if [[ -n "$line" ]]; then
+                # 使用简单可靠的方法提取字段
+                local record_timestamp
+                local record_count
+                local record_pinyin
+                local record_path
+
+                # 提取时间戳和计数（前两个字段）
+                record_timestamp=$(echo "$line" | cut -d':' -f1)
+                record_count=$(echo "$line" | cut -d':' -f2)
+
+                # 检查格式并提取拼音和路径
+                if [[ $(echo "$line" | grep -o ':' | wc -l) -ge 3 ]]; then
+                    # 新格式 timestamp:count:pinyin:path
+                    record_pinyin=$(echo "$line" | cut -d':' -f3)
+                    record_path=$(echo "$line" | cut -d':' -f4-)
+                else
+                    # 旧格式 timestamp:count:path
+                    record_pinyin=""
+                    record_path=$(echo "$line" | cut -d':' -f3-)
+                fi
+
+                if [[ "$record_path" == "$history_key" ]]; then
+                    # 更新计数和时间戳
+                    ((record_count++))
+                    echo "${timestamp}:${record_count}:${pinyin}:${history_key}" >> "$temp_history"
+                    found=1
+                else
+                    # 确保所有记录都使用新格式并包含拼音
+                    if [[ -z "$record_pinyin" ]]; then
+                        record_pinyin=$(get_path_pinyin "$record_path")
+                    fi
+                    echo "${record_timestamp}:${record_count}:${record_pinyin}:${record_path}" >> "$temp_history"
+                fi
+            fi
+        done < "$WZSH_MPV_HISTORY_FILE"
+    fi
+
+    # 如果是新记录，添加到历史
+    if [[ $found -eq 0 ]]; then
+        echo "${timestamp}:1:${pinyin}:${history_key}" >> "$temp_history"
+    fi
+
+    # 保存更新后的历史
+    mv "$temp_history" "$WZSH_MPV_HISTORY_FILE" || {
+        echo "错误: 无法更新历史记录文件: $WZSH_MPV_HISTORY_FILE"
+        rm -f "$temp_history"
+        return 1
+    }
+
+    # 确保文件权限正确
+    chmod 600 "$WZSH_MPV_HISTORY_FILE" 2>/dev/null
+
+    return 0
+}
+
+#
+# 播放视频并更新播放历史
+#
+# @param $@ 传递给 mpv 的参数，其中应包含一个可播放的路径
+#
+function play_and_update_history() {
+    local path_arg=""
     for arg in "$@"; do
-        if [[ -d "$arg" || -f "$arg" ]]; then
-            _path="$arg"
+        if [[ -e "$arg" || "$arg" =~ ^https?:// ]]; then
+            path_arg="$arg"
+            break
         fi
     done
 
-    if [[ -z "$_path"  ]]
-    then
-        zerror "请输入合规的文件参数: $@"
-        exit 1
+    if [[ -z "$path_arg" ]]; then
+        mpv --screenshot-template="%F_%04n" "$@"
+        return
     fi
 
-    # 使用绝对路径
-    _path=$(realpath $_path)
-    if [[ -f "$_h" && -n $(grep "${_path}" "$_h") ]]; then
-        play_add_one $_h $_path
-    else
-        echo "0:${_path}" >> $_h
-    fi
-    # 截图模板
-    # https://mpv.io/manual/master/#options-screenshot-template
-    mpv --screenshot-template="%F_%04n" $@
+    # 更新历史记录
+    update_history "$path_arg"
+    # 播放视频
+    mpv --screenshot-template="%F_%04n" "$@"
 }
 
-main $@
+#
+# 生成视频缩略图
+#
+# @param $1 视频路径
+# @return 缩略图路径
+#
+function generate_thumbnail() {
+    local video_path="$1"
 
-# play_add_one $@
+    # 定义基本命令的绝对路径（为了兼容性）
+    local MKDIR="/bin/mkdir"
+    local RM="/bin/rm"
+    local LS="/bin/ls"
+    local ECHO="/bin/echo"
+    local CUT="/usr/bin/cut"
+    local CKsum="/usr/bin/cksum"
+    local MD5="/sbin/md5"
+
+    # 添加调试信息
+    $ECHO "[调试] 生成缩略图: $video_path"
+    $ECHO "[调试] MPV_THUMBNAIL_DIR: ${MPV_THUMBNAIL_DIR}"
+
+    # 确保缓存目录存在
+    $MKDIR -p "${MPV_THUMBNAIL_DIR}" || {
+        $ECHO "[调试] 无法创建缓存目录: ${MPV_THUMBNAIL_DIR}"
+        return 1
+    }
+
+    # 生成缩略图文件名，使用更可靠的方式
+    local thumbnail_filename="default"
+
+    # 使用环境变量或固定的默认值作为后备方案
+    if [[ -n "$video_path" ]]; then
+        # 优先使用md5 (macOS默认)
+        if [[ -x "$MD5" ]]; then
+            thumbnail_filename=$($ECHO -n "$video_path" | $MD5)
+        # 尝试md5sum
+        elif command -v md5sum >/dev/null 2>&1; then
+            thumbnail_filename=$($ECHO -n "$video_path" | md5sum | $CUT -d' ' -f1)
+        # 尝试cksum
+        elif [[ -x "$CKsum" ]]; then
+            thumbnail_filename=$($ECHO -n "$video_path" | $CKsum | $CUT -d' ' -f1)
+        else
+            # 最后的后备方案：使用路径的长度和前几个字符
+            thumbnail_filename="$(($ECHO -n "$video_path" | wc -c))_${video_path:0:10}"
+        fi
+    fi
+
+    # 确保文件名有效
+    thumbnail_filename="${thumbnail_filename//[^a-zA-Z0-9]/_}.jpg"
+    local thumbnail_path="${MPV_THUMBNAIL_DIR}/${thumbnail_filename}"
+    $ECHO "[调试] 缩略图路径: $thumbnail_path"
+
+    # 如果缩略图已存在，直接返回路径
+    if [[ -f "$thumbnail_path" ]]; then
+        $ECHO "缩略图已存在: $thumbnail_path"
+        return 0
+    fi
+
+    # 检查是否是URL，如果是URL则提示无法生成缩略图
+    if [[ "$video_path" =~ ^https?:// ]]; then
+        $ECHO "URL视频不支持生成缩略图"
+        return 1
+    fi
+
+    # 检查视频文件是否存在
+    if [[ ! -f "$video_path" ]]; then
+        $ECHO "视频文件不存在: $video_path"
+        return 1
+    fi
+
+    # 检查视频文件权限
+    if [[ ! -r "$video_path" ]]; then
+        $ECHO "没有读取权限: $video_path"
+        return 1
+    fi
+
+    # 使用ffmpeg生成缩略图，如果ffmpeg存在
+    if command -v ffmpeg >/dev/null 2>&1; then
+        $ECHO "[调试] 使用ffmpeg生成缩略图..."
+        # 添加-update 1参数以确保正确写入单张图片，并且添加更多错误处理
+        ffmpeg -y -i "$video_path" -ss 00:00:02 -vframes 1 -vf "scale=320:240" -update 1 "$thumbnail_path" 2>&1
+
+        if [[ $? -eq 0 && -f "$thumbnail_path" ]]; then
+            $ECHO "缩略图生成成功: $thumbnail_path"
+            if [[ -x "$LS" ]]; then
+                $ECHO "缩略图大小: $($LS -lh "$thumbnail_path" 2>/dev/null | awk '{print $5}')"
+            fi
+            return 0
+        else
+            $ECHO "生成缩略图失败，请检查上面的错误信息"
+            return 1
+        fi
+    else
+        $ECHO "ffmpeg 未安装，无法生成缩略图"
+        return 1
+    fi
+}
+
+
+
+#
+# [辅助函数] 使用 awk 格式化历史记录用于 fzf 显示和搜索
+#
+function _format_history_for_fzf() {
+    awk -F: '{
+        # 从整行中提取路径（处理路径中可能包含冒号的情况）
+        # 新格式：timestamp:count:pinyin:path
+        # 旧格式：timestamp:count:path
+
+        path = $0
+        pinyin = ""
+
+        if (NF >= 4) {
+            # 新格式
+            count = $2
+            pinyin = $3
+            sub(/^[0-9]+:[0-9]+:[^:]+:/, "", path)
+        } else {
+            # 旧格式
+            count = $2
+            sub(/^[0-9]+:[0-9]+:/, "", path)
+        }
+
+        # 格式化 Unix 时间戳为可读日期
+        cmd = "date -r " $1 " +\"%Y-%m-%d %H:%M\"";
+        cmd | getline d;
+        close(cmd);
+
+        # 输出格式：时间 | 次数 | 路径 | 拼音（拼音部分用于搜索，不显示在预览中）
+        printf "% -17s | % -5s | %s\t%s\n", d, count, path, pinyin
+    }' \
+    | sort -t'|' -k1,1nr  # 按时间倒序排序
+}
+
+#
+# 使用 fzf 显示播放历史并选择播放
+#
+function show_history_and_play() {
+    if [[ ! -s "${WZSH_MPV_HISTORY_FILE}" ]]; then
+        echo "播放历史为空，请提供一个文件路径或 URL 作为参数进行播放。"
+        return
+    fi
+
+    # 使用更清晰的方式处理多行命令，并确保支持拼音搜索
+    local selected_line=$(cat "${WZSH_MPV_HISTORY_FILE}" | \
+        _format_history_for_fzf | \
+        fzf --ansi --no-sort \
+            --preview '\
+/bin/echo 预览中; \
+path=$(echo "{}" | /usr/bin/awk -F"|" "{print $3}" | /usr/bin/awk -F"\t" "{print $1}" | /usr/bin/sed "s/^[[:space:]]*//;s/[[:space:]]*$//"); \
+/bin/echo "路径: $path"; \
+/bin/ls -l "$path" 2>/dev/null || /bin/echo "无法访问文件"; \
+/Users/wxnacy/.wzsh/plugins/wzsh-mpv/bin/wzsh-mpv-play generate_thumbnail "$path"' \
+            --preview-window=down:20%:hidden:wrap \
+            --bind 'ctrl-p:toggle-preview' \
+            --header "按 CTRL-P 显示/隐藏预览 | Enter 播放 | 支持路径和拼音搜索"
+    )
+
+    if [[ -n "${selected_line}" ]]; then
+        # 提取路径，正确处理空格、特殊字符和tab分隔符
+        # 1. 先提取第3个字段（以|分隔）
+        # 2. 再以tab字符为分隔符，只保留第一部分（路径部分）
+        # 3. 最后去除首尾空格
+        local path_to_play=$(echo "${selected_line}" | cut -d'|' -f3 | cut -d$'\t' -f1 | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
+        # 确保路径存在或为URL
+        if [[ -e "$path_to_play" || "$path_to_play" =~ ^https?:// ]]; then
+            play_and_update_history "$path_to_play"
+        else
+            echo "错误：文件不存在或不是有效的URL: $path_to_play"
+        fi
+    fi
+}
+
+#
+# 主函数
+#
+function main() {
+    # 检查pypinyin包是否安装
+    check_pypinyin_installed
+
+    # 设置环境
+    setup_environment
+
+    # 解析命令行参数
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --history)
+                show_history_and_play
+                exit $?
+                ;;
+            get_pinyin)
+                # 仅用于测试：直接返回文件的拼音
+                get_path_pinyin "$2"
+                exit $?
+                ;;
+            generate_thumbnail)
+                # 生成缩略图的命令
+                generate_thumbnail "$2"
+                exit $?
+                ;;
+            *)
+                # 非选项参数直接传递给播放函数
+                play_and_update_history "$@"
+                return $?
+                ;;
+        esac
+    done
+
+    # 没有参数时显示历史记录
+    show_history_and_play
+}
+
+# 将所有脚本参数传递给主函数
+main "$@"
+
+# 恢复调试设置
+if [[ -n "$_WZSH_MPV_OLD_DEBUG" ]]; then
+    DEBUG="$_WZSH_MPV_OLD_DEBUG"
+    unset _WZSH_MPV_OLD_DEBUG
+fi

@@ -1,3 +1,3 @@
 export MPV_HOME="${WZSH_HOME}/plugins/wzsh-mpv/config"
-export MPV_CACHE_HOME="${WZSH_CACHE_HOME}/mpv"
-export MPV_HISTORY="${MPV_CACHE_HOME}/history"
+export MPV_SHARE_HOME="$HOME/.local/share/wzsh/mpv"
+export MPV_CACHE_HOME="$HOME/.cache/wzsh/mpv"
