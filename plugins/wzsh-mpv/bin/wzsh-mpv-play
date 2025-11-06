@@ -11,10 +11,11 @@
 #   - 存在。则记录地址的绝对路径、播放次数、最后播放时间、地址拼音
 #     - 播放参数为 mpv --screenshot-template="%F_%04n" $@
 #     - 通过 `"${WZSH_HOME}/plugins/wzsh-mpv/to_pinyin/to_pinyin" "$path"` 脚本生成拼音
+#     - 播放时，使用 ffmpeg 生成 10 秒处的截图，存放在 MPV_CACHE_HOME 中，供预览使用
 #   - 不存在。则使用 fzf 列出所有播放记录，按照播放时间倒序，可搜索
 #     - 列表字段：播放时间，播放次数，地址
 #     - 选中条目时，使用上面的播放逻辑进行播放。
-#     - ctrl+p 触发预览，展示视频截图，使用 ffmpeg 生成存放在 MPV_CACHE_HOME 中，如果有截图直接使用
+#     - ctrl+p 触发预览，预览存放在 MPV_CACHE_HOME 中的截图
 #     - 搜索可以触发地址和拼音
 #
 # 生成要求：
@@ -68,11 +69,11 @@ get_path_pinyin() {
 #
 function setup_environment() {
     # 创建所有必要的目录
-    mkdir -p "${MPV_SHARE_HOME}" "${MPV_CACHE_HOME}" "${MPV_THUMBNAIL_DIR}"
+    /bin/mkdir -p "${MPV_SHARE_HOME}" "${MPV_CACHE_HOME}" "${MPV_THUMBNAIL_DIR}"
 
     # 如果历史文件不存在，则创建它
     if [[ ! -f "${WZSH_MPV_HISTORY_FILE}" ]]; then
-        touch "${WZSH_MPV_HISTORY_FILE}"
+        /usr/bin/touch "${WZSH_MPV_HISTORY_FILE}"
     fi
 }
 
@@ -172,6 +173,97 @@ function update_history() {
 }
 
 #
+# 获取视频的缩略图路径
+#
+# @param $1 视频路径
+# @return 缩略图路径
+#
+function get_thumbnail_path() {
+    local video_path="$1"
+
+    if [[ -z "$video_path" ]]; then
+        return 1
+    fi
+
+    local ECHO="/bin/echo"
+    local CUT="/usr/bin/cut"
+    local CKsum="/usr/bin/cksum"
+    local MD5="/sbin/md5"
+
+    local thumbnail_filename="default"
+    if [[ -n "$video_path" ]]; then
+        if [[ -x "$MD5" ]]; then
+            thumbnail_filename=$($ECHO -n "$video_path" | $MD5)
+        elif command -v md5sum >/dev/null 2>&1; then
+            thumbnail_filename=$($ECHO -n "$video_path" | md5sum | $CUT -d' ' -f1)
+        elif [[ -x "$CKsum" ]]; then
+            thumbnail_filename=$($ECHO -n "$video_path" | $CKsum | $CUT -d' ' -f1)
+        else
+            thumbnail_filename="$(($ECHO -n "$video_path" | wc -c))_${video_path:0:10}"
+        fi
+    fi
+
+    thumbnail_filename="${thumbnail_filename//[^a-zA-Z0-9]/_}.jpg"
+    local thumbnail_path="${MPV_THUMBNAIL_DIR}/${thumbnail_filename}"
+    $ECHO "$thumbnail_path"
+    return 0
+}
+
+#
+# 生成视频缩略图
+#
+# @param $1 视频路径
+# @return 缩略图路径
+#
+function generate_thumbnail() {
+    local video_path="$1"
+    local thumbnail_path
+    thumbnail_path=$(get_thumbnail_path "$video_path")
+    if [[ $? -ne 0 || -z "$thumbnail_path" ]]; then
+        return 1
+    fi
+
+    # 如果缩略图已存在，直接返回路径
+    if [[ -f "$thumbnail_path" ]]; then
+        echo "$thumbnail_path"
+        return 0
+    fi
+
+    # 确保缓存目录存在
+    /bin/mkdir -p "${MPV_THUMBNAIL_DIR}" 2>/dev/null
+
+    # 检查是否是URL，如果是URL则提示无法生成缩略图
+    if [[ "$video_path" =~ ^https?:// ]]; then
+        return 1
+    fi
+
+    # 检查视频文件是否存在
+    if [[ ! -f "$video_path" ]]; then
+        return 1
+    fi
+
+    # 检查视频文件权限
+    if [[ ! -r "$video_path" ]]; then
+        return 1
+    fi
+
+    # 使用ffmpeg生成缩略图，如果ffmpeg存在
+    if command -v ffmpeg >/dev/null 2>&1; then
+        # 添加-update 1参数以确保正确写入单张图片，并且添加更多错误处理
+        ffmpeg -y -i "$video_path" -ss 00:00:02 -vframes 1 -vf "scale=320:240" -update 1 "$thumbnail_path" >/dev/null 2>&1
+
+        if [[ $? -eq 0 && -f "$thumbnail_path" ]]; then
+            echo "$thumbnail_path"
+            return 0
+        else
+            return 1
+        fi
+    else
+        return 1
+    fi
+}
+
+#
 # 播放视频并更新播放历史
 #
 # @param $@ 传递给 mpv 的参数，其中应包含一个可播放的路径
@@ -194,104 +286,10 @@ function play_and_update_history() {
     update_history "$path_arg"
     # 播放视频
     mpv --screenshot-template="%F_%04n" "$@"
-}
 
-#
-# 生成视频缩略图
-#
-# @param $1 视频路径
-# @return 缩略图路径
-#
-function generate_thumbnail() {
-    local video_path="$1"
-
-    # 定义基本命令的绝对路径（为了兼容性）
-    local MKDIR="/bin/mkdir"
-    local RM="/bin/rm"
-    local LS="/bin/ls"
-    local ECHO="/bin/echo"
-    local CUT="/usr/bin/cut"
-    local CKsum="/usr/bin/cksum"
-    local MD5="/sbin/md5"
-
-    # 添加调试信息
-    $ECHO "[调试] 生成缩略图: $video_path"
-    $ECHO "[调试] MPV_THUMBNAIL_DIR: ${MPV_THUMBNAIL_DIR}"
-
-    # 确保缓存目录存在
-    $MKDIR -p "${MPV_THUMBNAIL_DIR}" || {
-        $ECHO "[调试] 无法创建缓存目录: ${MPV_THUMBNAIL_DIR}"
-        return 1
-    }
-
-    # 生成缩略图文件名，使用更可靠的方式
-    local thumbnail_filename="default"
-
-    # 使用环境变量或固定的默认值作为后备方案
-    if [[ -n "$video_path" ]]; then
-        # 优先使用md5 (macOS默认)
-        if [[ -x "$MD5" ]]; then
-            thumbnail_filename=$($ECHO -n "$video_path" | $MD5)
-        # 尝试md5sum
-        elif command -v md5sum >/dev/null 2>&1; then
-            thumbnail_filename=$($ECHO -n "$video_path" | md5sum | $CUT -d' ' -f1)
-        # 尝试cksum
-        elif [[ -x "$CKsum" ]]; then
-            thumbnail_filename=$($ECHO -n "$video_path" | $CKsum | $CUT -d' ' -f1)
-        else
-            # 最后的后备方案：使用路径的长度和前几个字符
-            thumbnail_filename="$(($ECHO -n "$video_path" | wc -c))_${video_path:0:10}"
-        fi
-    fi
-
-    # 确保文件名有效
-    thumbnail_filename="${thumbnail_filename//[^a-zA-Z0-9]/_}.jpg"
-    local thumbnail_path="${MPV_THUMBNAIL_DIR}/${thumbnail_filename}"
-    $ECHO "[调试] 缩略图路径: $thumbnail_path"
-
-    # 如果缩略图已存在，直接返回路径
-    if [[ -f "$thumbnail_path" ]]; then
-        $ECHO "缩略图已存在: $thumbnail_path"
-        return 0
-    fi
-
-    # 检查是否是URL，如果是URL则提示无法生成缩略图
-    if [[ "$video_path" =~ ^https?:// ]]; then
-        $ECHO "URL视频不支持生成缩略图"
-        return 1
-    fi
-
-    # 检查视频文件是否存在
-    if [[ ! -f "$video_path" ]]; then
-        $ECHO "视频文件不存在: $video_path"
-        return 1
-    fi
-
-    # 检查视频文件权限
-    if [[ ! -r "$video_path" ]]; then
-        $ECHO "没有读取权限: $video_path"
-        return 1
-    fi
-
-    # 使用ffmpeg生成缩略图，如果ffmpeg存在
-    if command -v ffmpeg >/dev/null 2>&1; then
-        $ECHO "[调试] 使用ffmpeg生成缩略图..."
-        # 添加-update 1参数以确保正确写入单张图片，并且添加更多错误处理
-        ffmpeg -y -i "$video_path" -ss 00:00:02 -vframes 1 -vf "scale=320:240" -update 1 "$thumbnail_path" 2>&1
-
-        if [[ $? -eq 0 && -f "$thumbnail_path" ]]; then
-            $ECHO "缩略图生成成功: $thumbnail_path"
-            if [[ -x "$LS" ]]; then
-                $ECHO "缩略图大小: $($LS -lh "$thumbnail_path" 2>/dev/null | awk '{print $5}')"
-            fi
-            return 0
-        else
-            $ECHO "生成缩略图失败，请检查上面的错误信息"
-            return 1
-        fi
-    else
-        $ECHO "ffmpeg 未安装，无法生成缩略图"
-        return 1
+    # 播放成功后生成缩略图
+    if [[ $? -eq 0 ]]; then
+        generate_thumbnail "$path_arg" >/dev/null 2>&1
     fi
 }
 
@@ -344,12 +342,14 @@ function show_history_and_play() {
     local selected_line=$(cat "${WZSH_MPV_HISTORY_FILE}" | \
         _format_history_for_fzf | \
         fzf --ansi --no-sort \
-            --preview '\
-/bin/echo 预览中; \
-path=$(echo "{}" | /usr/bin/awk -F"|" "{print $3}" | /usr/bin/awk -F"\t" "{print $1}" | /usr/bin/sed "s/^[[:space:]]*//;s/[[:space:]]*$//"); \
-/bin/echo "路径: $path"; \
-/bin/ls -l "$path" 2>/dev/null || /bin/echo "无法访问文件"; \
-/Users/wxnacy/.wzsh/plugins/wzsh-mpv/bin/wzsh-mpv-play generate_thumbnail "$path"' \
+            --preview 'export PATH="/usr/bin:/bin:$PATH"; \
+path=$(echo "{}" | /usr/bin/sed -e "s/.*| *//" -e "s/\t.*//" ); \
+thumbnail_path=$(/Users/wxnacy/.wzsh/plugins/wzsh-mpv/bin/wzsh-mpv-play get_thumbnail_path "$path"); \
+if [[ -f "$thumbnail_path" ]]; then \
+    /opt/homebrew/bin/kitty +kitten icat "$thumbnail_path"; \
+else \
+    echo "无预览: $path"; \
+fi' \
             --preview-window=down:20%:hidden:wrap \
             --bind 'ctrl-p:toggle-preview' \
             --header "按 CTRL-P 显示/隐藏预览 | Enter 播放 | 支持路径和拼音搜索"
@@ -375,16 +375,12 @@ path=$(echo "{}" | /usr/bin/awk -F"|" "{print $3}" | /usr/bin/awk -F"\t" "{print
 # 主函数
 #
 function main() {
-    # 检查pypinyin包是否安装
-    check_pypinyin_installed
-
-    # 设置环境
-    setup_environment
-
     # 解析命令行参数
     while [[ $# -gt 0 ]]; do
         case "$1" in
             --history)
+                check_pypinyin_installed
+                setup_environment
                 show_history_and_play
                 exit $?
                 ;;
@@ -393,13 +389,20 @@ function main() {
                 get_path_pinyin "$2"
                 exit $?
                 ;;
+            get_thumbnail_path)
+                get_thumbnail_path "$2"
+                exit $?
+                ;;
             generate_thumbnail)
                 # 生成缩略图的命令
+                setup_environment
                 generate_thumbnail "$2"
                 exit $?
                 ;;
             *)
                 # 非选项参数直接传递给播放函数
+                check_pypinyin_installed
+                setup_environment
                 play_and_update_history "$@"
                 return $?
                 ;;
@@ -407,6 +410,8 @@ function main() {
     done
 
     # 没有参数时显示历史记录
+    check_pypinyin_installed
+    setup_environment
     show_history_and_play
 }
 

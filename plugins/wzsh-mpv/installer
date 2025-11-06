@@ -1,2 +1,3 @@
 brew install mpv fzf
 brew install go ffmpeg
+brew install --cask kitty
