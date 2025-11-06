@@ -40,14 +40,6 @@ MPV_CACHE_HOME="${MPV_CACHE_HOME:="$HOME/.cache/wzsh/mpv"}"
 WZSH_MPV_HISTORY_FILE="${WZSH_MPV_HISTORY_FILE:="${MPV_SHARE_HOME}/history"}"
 MPV_THUMBNAIL_DIR="${MPV_THUMBNAIL_DIR:="${MPV_CACHE_HOME}/thumbnails"}"
 
-# 检查是否安装了pypinyin包，如果没有安装则提示用户
-function check_pypinyin_installed() {
-    if ! python3 -c "import pypinyin" 2>/dev/null; then
-        # 只在stderr输出提示，避免干扰正常功能
-        echo "提示：未安装pypinyin包，拼音生成功能将使用有限的内置映射。" >&2
-        echo "建议安装pypinyin以获得更好的拼音支持：pip install pypinyin" >&2
-    fi
-}
 
 #
 # 获取文件路径的拼音
@@ -179,10 +171,21 @@ function update_history() {
 # @return 缩略图路径
 #
 function get_thumbnail_path() {
-    local video_path="$1"
+    local video_path_arg="$1"
 
-    if [[ -z "$video_path" ]]; then
+    if [[ -z "$video_path_arg" ]]; then
         return 1
+    fi
+
+    local video_path
+    if [[ "$video_path_arg" =~ ^https?:// ]]; then
+        video_path="$video_path_arg"
+    else
+        video_path=$(realpath "$video_path_arg" 2>/dev/null)
+        if [[ -z "$video_path" ]]; then
+            # Fallback if realpath fails, use original arg.
+            video_path="$video_path_arg"
+        fi
     fi
 
     local ECHO="/bin/echo"
@@ -299,6 +302,7 @@ function play_and_update_history() {
 # [辅助函数] 使用 awk 格式化历史记录用于 fzf 显示和搜索
 #
 function _format_history_for_fzf() {
+    cat "${WZSH_MPV_HISTORY_FILE}" | sort -t':' -k1,1nr | \
     awk -F: '{
         # 从整行中提取路径（处理路径中可能包含冒号的情况）
         # 新格式：timestamp:count:pinyin:path
@@ -325,8 +329,7 @@ function _format_history_for_fzf() {
 
         # 输出格式：时间 | 次数 | 路径 | 拼音（拼音部分用于搜索，不显示在预览中）
         printf "% -17s | % -5s | %s\t%s\n", d, count, path, pinyin
-    }' \
-    | sort -t'|' -k1,1nr  # 按时间倒序排序
+    }'
 }
 
 #
@@ -346,11 +349,11 @@ function show_history_and_play() {
 path=$(echo "{}" | /usr/bin/sed -e "s/.*| *//" -e "s/\t.*//" ); \
 thumbnail_path=$(/Users/wxnacy/.wzsh/plugins/wzsh-mpv/bin/wzsh-mpv-play get_thumbnail_path "$path"); \
 if [[ -f "$thumbnail_path" ]]; then \
-    /opt/homebrew/bin/kitty +kitten icat "$thumbnail_path"; \
+    /opt/homebrew/bin/chafa --size ${FZF_PREVIEW_COLUMNS:-80}x${FZF_PREVIEW_LINES:-24} "$thumbnail_path"; \
 else \
     echo "无预览: $path"; \
 fi' \
-            --preview-window=down:20%:hidden:wrap \
+            --preview-window=right:50%:hidden:wrap \
             --bind 'ctrl-p:toggle-preview' \
             --header "按 CTRL-P 显示/隐藏预览 | Enter 播放 | 支持路径和拼音搜索"
     )
@@ -379,7 +382,6 @@ function main() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
             --history)
-                check_pypinyin_installed
                 setup_environment
                 show_history_and_play
                 exit $?
@@ -401,7 +403,6 @@ function main() {
                 ;;
             *)
                 # 非选项参数直接传递给播放函数
-                check_pypinyin_installed
                 setup_environment
                 play_and_update_history "$@"
                 return $?
@@ -410,7 +411,6 @@ function main() {
     done
 
     # 没有参数时显示历史记录
-    check_pypinyin_installed
     setup_environment
     show_history_and_play
 }
