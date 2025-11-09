@@ -349,9 +349,9 @@ function show_history_and_play() {
 path=$(echo "{}" | /usr/bin/sed -e "s/.*| *//" -e "s/\t.*//" ); \
 thumbnail_path=$(/Users/wxnacy/.wzsh/plugins/wzsh-mpv/bin/wzsh-mpv-play get_thumbnail_path "$path"); \
 if [[ -f "$thumbnail_path" ]]; then \
-    /opt/homebrew/bin/chafa --size ${FZF_PREVIEW_COLUMNS:-80}x${FZF_PREVIEW_LINES:-24} "$thumbnail_path"; \
+    /opt/homebrew/bin/chafa --symbols block --clear --fg-only --size ${FZF_PREVIEW_COLUMNS:-80}x${FZF_PREVIEW_LINES:-24} "$thumbnail_path"; \
 else \
-    echo "无预览: $path"; \
+    echo "无预览图: $path"; \
 fi' \
             --preview-window=right:50%:hidden:wrap \
             --bind 'ctrl-p:toggle-preview' \
