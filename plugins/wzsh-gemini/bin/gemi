@@ -1,0 +1,9 @@
+#!/bin/zsh
+# 开启代理并启动 gemini，结束时关闭代理
+#
+# 实现逻辑:
+# 将脚本接收到的参数都传给 gemini 命令
+
+proxyon
+gemini --approval-mode=auto_edit "$@"
+proxyoff
