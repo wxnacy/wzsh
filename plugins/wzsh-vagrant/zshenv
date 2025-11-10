@@ -1,0 +1,2 @@
+# 修改数据保存目录，需要配合 VirtualBox 软件修改对应的数据存储位置
+export VAGRANT_HOME=/Volumes/ZhiTai/.vagrant.d

@@ -1,0 +1,21 @@
+#!/bin/zsh
+# 初始化自定义的 Vagrantfile 文件
+#
+# 实现逻辑:
+# - 判断当前目录是否包含 Vagrantfile 文件，如果存在，给出友好提示并退出
+# - 将 `$(wzsh plugin home vagrant)/config/DefaultVagrantfile` 文件复制到当前目录的 Vagrantfile 中
+# - DefaultVagrantfile 文件一定存在，不需要创建
+
+# 检查当前目录是否包含 Vagrantfile 文件
+if [ -f Vagrantfile ]; then
+  echo "当前目录已存在 Vagrantfile 文件，请勿重复初始化。"
+  exit 1
+fi
+
+# 获取 wzsh-vagrant 插件的根目录
+VAGRANT_PLUGIN_HOME=$(wzsh plugin home vagrant)
+
+# 复制 DefaultVagrantfile 到当前目录
+cp "${VAGRANT_PLUGIN_HOME}/config/DefaultVagrantfile" Vagrantfile
+
+echo "Vagrantfile 初始化成功！"
