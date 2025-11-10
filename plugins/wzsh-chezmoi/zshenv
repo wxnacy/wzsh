@@ -1,0 +1,2 @@
+# 将配置文件放到配置存储目录
+export CHEZMOI_CONFIG=~/.local/share/chezmoi/chezmoi.toml
