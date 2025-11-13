@@ -7,6 +7,12 @@
 
 name=$1
 plugin_home=$(wzsh plugin home ${name})
+
+if [[ ! -d ${plugin_home} ]]; then
+  echo "Error: Plugin home directory '${plugin_home}' does not exist." >&2
+  return 1
+fi
+
 brewfile=${plugin_home}/Brewfile
 
 brew bundle --file=${brewfile} add ${@:2}
