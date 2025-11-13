@@ -1,0 +1,6 @@
+brew "mpv"
+# for wzsh-mpv-play
+brew "fzf"
+brew "ffmpeg"
+brew "chafa"
+brew "go"

@@ -144,6 +144,46 @@ function __init_plugin() {
     zsh $init_path
 }
 
+function __add_brew() {
+    # 将软件添加到插件的 Brewfile 中
+    #
+    # 实现逻辑:
+    # - name: 将第一个参数作为插件名称，查询 plugin_home 目录是否存在，不存在报错直接返回
+    # - 其余参数都传给 brew bundle add 命令
+
+    name=$1
+    plugin_home=$(wzsh plugin home ${name})
+
+    if [[ ! -d ${plugin_home} ]]; then
+        zerror "插件 ${name} 不存在"
+        return 1
+    fi
+
+    brewfile=${plugin_home}/Brewfile
+
+    brew bundle --file=${brewfile} add ${@:2}
+}
+
+function __remove_brew() {
+    # 将软件移除插件的 Brewfile
+    #
+    # 实现逻辑:
+    # - name: 将第一个参数作为插件名称，查询 plugin_home 目录是否存在，不存在报错直接返回
+    # - 其余参数都传给 brew bundle remove 命令
+
+    name=$1
+    plugin_home=$(wzsh plugin home ${name})
+
+    if [[ ! -d ${plugin_home} ]]; then
+        zerror "插件 ${name} 不存在"
+        return 1
+    fi
+
+    brewfile=${plugin_home}/Brewfile
+
+    brew bundle --file=${brewfile} remove ${@:2}
+}
+
 function plugin() {
     # 插件相关操作
     # create 创建插件
@@ -174,6 +214,13 @@ function plugin() {
             ;;
         'init')
             __init_plugin $@
+            ;;
+        # brew
+        'add-brew')
+            __add_brew $@
+            ;;
+        'remove-brew')
+            __remove_brew $@
             ;;
 
         *)

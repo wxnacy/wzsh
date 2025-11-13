@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
 # Author: wxnacy(wxnacy@gmail.com)
 # Description:
-source "${WZSH_HOME}/lib/basic.zsh"
+# source "${WZSH_HOME}/lib/basic.zsh"
+# echo 'install'
 
-z brew install pyenv pyenv-virtualenv poetry
-# miniconda 和 自动补全
-z brew install miniconda conda-zsh-completion
+# z brew install pyenv pyenv-virtualenv poetry
+# # miniconda 和 自动补全
+# z brew install miniconda conda-zsh-completion
 
-# 安装 poetry 自动补全
-# zfunc="${WZSH_HOME}/plugins/wzsh-python/zfunc"
-zfunc="${HOME}/.zfunc"
-mkdir -p "${zfunc}"
-zinfo "create poetry completions"
-poetry completions zsh > "${zfunc}/_poetry"
+# # 安装 poetry 自动补全
+# # zfunc="${WZSH_HOME}/plugins/wzsh-python/zfunc"
+# zfunc="${HOME}/.zfunc"
+# mkdir -p "${zfunc}"
+# zinfo "create poetry completions"
+# poetry completions zsh > "${zfunc}/_poetry"
+
+# brew bundle install --file

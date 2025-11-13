@@ -1,0 +1,5 @@
+brew "pyenv"
+brew "pyenv-virtualenv"
+brew "poetry"
+brew "conda-zsh-completion"
+cask "miniconda"
