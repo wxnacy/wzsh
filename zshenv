@@ -10,7 +10,7 @@
 
 export ZSH_START_TIME=$(/usr/bin/python3 -c 'import time; print(int(time.time() * 1000))')
 # 需要加载的插件列表
-export WZSH_PLUGINS=(ai python direnv eza fzf gemini git go homebrew kitty mpv nvim p10k poetry rust ssh yazi vagrant chezmoi)
+export WZSH_PLUGINS=(zinit ai python direnv eza fzf gemini git go homebrew kitty mpv nvim poetry rust ssh yazi vagrant chezmoi)
 
 export WZSH_HOME=${HOME}/.zsh
 # 加载基础命令
