@@ -30,15 +30,6 @@ alias zshrc="vim ~/.zshrc"
 alias zshrcs="source ~/.zshrc"
 alias c="clear"
 alias h="history"
-alias n="nvim"
-
-# for docker
-# alias docker="sudo docker"
-
-# for vagrant
-alias vg="vagrant"
-alias vgreup="vagrant destroy -f && vagrant up"
-alias vgd="vagrant destroy -f"
 
 # autossh
 alias assh="autossh -M 0 "
