@@ -161,6 +161,7 @@ tmp/
 *-E
 completions/
 zfunc/
+sbin/
 
 #=================== for plugins begin
 # mpv
