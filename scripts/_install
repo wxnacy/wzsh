@@ -1,0 +1,73 @@
+#!/bin/sh
+
+BACKUP_SUFFIX=".bak.$(date +%Y%m%d%H%M%S)"
+
+link_file() {
+    local src=$1
+    local dest=$2
+    echo "Checking ${dest}"
+    if [ -L "${dest}" ]; then
+        if [ "$(readlink "${dest}")" = "${src}" ]; then
+            echo "✓ Already linked correctly"
+        else
+            echo "Relinking ${dest} -> ${src}"
+            ln -sf "${src}" "${dest}"
+        fi
+    elif [ -e "${dest}" ]; then
+        echo "Backing up existing ${dest} to ${dest}${BACKUP_SUFFIX}"
+        mv "${dest}" "${dest}${BACKUP_SUFFIX}"
+        echo "Linking ${dest} -> ${src}"
+        ln -sf "${src}" "${dest}"
+    else
+        echo "Linking ${dest} -> ${src}"
+        ln -sf "${src}" "${dest}"
+    fi
+}
+
+ensure_dir() {
+    local dir_path=$1
+    echo "Checking directory ${dir_path}"
+    if [ -d "${dir_path}" ]; then
+        echo "✓ Already exists"
+    elif [ -e "${dir_path}" ]; then
+        echo "Backing up existing ${dir_path} to ${dir_path}${BACKUP_SUFFIX}"
+        mv "${dir_path}" "${dir_path}${BACKUP_SUFFIX}"
+        echo "Creating directory ${dir_path}"
+        mkdir "${dir_path}"
+    else
+        echo "Creating directory ${dir_path}"
+        mkdir "${dir_path}"
+    fi
+}
+
+echo "The final step is to complete the configuration of Wzsh"
+echo "Run these commands"
+printf '	ln -sf %s %s\n' "${WZSH_DIR}" "${HOME}/.zsh"
+printf '	ln -sf %s %s\n' "${WZSH_DIR}/zshenv" "${HOME}/.zshenv"
+printf '	ln -sf %s %s\n' "${WZSH_DIR}/zprofile" "${HOME}/.zprofile"
+printf '	ln -sf %s %s\n' "${WZSH_DIR}/zshrc" "${HOME}/.zshrc"
+printf '	zsh\n'
+
+link_file "${WZSH_DIR}" "${HOME}/.zsh"
+link_file "${WZSH_DIR}/zshenv" "${HOME}/.zshenv"
+link_file "${WZSH_DIR}/zprofile" "${HOME}/.zprofile"
+link_file "${WZSH_DIR}/zshrc" "${HOME}/.zshrc"
+ensure_dir "${HOME}/.zsh/completions"
+ensure_dir "${HOME}/.zsh/sbin"
+
+echo ""
+echo "wzsh installation complete!"
+if [ "$(uname -s)" = "Linux" ]; then
+    current_shell="${SHELL:-}"
+    zsh_path="$(command -v zsh 2>/dev/null)"
+    if [ -n "$zsh_path" ] && [ "$current_shell" != "$zsh_path" ]; then
+        if command -v chsh >/dev/null 2>&1; then
+            echo "正在将默认 shell 切换为 zsh ($zsh_path)"
+            chsh -s "$zsh_path"
+        else
+            echo "请手动执行: chsh -s $zsh_path"
+        fi
+    fi
+fi
+echo "Starting zsh..."
+zsh
