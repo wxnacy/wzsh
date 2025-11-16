@@ -7,5 +7,4 @@ if [ ! -d "${GEMINI_CONFIG_DIR}" ]; then
   mkdir -p "${GEMINI_CONFIG_DIR}"
 fi
 
-zinfo "Link ${PLUGIN_CONFIG_DIR}/GEMINI.md => ${GEMINI_CONFIG_DIR}/GEMINI.md"
-ln -sf "${PLUGIN_CONFIG_DIR}/GEMINI.md" "${GEMINI_CONFIG_DIR}/GEMINI.md"
+zlink "${PLUGIN_CONFIG_DIR}/GEMINI.md" "${GEMINI_CONFIG_DIR}/GEMINI.md"

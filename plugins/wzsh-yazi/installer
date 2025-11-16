@@ -2,7 +2,7 @@
 # Author: wxnacy(wxnacy@gmail.com)
 # Description:
 
-z brew install yazi ffmpeg sevenzip jq poppler fd ripgrep fzf zoxide imagemagick font-symbols-only-nerd-font
-z brew install font-hack-nerd-font
-# 查看媒体文件信息
-z brew install mediainfo
+# z brew install yazi ffmpeg sevenzip jq poppler fd ripgrep fzf zoxide imagemagick font-symbols-only-nerd-font
+# z brew install font-hack-nerd-font
+# # 查看媒体文件信息
+# z brew install mediainfo
