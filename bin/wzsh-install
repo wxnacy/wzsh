@@ -1,8 +1,22 @@
 #!/usr/bin/env zsh
 #安装插件或软件
+# 如果包含参数 --no-brew，不执行 brew bundle install
+
+no_brew=false
+args=()
+for arg in "$@"; do
+  case $arg in
+    --no-brew)
+      no_brew=true
+      ;;
+    *)
+      args+=("$arg")
+      ;;
+  esac
+done
 
 # 插件名称
-name=$1
+name=${args[1]}
 
 function _install() {
     _name=$1
@@ -11,7 +25,7 @@ function _install() {
     then
         # 先安装 brew 应用
         brewfile=${plugin_home}/Brewfile
-        if [[ -f $brewfile ]]
+        if [[ -f $brewfile && "$no_brew" = false ]]
         then
             zinfo "安装 Brew 软件 ${brewfile}"
             brew bundle install --file=$brewfile
@@ -20,6 +34,20 @@ function _install() {
         # 进行自定义安装
         installer=${plugin_home}/installer
         test -f $installer && zinfo "执行自定义安装 ${installer}"; $installer
+
+        # 安装脚本命令
+        plugin_bin_dir="${plugin_home}/bin"
+        if [[ -d "${plugin_bin_dir}" ]]; then
+            zinfo "安装脚本命令 ${plugin_bin_dir}"
+            # 确保 sbin 目录存在
+            mkdir -p "${WZSH_BIN}"
+            for bin_file in $(find "${plugin_bin_dir}" -type f -maxdepth 1); do
+                if [[ -x "${bin_file}" ]]; then
+                    dest_file="${WZSH_BIN}/$(basename "${bin_file}")"
+                    zlink "${bin_file}" "${dest_file}"
+                fi
+            done
+        fi
     else
         zwarn $_name "插件不存在"
     fi
