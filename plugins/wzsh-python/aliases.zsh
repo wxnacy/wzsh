@@ -8,4 +8,5 @@
 #===============================
 
 # alias pipi="pip install -i https://pypi.tuna.tsinghua.edu.cn/simple"
-alias pydb="python -m pdb"
+alias pydb="python3 -m pdb"
+alias python="python3"
