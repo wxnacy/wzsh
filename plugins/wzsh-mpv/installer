@@ -1,0 +1,7 @@
+
+# cur_dir=${0:A:h}
+original_dir=$(pwd)
+cd $(wzsh plugin home mpv)/to_pinyin
+
+GOBIN=${WZSH_BIN} go install .
+cd ${original_dir}

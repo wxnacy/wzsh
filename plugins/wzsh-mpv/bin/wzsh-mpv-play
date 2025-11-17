@@ -10,7 +10,7 @@
 # - 检测参数是否存在可以播放的地址
 #   - 存在。则记录地址的绝对路径、播放次数、最后播放时间、地址拼音
 #     - 播放参数为 mpv --screenshot-template="%F_%04n" $@
-#     - 通过 `"${WZSH_HOME}/plugins/wzsh-mpv/to_pinyin/to_pinyin" "$path"` 脚本生成拼音
+#     - 通过 `"${WZSH_BIN}/to_pinyin" "$path"` 脚本生成拼音
 #     - 播放时，使用 ffmpeg 生成 10 秒处的截图，存放在 MPV_CACHE_HOME 中，供预览使用
 #   - 不存在。则使用 fzf 列出所有播放记录，按照播放时间倒序，可搜索
 #     - 列表字段：播放时间，播放次数，地址
@@ -51,7 +51,7 @@ MPV_THUMBNAIL_DIR="${MPV_THUMBNAIL_DIR:="${MPV_CACHE_HOME}/thumbnails"}"
 get_path_pinyin() {
     local path="$1"
     # 直接使用Python脚本生成拼音
-    "${WZSH_HOME}/plugins/wzsh-mpv/to_pinyin/to_pinyin" "$path"
+    "${WZSH_BIN}/to_pinyin" "$path"
 }
 
 #
@@ -342,6 +342,7 @@ function show_history_and_play() {
     fi
 
     # 使用更清晰的方式处理多行命令，并确保支持拼音搜索
+    # /opt/homebrew/bin/chafa --symbols block --clear --fg-only --size ${FZF_PREVIEW_COLUMNS:-80}x${FZF_PREVIEW_LINES:-24} "$thumbnail_path"; \
     local selected_line=$(cat "${WZSH_MPV_HISTORY_FILE}" | \
         _format_history_for_fzf | \
         fzf --ansi --no-sort \
@@ -349,7 +350,7 @@ function show_history_and_play() {
 path=$(echo "{}" | /usr/bin/sed -e "s/.*| *//" -e "s/\t.*//" ); \
 thumbnail_path=$(/Users/wxnacy/.wzsh/plugins/wzsh-mpv/bin/wzsh-mpv-play get_thumbnail_path "$path"); \
 if [[ -f "$thumbnail_path" ]]; then \
-    /opt/homebrew/bin/chafa --symbols block --clear --fg-only --size ${FZF_PREVIEW_COLUMNS:-80}x${FZF_PREVIEW_LINES:-24} "$thumbnail_path"; \
+    /Users/wxnacy/.wzsh/plugins/wzsh-fzf/fzf-preview.sh "$thumbnail_path"; \
 else \
     echo "无预览图: $path"; \
 fi' \
