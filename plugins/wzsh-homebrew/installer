@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 # homebrew from https://mirrors.tuna.tsinghua.edu.cn/help/homebrew/
 
 set -euo pipefail
@@ -11,7 +11,7 @@ core_remote="${git_root}/homebrew-core.git"
 bottles_api="${mirror_root}/homebrew-bottles/api"
 bottles_domain="${mirror_root}/homebrew-bottles"
 
-typeset -g tmp_dir=""
+tmp_dir=""
 
 cleanup() {
     if [[ -n "${tmp_dir}" && -d "${tmp_dir}" ]]; then
@@ -22,7 +22,7 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 log() {
-    print -r -- "$@"
+    echo "$@"
 }
 
 require_cmd() {
@@ -38,11 +38,11 @@ append_once() {
     local line="$2"
 
     [[ -n "${file}" ]] || return 0
-    mkdir -p "${file:h}"
+    mkdir -p "$(dirname "${file}")"
     [[ -e "${file}" ]] || : >"${file}"
 
     if ! grep -Fqx -- "${line}" "${file}" >/dev/null 2>&1; then
-        print -r -- "${line}" >>"${file}"
+        echo "${line}" >>"${file}"
     fi
 }
 
@@ -62,7 +62,7 @@ detect_brew() {
     local candidate
     for candidate in /opt/homebrew/bin/brew /usr/local/bin/brew "${HOME}/.linuxbrew/bin/brew" /home/linuxbrew/.linuxbrew/bin/brew; do
         if [[ -x "${candidate}" ]]; then
-            print -r -- "${candidate}"
+            echo "${candidate}"
             return 0
         fi
     done
