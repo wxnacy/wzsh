@@ -11,19 +11,6 @@ zdbug $(blue "###############################################")
 zdbug $(blue "加载 ~/.zshrc")
 zdbug $(blue "###############################################")
 
-export ZSH=${HOME}/.oh-my-zsh
-
-# https://github.com/robbyrussell/oh-my-zsh/wiki/themes
-# ZSH_THEME="bureau"
-# 使用 powerlevel10k 主题，详见 plugins/wzsh-p10k/zshrc
-# history-substring-search
-plugins=(git python autojump poetry)
-if [ -f $ZSH/oh-my-zsh.sh ]; then
-    source $ZSH/oh-my-zsh.sh
-fi
-source ${WZSH_HOME}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-source ${WZSH_HOME}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
 zdbug $(yellow "开始加载本地库")
 # load lib
 for name in `ls ${WZSH_HOME}/lib`
