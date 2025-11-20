@@ -84,6 +84,15 @@ function gsuba(){
     proxyoff
 }
 
+# 删除子模块，并提交
+function gsubm(){
+    local p=$1
+    git submodule deinit -f $p
+    git rm -f $p
+    rm -rf .git/modules/${p}
+    git commit -m "feat(gitmodules): Remove git submodule ${p}"
+}
+
 # git clone
 function glone(){
     proxyon
@@ -121,13 +130,4 @@ cat > $name <<EOF
 ignore=B6
 contrib=CT1
 EOF
-}
-
-# 删除子模块，并提交
-function grmsmod(){
-    local p=$1
-    git submodule deinit -f $p
-    git rm -f $p
-    rm -rf .git/modules/${p}
-    git commit -m "feat(gitmodules): Remove git submodule ${p}"
 }
