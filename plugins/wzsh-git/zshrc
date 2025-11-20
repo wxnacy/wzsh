@@ -7,10 +7,8 @@
 # Description: wzsh-git 插件
 #===============================
 
-. ${WZSH_HOME}/lib/try-catch.zsh
 . ${WZSH_HOME}/plugins/wzsh-git/aliases.zsh
 
-export GitException=100
 
 # 推送
 function gpush(){
@@ -19,23 +17,6 @@ function gpush(){
     zinfo '当前分支:' $bname
     gcmit $@
     git pull origin $bname
-    # try
-    # (   # open a subshell !!!
-        # git pull origin $bname && throw $GitException
-    # )
-    # catch || {
-        # # case $ex_code in
-            # # $GitException)
-                # # echo "GitException was thrown"
-            # # ;;
-            # # *)
-                # # echo "An unexpected exception was thrown"
-                # # throw $ex_code # you can rethrow the "exception" causing the script to exit if not caught
-            # # ;;
-        # # esac
-        # # echo -e "\033[31mPull Error \033[0m"
-        # zerror "git pull failed"
-    # }
     git push origin $bname
     proxyoff
 }
@@ -139,4 +120,13 @@ cat > $name <<EOF
 ignore=B6
 contrib=CT1
 EOF
+}
+
+# 删除子模块，并提交
+function grmsmod(){
+    local p=$1
+    git submodule deinit -f $p
+    git rm -f $p
+    rm -rf .git/modules/${p}
+    git commit -m "feat(gitmodules): Remove git submodule ${p}"
 }
