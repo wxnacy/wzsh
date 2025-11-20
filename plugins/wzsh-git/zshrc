@@ -9,6 +9,7 @@
 
 . ${WZSH_HOME}/plugins/wzsh-git/aliases.zsh
 
+source ${WZSH_HOME}/plugins/wzsh-git/forgit.zsh
 
 # 推送
 function gpush(){
