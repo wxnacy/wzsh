@@ -50,22 +50,12 @@ if [ ${#missing[@]} -ne 0 ]; then
     exit 1
 fi
 
-W_HOME=${HOME}/.zsh
-
-if [[ -d "${W_HOME}" ]]; then
-    echo "请先备份并删除 ${W_HOME} 再执行安装脚本";
-    exit 0
-fi
-
-
-test -d "${W_HOME}" || git clone --recursive --depth=1 https://github.com/wxnacy/wzsh "${W_HOME}"
-test -d "${W_HOME}/completions" || mkdir "${W_HOME}/completions"
-test -d "${W_HOME}/zfunc" || mkdir "${W_HOME}/zfunc"
-test -d "~/.zfunc" || mkdir "~/.zfunc"
-cd $W_HOME
+CUR_DIR=$(pwd)
+W_HOME=$HOME/.local/share/wzsh
+W_GIT=$W_HOME/wzsh.git
+command mkdir -p "$W_HOME" && command chmod g-rwX "$W_HOME"
+test -d "$W_GIT" || git clone --recursive --depth=1 https://github.com/wxnacy/wzsh "${W_GIT}"
+cd $W_GIT
 make install
-cd -
-
-# 安装 oh-my-zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+cd $CUR_DIR
 

@@ -226,7 +226,7 @@ function addpath() {
             zdbug "已将路径 '${dir_to_add}' 添加到 PATH。"
         fi
     else
-        zwarn "警告: 目录 '${dir_to_add}' 不存在，未添加到 PATH。"
+        #zwarn "警告: 目录 '${dir_to_add}' 不存在，未添加到 PATH。"
         return 1
     fi
     return 0

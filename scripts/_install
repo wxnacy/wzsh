@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 BACKUP_SUFFIX=".bak.$(date +%Y%m%d%H%M%S)"
 
@@ -48,12 +48,24 @@ printf '	ln -sf %s %s\n' "${WZSH_DIR}/zprofile" "${HOME}/.zprofile"
 printf '	ln -sf %s %s\n' "${WZSH_DIR}/zshrc" "${HOME}/.zshrc"
 printf '	zsh\n'
 
-link_file "${WZSH_DIR}" "${HOME}/.zsh"
+ZSH_HOME="${HOME}/.zsh"
+link_file "${WZSH_DIR}" "${ZSH_HOME}"
 link_file "${WZSH_DIR}/zshenv" "${HOME}/.zshenv"
 link_file "${WZSH_DIR}/zprofile" "${HOME}/.zprofile"
 link_file "${WZSH_DIR}/zshrc" "${HOME}/.zshrc"
-ensure_dir "${HOME}/.zsh/completions"
-ensure_dir "${HOME}/.zsh/sbin"
+
+source "${HOME}/.zshenv"
+# 创建数据目录
+ensure_dir "${WZSH_BIN}"
+ensure_dir "${WZSH_COMPLETION}"
+ensure_dir "${WZSH_PLUGIN}"
+
+export PATH="${WZSH_DIR}/bin:${PATH}"
+
+# 安装 zinit
+zsh "${WZSH_DIR}/plugins/wzsh-zinit/installer"
+# 安装 homebrew
+zsh "${WZSH_DIR}/plugins/wzsh-homebrew/installer"
 
 echo ""
 echo "wzsh installation complete!"

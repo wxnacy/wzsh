@@ -10,12 +10,15 @@
 
 export ZSH_START_TIME=$(/usr/bin/python3 -c 'import time; print(int(time.time() * 1000))')
 # 需要加载的插件列表
-export WZSH_PLUGINS=(zinit ai python direnv eza fzf gemini git go homebrew kitty mpv nvim poetry rust ssh yazi vagrant chezmoi)
+export WZSH_PLUGINS=(self homebrew zinit go ai python direnv eza fzf gemini git kitty mpv nvim poetry rust ssh yazi vagrant chezmoi)
 
+export WZSH_DATA=${HOME}/.local/share/wzsh
+export WZSH_BIN=${WZSH_DATA}/bin
+export WZSH_COMPLETION=${WZSH_DATA}/completions
+export WZSH_PLUGIN=${WZSH_DATA}/plugins
 export WZSH_HOME=${HOME}/.zsh
 # 加载基础命令
 source ${WZSH_HOME}/lib/basic.zsh
-export PATH="${WZSH_HOME}/bin:${PATH}"
 export WZSH_NAME=wZsh
 export WZSH_CACHE_HOME="${HOME}/Documents/Configs/wzsh"
 export WZSH_TEMP=/tmp/wzsh
@@ -54,6 +57,12 @@ export WZSH_BREW="${WZSH_BREW_HOME_BIN}/brew"
 zdbug $(blue "###############################################")
 zdbug $(blue "加载 ~/.zshenv")
 zdbug $(blue "###############################################")
+
+# 加载 PATH
+zdebug "加载 bin"
+addpath "${WZSH_HOME}/bin"
+addpath ${WZSH_BIN}
+addpath "${HOME}/.local/bin"
 
 # 加载插件
 for plugin in "${WZSH_PLUGINS[@]}"; do

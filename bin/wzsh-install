@@ -20,21 +20,9 @@ name=${args[1]}
 
 function _install() {
     _name=$1
-    plugin_home=$(wzsh plugin home ${_name})
+    plugin_home="${WZSH_HOME}/plugins/wzsh-${_name}"
     if [[ -d $plugin_home ]]
     then
-        # 先安装 brew 应用
-        brewfile=${plugin_home}/Brewfile
-        if [[ -f $brewfile && "$no_brew" = false ]]
-        then
-            zinfo "安装 Brew 软件 ${brewfile}"
-            brew bundle install --file=$brewfile
-        fi
-
-        # 进行自定义安装
-        installer=${plugin_home}/installer
-        test -f $installer && zinfo "执行自定义安装 ${installer}"; $installer
-
         # 安装脚本命令
         plugin_bin_dir="${plugin_home}/bin"
         if [[ -d "${plugin_bin_dir}" ]]; then
@@ -47,6 +35,22 @@ function _install() {
                     zlink "${bin_file}" "${dest_file}"
                 fi
             done
+        fi
+
+        # 安装 Brewfile 应用
+        brewfile=${plugin_home}/Brewfile
+        if [[ -f $brewfile && "$no_brew" = false ]]
+        then
+            zinfo "安装 Brew 软件 ${brewfile}"
+            wbrew bundle install --file=$brewfile
+        fi
+
+        # 进行自定义安装
+        installer=${plugin_home}/installer
+        if [[ -f $installer ]]
+        then
+            zinfo "执行自定义安装 ${installer}";
+            zsh $installer
         fi
     else
         zwarn $_name "插件不存在"
