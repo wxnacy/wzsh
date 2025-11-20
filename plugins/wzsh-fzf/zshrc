@@ -17,4 +17,4 @@ test -f $fzf_key_bind_file && source $fzf_key_bind_file
 . ${WZSH_FZF_HOME}/git.zsh
 . ${WZSH_FZF_HOME}/taskwarrior-tui.zsh
 # https:/FZF_/github.com/wfxr/forgit
-. ${WZSH_FZF_HOME}/forgit.plugin.zsh
+#. ${WZSH_FZF_HOME}/forgit.plugin.zsh

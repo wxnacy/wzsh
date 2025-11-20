@@ -32,6 +32,8 @@ function rainit() {
         # 链接当前配置文件夹
         zinfo "链接配置 $conf_dir"
         ln -sf ${WZSH_HOME}/plugins/wzsh-ranger/config $conf_dir
+        # 不再使用在项目里增加 ranger 字体
+        # gsuba https://github.com/alexanderjeurissen/ranger_devicons plugins/wzsh-ranger/config/plugins/ranger_devicons
     else
         zinfo "${conf_dir} 配置已存在"
     fi
