@@ -1,0 +1,14 @@
+
+plugin_home=${WZSH_PLUGIN}/eza
+test -d ${plugin_home} || mkdir -p ${plugin_home}
+
+themes_home=${plugin_home}/themes
+if [[ ! -d $themes_home ]]; then
+    git clone --recursive --depth=1 https://github.com/eza-community/eza-themes ${themes_home}
+fi
+
+config_home=${plugin_home}/config
+#config_home=${HOME}/.config/eza
+test -d ${config_home} || mkdir -p ${config_home}
+
+zlink ${themes_home}/themes/catppuccin.yml ${config_home}/themes
