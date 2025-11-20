@@ -183,4 +183,26 @@ function proxy() {
     fi
 }
 
+BACKUP_SUFFIX=".bak.$(date +%Y%m%d%H%M%S)"
 
+function zlink() {
+    local src=$1
+    local dest=$2
+    zinfo "Checking ${dest}"
+    if [ -L "${dest}" ]; then
+        if [ "$(readlink "${dest}")" = "${src}" ]; then
+            zinfo "✓ Already linked correctly"
+        else
+            zinfo "Relinking ${dest} -> ${src}"
+            ln -sf "${src}" "${dest}"
+        fi
+    elif [ -e "${dest}" ]; then
+        zinfo "Backing up existing ${dest} to ${dest}${BACKUP_SUFFIX}"
+        mv "${dest}" "${dest}${BACKUP_SUFFIX}"
+        zinfo "Linking ${dest} -> ${src}"
+        ln -sf "${src}" "${dest}"
+    else
+        zinfo "Linking ${dest} -> ${src}"
+        ln -sf "${src}" "${dest}"
+    fi
+}
