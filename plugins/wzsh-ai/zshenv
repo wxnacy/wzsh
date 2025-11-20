@@ -3,3 +3,14 @@
 export AIDER_EDITOR=nvim
 export OLLAMA_API_BASE=http://127.0.0.1:11434
 # for aider end
+
+# for ollama begin
+export OLLAMA_MODELS=/Volumes/ZhiTai/.ollama/models
+# for ollama end
+
+# Added by CodeBuddy CN
+addpath "${HOME}/.codebuddy/bin"
+
+# Added by LM Studio CLI (lms)
+addpath "${HOME}/.lmstudio/bin"
+
