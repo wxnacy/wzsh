@@ -1,0 +1,136 @@
+#!/usr/bin/env bash
+# homebrew from https://mirrors.tuna.tsinghua.edu.cn/help/homebrew/
+
+set -euo pipefail
+
+mirror_root="https://mirrors.tuna.tsinghua.edu.cn"
+git_root="${mirror_root}/git/homebrew"
+install_repo="${git_root}/install.git"
+brew_remote="${git_root}/brew.git"
+core_remote="${git_root}/homebrew-core.git"
+bottles_api="${mirror_root}/homebrew-bottles/api"
+bottles_domain="${mirror_root}/homebrew-bottles"
+
+tmp_dir=""
+
+cleanup() {
+    if [[ -n "${tmp_dir}" && -d "${tmp_dir}" ]]; then
+        rm -rf "${tmp_dir}"
+    fi
+}
+
+trap cleanup EXIT INT TERM
+
+log() {
+    echo "$@"
+}
+
+require_cmd() {
+    local cmd="$1"
+    if ! command -v "${cmd}" >/dev/null 2>&1; then
+        log "缺少依赖: ${cmd}"
+        exit 1
+    fi
+}
+
+append_once() {
+    local file="$1"
+    local line="$2"
+
+    [[ -n "${file}" ]] || return 0
+    mkdir -p "$(dirname "${file}")"
+    [[ -e "${file}" ]] || : >"${file}"
+
+    if ! grep -Fqx -- "${line}" "${file}" >/dev/null 2>&1; then
+        echo "${line}" >>"${file}"
+    fi
+}
+
+install_brew() {
+    tmp_dir=$(mktemp -d 2>/dev/null || mktemp -d -t brew-install)
+    if git clone --depth=1 "${install_repo}" "${tmp_dir}" >/dev/null 2>&1; then
+        /bin/bash "${tmp_dir}/install.sh"
+    else
+        log "镜像脚本下载失败，改用官方安装脚本"
+        /bin/bash -c "$(curl -fsSL https://github.com/Homebrew/install/raw/master/install.sh)"
+    fi
+    cleanup
+    tmp_dir=""
+}
+
+detect_brew() {
+    local candidate
+    for candidate in /opt/homebrew/bin/brew /usr/local/bin/brew "${HOME}/.linuxbrew/bin/brew" /home/linuxbrew/.linuxbrew/bin/brew; do
+        if [[ -x "${candidate}" ]]; then
+            echo "${candidate}"
+            return 0
+        fi
+    done
+    if command -v brew >/dev/null 2>&1; then
+        command -v brew
+        return 0
+    fi
+    return 1
+}
+
+system=$(uname -s)
+arch=$(uname -m)
+
+case "${system}" in
+    Darwin)
+        if ! xcode-select -p >/dev/null 2>&1; then
+            log "请先运行: xcode-select --install"
+            exit 1
+        fi
+        profiles_to_update=("${HOME}/.zprofile" "${HOME}/.bash_profile")
+        ;;
+    Linux)
+        profiles_to_update=("${HOME}/.profile" "${HOME}/.bash_profile" "${HOME}/.zprofile")
+        ;;
+    *)
+        log "暂不支持的系统: ${system}"
+        exit 1
+        ;;
+esac
+
+export HOMEBREW_BREW_GIT_REMOTE="${brew_remote}"
+export HOMEBREW_CORE_GIT_REMOTE="${core_remote}"
+export HOMEBREW_API_DOMAIN="${bottles_api}"
+export HOMEBREW_BOTTLE_DOMAIN="${bottles_domain}"
+export HOMEBREW_INSTALL_FROM_API=1
+
+require_cmd git
+require_cmd curl
+
+if ! command -v brew >/dev/null 2>&1; then
+    log "开始安装 Homebrew"
+    install_brew
+else
+    log "检测到已安装 Homebrew: $(brew --prefix)"
+fi
+
+brew_cmd=$(detect_brew) || {
+    log "未找到 Homebrew 可执行文件"
+    exit 1
+}
+
+eval "$(${brew_cmd} shellenv)"
+
+brew update
+
+# shellenv_line="eval \"\$(${brew_cmd} shellenv)\""
+# env_lines=(
+    # "export HOMEBREW_BREW_GIT_REMOTE=\"${brew_remote}\""
+    # "export HOMEBREW_CORE_GIT_REMOTE=\"${core_remote}\""
+    # "export HOMEBREW_API_DOMAIN=\"${bottles_api}\""
+    # "export HOMEBREW_BOTTLE_DOMAIN=\"${bottles_domain}\""
+# )
+
+# for profile in "${profiles_to_update[@]}"; do
+    # for line in "${env_lines[@]}"; do
+        # append_once "${profile}" "${line}"
+    # done
+    # append_once "${profile}" "${shellenv_line}"
+# done
+
+log "Homebrew 环境已配置完成"

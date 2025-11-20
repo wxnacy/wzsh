@@ -8,3 +8,4 @@
 #===============================
 
 alias bi="z brew install"
+alias b="HOMEBREW_NO_AUTO_UPDATE=1 brew"
