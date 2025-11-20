@@ -206,3 +206,28 @@ function zlink() {
         ln -sf "${src}" "${dest}"
     fi
 }
+
+# 第一个参数作为文件夹
+# 判断文件夹是否存在，如果存在添加到 $PATH 中
+function addpath() {
+    local dir_to_add="$1"
+
+    if [[ -z "$dir_to_add" ]]; then
+        zerr "错误: addpath 函数需要一个目录路径作为参数。"
+        return 1
+    fi
+
+    if [[ -d "$dir_to_add" ]]; then
+        # 检查是否已存在于 PATH 中
+        if [[ ":$PATH:" == *":$dir_to_add:"* ]]; then
+            zdbug "路径 '${dir_to_add}' 已存在于 PATH 中。"
+        else
+            export PATH="${dir_to_add}:${PATH}"
+            zdbug "已将路径 '${dir_to_add}' 添加到 PATH。"
+        fi
+    else
+        zwarn "警告: 目录 '${dir_to_add}' 不存在，未添加到 PATH。"
+        return 1
+    fi
+    return 0
+}
