@@ -8,7 +8,6 @@
 # https://github.com/eddieantonio/imgcat
 #===============================
 
-. ${WZSH_HOME}/lib/try-catch.zsh
 . ${WZSH_HOME}/plugins/wzsh-ranger/aliases.zsh
 
 

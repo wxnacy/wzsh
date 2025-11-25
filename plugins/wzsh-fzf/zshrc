@@ -1,6 +1,3 @@
-
-. ${WZSH_HOME}/lib/try-catch.zsh
-
 # Auto-completion
 # ---------------
 [[ $- == *i* ]] && source "${WZSH_BREW_HOME_OPT}/fzf/shell/completion.zsh" 2> /dev/null

@@ -7,7 +7,6 @@
 # Description: python 相关命令
 #===============================
 
-. ${WZSH_HOME}/lib/try-catch.zsh
 . ${WZSH_HOME}/plugins/wzsh-python/aliases.zsh
 
 export GitException=100
