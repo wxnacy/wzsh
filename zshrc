@@ -13,18 +13,8 @@ zdbug $(blue "###############################################")
 
 zdbug $(yellow "开始加载本地库")
 # load lib
-for name in `ls ${WZSH_HOME}/lib`
-do
-    if [[ `echo $name | grep '__'` ]]
-    then
-        continue
-    fi
-    shfile=${WZSH_HOME}/lib/${name}
-    if [ -f $shfile ]; then
-        zdebug "加载 $name"
-        source $shfile
-    fi
-done
+source ${WZSH_HOME}/lib/basic.zsh
+source ${WZSH_HOME}/lib/functions.zsh
 
 zdebug $(yellow "开始加载插件")
 # load zsh plugins
