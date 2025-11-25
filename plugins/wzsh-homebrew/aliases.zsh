@@ -9,3 +9,5 @@
 
 alias bi="z brew install"
 alias b="HOMEBREW_NO_AUTO_UPDATE=1 brew"
+# 强制全局备份 bundle 文件列表
+alias bbd="brew bundle dump --global -f"
