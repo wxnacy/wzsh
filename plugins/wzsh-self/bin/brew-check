@@ -1,0 +1,49 @@
+#!/bin/zsh
+# 检查 bundle 文件是否有遗漏，并进行添加
+#
+# 实现逻辑：
+# 1、定义源 bundle 文件，SOURCE_BUNDLE=~/.Brewfile，如果该文件不存在，调用 brew bundle dump --global 命令生成
+# 2、定义目标 bundle 文件，TARGET_BUNDLE="$(wzsh plugin home self)/Brewfile"
+# 3、调用 brew bundle list --file $SOURCE_BUNDLE 查看已安装软件列表 INSTALLED_LIST
+# 4、调用 brew bundle list --file $TARGET_BUNDLE 查看已存在软件列表 EXISTS_LIST
+# 5、过滤出 INSTALLED_LIST 中 EXISTS_LIST 不存在的软件列表，使用 fzf 展示出来，可以多选，回车后 调用 brew bundle add --file $TARGET_BUNDLE 命令将选择的软件列表传入，ctrl+p 预览调用 brew info $name --json=v2 获取 json 结果进行预览，需要对 json 进行高亮
+# 6、如果当前脚本带有 --formula --cask --go 参数，调用 bundle list、bundle add 命令时也要携带该参数
+
+SOURCE_BUNDLE=~/.Brewfile
+if [ ! -f "$SOURCE_BUNDLE" ]; then
+  brew bundle dump --global
+fi
+
+TARGET_BUNDLE="$(wzsh plugin home self)/Brewfile"
+if [ ! -f "$TARGET_BUNDLE" ]; then
+  touch "$TARGET_BUNDLE"
+fi
+
+ARGS=()
+for arg in "$@"; do
+  case $arg in
+    --formula|--cask|--go)
+      ARGS+=("$arg")
+      ;;
+  esac
+done
+
+INSTALLED_LIST=$(brew bundle list --file "$SOURCE_BUNDLE" "${ARGS[@]}")
+EXISTS_LIST=$(brew bundle list --file "$TARGET_BUNDLE" "${ARGS[@]}")
+
+MISSING_LIST=$(comm -23 <(echo "$INSTALLED_LIST" | sort) <(echo "$EXISTS_LIST" | sort))
+
+if [ -z "$MISSING_LIST" ]; then
+  echo "No missing packages to add."
+  exit 0
+fi
+
+SELECTED_LIST=$(echo "$MISSING_LIST" | fzf --multi --preview 'brew info {} --json=v2 | jq')
+
+if [ -z "$SELECTED_LIST" ]; then
+  exit 0
+fi
+
+for item in $(echo "$SELECTED_LIST"); do
+  brew bundle add --file="$TARGET_BUNDLE" "$item" "${ARGS[@]}"
+done
