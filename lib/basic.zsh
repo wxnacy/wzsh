@@ -24,16 +24,6 @@ function has_command() {
     command -v $1 >/dev/null 2>&1 && echo true  || { echo ""; }
 }
 
-function is_debug() {
-    # 判断是否为 debug 模式
-    if [ $WZSH_DEBUG ]
-    then
-        echo true
-    else
-        echo ''
-    fi
-}
-
 function is_apple_arm() {
     # 是否为苹果m芯片
     if [[ "$(uname -s) $(uname -m)" == "Darwin arm64" ]]
@@ -76,16 +66,26 @@ function is_linux() {
 
 function debugon() {
     # 开始 wzsh debug 模式
-    export WZSH_DEBUG=true
+    touch ~/.WZSH_DEBUG
     export WZSH_LOG_LEVEL=debug
     zinfo "${WZSH_NAME} DEBUG 模式开启"
 }
 
 function debugoff() {
     # 关闭 wzsh debug 模式
-    unset WZSH_DEBUG
+    test -f ~/.WZSH_DEBUG && rm ~/.WZSH_DEBUG
     export WZSH_LOG_LEVEL=info
     zinfo "${WZSH_NAME} DEBUG 模式关闭"
+}
+
+function is_debug() {
+    # 判断是否为 debug 模式
+    if [ -f ~/.WZSH_DEBUG ]
+    then
+        echo true
+    else
+        echo ''
+    fi
 }
 
 function debug() {
