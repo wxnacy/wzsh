@@ -1,3 +1,42 @@
 brew "vim"
-brew "nvim"
 brew "helix"
+
+
+# Brewfile for nvim setup
+
+# Basic tools
+brew "gcc"
+brew "git"
+brew "wget"
+brew "unzip"
+brew "neovim"
+
+# Python
+brew "python"
+brew "pyright"
+# brew "flake8"
+# brew "autopep8"
+
+# Go
+brew "go"
+
+# Node
+brew "node"
+
+# Rust
+brew "rust"
+brew "rust-analyzer"
+
+# Shell
+brew "shellcheck"
+
+# Plugin dependencies
+# for telescope
+# rg is an alias for ripgrep
+brew "ripgrep" # for telescope nvim-spectre
+brew "fd" # for telescope
+brew "deno" # for peek.nvim
+brew "gnu-sed" # for nvim-spectre
+brew "markdownlint-cli" # for markdownlint
+brew "commitlint" # for commit check
+

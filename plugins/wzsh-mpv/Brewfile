@@ -2,5 +2,6 @@ brew "mpv"
 # for wzsh-mpv-play
 brew "fzf"
 brew "ffmpeg"
-brew "chafa"
+brew "chafa" # 播放列表展示图片
 brew "go"
+brew "media-info" # for show media info
