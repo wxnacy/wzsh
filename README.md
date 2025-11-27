@@ -4,7 +4,7 @@
 
 zsh 快速配置脚本
 
-**需要的依赖** `curl, git, zsh`
+**需要的依赖** `homebrew, curl, git, zsh`
 
 [Zsh 与 oh-my-zsh 安装与使用](https://wxnacy.com/2017/08/16/shell-2017-08-16-zsh-install/)
 
@@ -17,28 +17,25 @@ curl -L https://raw.githubusercontent.com/wxnacy/wzsh/master/installer.sh | bash
 或者手动安装
 
 ```bash
-git clone --recursive https://github.com/wxnacy/wzsh
-cd wzsh
-ln -sf $(pwd) ${HOME}/.zsh
-ln -sf $(pwd)/zshenv ${HOME}/.zshenv
-ln -sf $(pwd)/zprofile ${HOME}/.zprofile
-ln -sf $(pwd)/zshrc ${HOME}/.zshrc
-zsh
+CUR_DIR=$(pwd)
+W_HOME=$HOME/.local/share/wzsh
+W_GIT=$W_HOME/wzsh.git
+command mkdir -p "$W_HOME" && command chmod g-rwX "$W_HOME"
+test -d "$W_GIT" || git clone --recursive --depth=1 https://github.com/wxnacy/wzsh "${W_GIT}"
+cd $W_GIT
+make install
+cd $CUR_DIR
 ```
 
 ## 本人全环境安装
 
 ```bash
 # install brew from https://mirrors.tuna.tsinghua.edu.cn/help/homebrew/
-# install ohmyzsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-# install and init zsh
+# install and init zsh and ohmyzsh
 curl -L https://raw.githubusercontent.com/wxnacy/wzsh/master/installer.sh | bash
-brewinit
-
-# install wnvim
-curl -L https://raw.githubusercontent.com/wxnacy/wnvim/master/bin/nvim-install | bash
+# 安装全部插件
+wzsh-install
 
 # install and init tmux
 # prefix + $ 修改 session 名称
