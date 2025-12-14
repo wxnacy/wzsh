@@ -10,3 +10,6 @@
 # alias pipi="pip install -i https://pypi.tuna.tsinghua.edu.cn/simple"
 alias pydb="python3 -m pdb"
 alias python="python3"
+
+# for hatch
+alias hbp="hatch clean && hatch build && hatch publish"
