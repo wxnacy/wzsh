@@ -1,4 +1,5 @@
 . ${WZSH_HOME}/plugins/wzsh-direnv/aliases.zsh
+. ${WZSH_HOME}/plugins/wzsh-direnv/config/direnvrc
 
 if [[ $(has_command direnv) ]]
 then

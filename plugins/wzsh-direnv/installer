@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+
+mkdir -p ${HOME}/.config/direnv
+zlink "${WZSH_HOME}/plugins/wzsh-direnv/config/direnvrc" "${HOME}/.config/direnv/direnvrc"
