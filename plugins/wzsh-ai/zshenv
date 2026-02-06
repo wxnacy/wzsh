@@ -8,6 +8,10 @@ export OLLAMA_API_BASE=http://127.0.0.1:11434
 export OLLAMA_MODELS=/Volumes/ZhiTai/.ollama/models
 # for ollama end
 
+# for huggingface begin
+export HF_HOME=/Volumes/ZhiTai/.cache/huggingface
+# for huggingface end
+
 # Added by CodeBuddy CN
 addpath "${HOME}/.codebuddy/bin"
 
