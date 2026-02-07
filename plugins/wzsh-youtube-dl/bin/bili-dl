@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# ## 脚本功能
+#
+# 使用 `yt-dlp` 下载 `https://www.bilibili.com` 网站视频
+#
+# ## 脚本需求：
+#
+# ### 参数说明
+#
+# - `url` 默认参数，bilibili 地址，没有该参数需要报错
+# - `-d` `--download-dir` 指定下载目录，默认使用 `~/Downloads`
+#
+# ### 功能细节
+#
+# - 如果当前视频只有一个可下载视频，使用 `%(title)s.%(ext)s` 命名
+# - 如果当前视频有多个可下载视频，会自动创建以 `%(playlist_title)s` 命名的目录，并在其中使用 `%(title)s.%(ext)s` 命名
+# - 必要的扩展参数 `--cookies-from-browser chrome --write-thumbnail`
+#
+# ## 调用示例
+#
+# ```bash
+# ./bili-dl https://www.bilibili.com/video/BV1RSzCBLEwS -d ~/Downloads/test
+# ```
+
+# 默认下载目录
+DOWNLOAD_DIR="$HOME/Downloads"
+URL=""
+# 解析参数
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -d|--download-dir)
+      DOWNLOAD_DIR="$2"
+      shift 2
+      ;;
+    *)
+      if [[ -z "$URL" ]]; then
+        URL="$1"
+      fi
+      shift
+      ;;
+  esac
+done
+
+# 检查 URL 参数
+if [[ -z "$URL" ]]; then
+  echo "错误: 未提供 bilibili 地址"
+  echo "使用方法: $0 <bilibili_url> [-d|--download-dir <下载目录>]"
+  exit 1
+fi
+
+# 检查下载目录是否存在，不存在则创建
+if [[ ! -d "$DOWNLOAD_DIR" ]]; then
+  echo "创建下载目录: $DOWNLOAD_DIR"
+  mkdir -p "$DOWNLOAD_DIR"
+fi
+
+# 检查是否是播放列表（多个视频）
+PLAYLIST_COUNT=$(yt-dlp --flat-playlist --print "%(playlist_count)s" "$URL" 2>/dev/null | head -1)
+
+# 如果 playlist_count 是数字且大于1，则使用播放列表模板
+if [[ "$PLAYLIST_COUNT" =~ ^[0-9]+$ ]] && [ "$PLAYLIST_COUNT" -gt 1 ]; then
+  OUTPUT_TEMPLATE="%(playlist_title)s/%(title)s.%(ext)s"
+  echo "检测到播放列表，共 $PLAYLIST_COUNT 个视频"
+else
+  OUTPUT_TEMPLATE="%(title)s.%(ext)s"
+  echo "检测到单个视频"
+fi
+
+# 构建命令
+CMD="yt-dlp --cookies-from-browser chrome --write-thumbnail -o \"$OUTPUT_TEMPLATE\" -P \"$DOWNLOAD_DIR\" \"$URL\""
+
+echo "下载视频: $URL"
+echo "下载目录: $DOWNLOAD_DIR"
+echo "执行命令: $CMD"
+
+# 执行下载
+eval $CMD
