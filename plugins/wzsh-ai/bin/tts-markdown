@@ -1,0 +1,21 @@
+#!/bin/zsh
+#
+
+markdown=$1
+work=$2
+dump_markdown="${work}/文案.md"
+clean_markdown="${work}/清洗文案.md"
+audio_dir="${work}/audio"
+
+cp $markdown $dump_markdown
+mkdir -p $audio_dir
+
+cd /Users/wxnacy/Projects/agent/skills/markdown-tts
+
+python3 clean_markdown.py $dump_markdown --output $clean_markdown
+
+# python3 split_markdown.py $clean_markdown --output-dir $audio_dir
+
+# ./iter_tts.sh $audio_dir --ref-name 诺澜-接电话 --ref-path /Users/wxnacy/Movies/音频素材/克隆声音源/ref.json
+
+cd -

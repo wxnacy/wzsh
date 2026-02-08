@@ -1,0 +1,65 @@
+#!/bin/zsh
+# ## 脚本功能
+#
+# 将 `.agent/skills` 目录下的 `skill` 安装到指定 `agent` 项目级 `skill`
+#
+# ## 脚本需求：
+#
+# ### 默认变量
+#
+# - `AGENTS` 默认列表为 `codebuddy` `gemini-cli` `opencode`
+#
+# ### 参数说明
+#
+# - `-a` `--agent` 如果指定，则只安装到对应 `agent`。否则遍历 `AGENTS` 列表
+#
+# ### 功能细节
+#
+# - 自动遍历 `.agent/skills` 目录下的所有技能目录
+# - 对每个技能使用 `npx skills add` 命令安装到指定的 agent
+# - 使用 `-p -y` 参数自动确认安装
+#
+# ## 调用示例
+#
+# ```bash
+# # 安装所有技能到所有 agent
+# ./add_skills
+#
+# # 只安装到 codebuddy agent
+# ./add_skills -a codebuddy
+#
+# # 只安装到指定的多个 agent
+# ./add_skills -a gemini-cli -a opencode
+# ```
+
+# 默认 agent 列表
+AGENTS=("codebuddy" "gemini-cli" "opencode")
+SINGLE_AGENT=""
+
+# 解析参数
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -a|--agent)
+      SINGLE_AGENT="$2"
+      AGENTS=("$SINGLE_AGENT")
+      shift 2
+      ;;
+    *)
+      echo "未知参数: $1"
+      echo "使用方法: $0 [-a|--agent <agent_name>]"
+      exit 1
+      ;;
+  esac
+done
+
+# 遍历所有技能
+for skill in `ls .agent/skills`
+do
+    echo "处理技能: $skill"
+    for agent in "${AGENTS[@]}"
+    do
+        echo "  安装到: $agent"
+        npx skills add ./.agent/skills/${skill} -a $agent -p -y
+    done
+done
+
