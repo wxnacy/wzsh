@@ -1,0 +1,1 @@
+zlink "${WZSH_HOME}/plugins/wzsh-television/config" "${HOME}/.config/television"

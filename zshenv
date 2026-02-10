@@ -10,7 +10,7 @@
 
 export ZSH_START_TIME=$(/usr/bin/python3 -c 'import time; print(int(time.time() * 1000))')
 # 需要加载的插件列表
-export WZSH_PLUGINS=(self homebrew zinit go ai python direnv eza fzf gemini git kitty mpv nvim poetry rust ssh yazi vagrant chezmoi conda obsidian youtube-dl)
+export WZSH_PLUGINS=(self homebrew zinit go ai python direnv eza fzf gemini git kitty mpv nvim poetry rust ssh yazi vagrant chezmoi conda obsidian youtube-dl television)
 export WZSH_DATA=${HOME}/.local/share/wzsh
 export WZSH_BIN=${WZSH_DATA}/bin
 export WZSH_COMPLETION=${WZSH_DATA}/completions
@@ -26,22 +26,19 @@ export WZSH_LOG=${WZSH_TEMP}/wzsh.log
 if [[ ! -d ${WZSH_TEMP} ]]; then
     mkdir ${WZSH_TEMP}
 fi
-echo '' > ${WZSH_LOG}
+echo '' >${WZSH_LOG}
 # debug 模式设置日志级别为 debug
-if [ $(is_debug) ]
-then
+if [ $(is_debug) ]; then
     export WZSH_LOG_LEVEL=debug
 else
     export WZSH_LOG_LEVEL=info
 fi
 # 命令安装基础信息
 export WZSH_BREW_HOME=/opt/homebrew
-if [ $(is_apple_intel) ]
-then
+if [ $(is_apple_intel) ]; then
     export WZSH_BREW_HOME=/usr/local
 fi
-if [ $(is_linux) ]
-then
+if [ $(is_linux) ]; then
     if [[ -d "${HOME}/.linuxbrew/bin/brew" ]]; then
         export WZSH_BREW_HOME=${HOME}/.linuxbrew/bin/brew
     fi
@@ -67,8 +64,7 @@ addpath "${HOME}/.local/bin"
 for plugin in "${WZSH_PLUGINS[@]}"; do
     name="wzsh-${plugin}"
     bindir=${WZSH_HOME}/plugins/${name}/bin
-    if [[ -d $bindir ]]
-    then
+    if [[ -d $bindir ]]; then
         zdebug "加载 bin $name"
         export PATH="$bindir:${PATH}"
     fi
@@ -80,8 +76,7 @@ for plugin in "${WZSH_PLUGINS[@]}"; do
 done
 
 # 加载 bash 登录配置
-for name in .local/zshenv
-do
+for name in .local/zshenv; do
     shfile=${HOME}/${name}
     if [ -f $shfile ]; then
         zdebug "加载 $shfile"
