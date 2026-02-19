@@ -1,3 +1,9 @@
+
+# Kiro CLI pre block. Keep at the top of this file.
+# 禁用 kiro-cli 自动建议以避免与 zsh-autosuggestions 冲突
+# FUNCNEST=500
+# [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.pre.zsh"
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -48,3 +54,8 @@ if [ -n "$ZSH_START_TIME" ]; then
     ZSH_LOAD_TIME=$(printf "%.3f\n" $(echo "($ZSH_END_TIME - $ZSH_START_TIME)/1000" | bc -l))
     zdebug "Zsh load time: ${ZSH_LOAD_TIME}s"
 fi
+
+
+# Kiro CLI post block. Keep at the bottom of this file.
+# 禁用 kiro-cli 自动建议以避免与 zsh-autosuggestions 冲突
+# [[ -f "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/zshrc.post.zsh"
