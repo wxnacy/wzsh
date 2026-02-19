@@ -22,6 +22,19 @@ zdbug $(yellow "开始加载本地库")
 source ${WZSH_HOME}/lib/basic.zsh
 source ${WZSH_HOME}/lib/functions.zsh
 
+# =============================================================================
+# 补全初始化 (Completion Initialization)
+# =============================================================================
+# 注意：必须在加载插件之前初始化 compinit，否则会报错：
+# (eval):207: command not found: compdef
+#
+# 切勿将此段代码移动到插件加载循环之后！
+# 许多插件（如 fzf, zinit）在初始化时依赖 compdef 命令。
+# =============================================================================
+fpath=(${WZSH_HOME}/completions $fpath) # 命令补全目录
+autoload -Uz compinit; compinit
+zstyle ':completion:*' menu select
+
 zdebug $(yellow "开始加载插件")
 # load zsh plugins
 for plugin in "${WZSH_PLUGINS[@]}"; do
@@ -43,10 +56,6 @@ do
     fi
 done
 
-# 懒加载
-fpath=(${WZSH_HOME}/completions $fpath) # 命令补全目录
-autoload -Uz compinit; compinit
-zstyle ':completion:*' menu select
 
 # 计算加载时间
 if [ -n "$ZSH_START_TIME" ]; then
