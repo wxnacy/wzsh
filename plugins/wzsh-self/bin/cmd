@@ -1,0 +1,213 @@
+#!/bin/zsh
+# cmd - 命令行管理工具
+#
+# 功能：管理常用命令行，支持添加、编辑、删除和搜索命令
+#
+# 使用示例：
+#   cmd                    # 搜索并选择命令
+#   cmd add                # 添加新命令
+#   cmd edit <id|alias>    # 编辑命令
+#   cmd rm <id|alias>      # 删除命令
+#   cmd -c <path>          # 指定配置目录
+#   cmd --config <path>    # 指定配置目录
+
+# 默认配置目录
+CONFIG_DIR="$HOME/Documents/Configs/wzsh/self"
+
+# 解析参数
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -c|--config)
+            CONFIG_DIR="$2"
+            shift 2
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+# 确保配置目录存在
+mkdir -p "$CONFIG_DIR"
+
+CMD_FILE="$CONFIG_DIR/cmd.json"
+
+# 初始化 JSON 文件
+if [[ ! -f "$CMD_FILE" ]]; then
+    echo '{"commands":[],"next_id":1}' > "$CMD_FILE"
+fi
+
+# 获取下一个 ID
+get_next_id() {
+    jq -r '.next_id' "$CMD_FILE"
+}
+
+# 更新下一个 ID
+update_next_id() {
+    local next_id=$1
+    jq ".next_id = $next_id" "$CMD_FILE" > "$CMD_FILE.tmp" && mv "$CMD_FILE.tmp" "$CMD_FILE"
+}
+
+# 检查别名是否存在
+alias_exists() {
+    local alias_name=$1
+    local count=$(jq "[.commands[] | select(.alias == \"$alias_name\")] | length" "$CMD_FILE")
+    [[ $count -gt 0 ]]
+}
+
+# 检查 ID 是否存在
+id_exists() {
+    local id=$1
+    local count=$(jq "[.commands[] | select(.id == $id)] | length" "$CMD_FILE")
+    [[ $count -gt 0 ]]
+}
+
+# 通过 ID 或别名查找命令
+find_command() {
+    local key=$1
+    if [[ "$key" =~ ^[0-9]+$ ]]; then
+        jq ".commands[] | select(.id == $key)" "$CMD_FILE"
+    else
+        jq ".commands[] | select(.alias == \"$key\")" "$CMD_FILE"
+    fi
+}
+
+# 添加命令
+cmd_add() {
+    echo "添加新命令"
+    
+    # 输入命令行
+    echo -n "命令行 (command): "
+    read command
+    [[ -z "$command" ]] && echo "命令行不能为空" && return 1
+    
+    # 输入描述
+    echo -n "描述 (desc): "
+    read desc
+    
+    # 输入别名
+    echo -n "别名 (alias): "
+    read alias
+    
+    # 检查别名唯一性
+    if [[ -n "$alias" ]] && alias_exists "$alias"; then
+        echo "错误: 别名 '$alias' 已存在"
+        return 1
+    fi
+    
+    # 获取新 ID
+    local id=$(get_next_id)
+    
+    # 添加命令
+    local new_cmd=$(jq -n \
+        --arg id "$id" \
+        --arg command "$command" \
+        --arg desc "$desc" \
+        --arg alias "$alias" \
+        '{id: ($id | tonumber), command: $command, desc: $desc, alias: $alias}')
+    
+    jq ".commands += [$new_cmd]" "$CMD_FILE" > "$CMD_FILE.tmp" && mv "$CMD_FILE.tmp" "$CMD_FILE"
+    update_next_id $((id + 1))
+    
+    echo "命令添加成功 (ID: $id)"
+}
+
+# 编辑命令
+cmd_edit() {
+    local key=$1
+    [[ -z "$key" ]] && echo "用法: cmd edit <id|alias>" && return 1
+    
+    local cmd_data=$(find_command "$key")
+    [[ -z "$cmd_data" ]] && echo "错误: 未找到命令 '$key'" && return 1
+    
+    local id=$(echo "$cmd_data" | jq -r '.id')
+    local old_command=$(echo "$cmd_data" | jq -r '.command')
+    local old_desc=$(echo "$cmd_data" | jq -r '.desc')
+    
+    echo "编辑命令 (ID: $id)"
+    
+    # 编辑命令行
+    echo -n "命令行 [$old_command]: "
+    read new_command
+    [[ -z "$new_command" ]] && new_command="$old_command"
+    
+    # 编辑描述
+    echo -n "描述 [$old_desc]: "
+    read new_desc
+    [[ -z "$new_desc" ]] && new_desc="$old_desc"
+    
+    # 更新命令
+    jq "(.commands[] | select(.id == $id) | .command) = \"$new_command\" | 
+        (.commands[] | select(.id == $id) | .desc) = \"$new_desc\"" \
+        "$CMD_FILE" > "$CMD_FILE.tmp" && mv "$CMD_FILE.tmp" "$CMD_FILE"
+    
+    echo "命令更新成功"
+}
+
+# 删除命令
+cmd_rm() {
+    local key=$1
+    [[ -z "$key" ]] && echo "用法: cmd rm <id|alias>" && return 1
+    
+    local cmd_data=$(find_command "$key")
+    [[ -z "$cmd_data" ]] && echo "错误: 未找到命令 '$key'" && return 1
+    
+    local id=$(echo "$cmd_data" | jq -r '.id')
+    
+    # 删除命令
+    if [[ "$key" =~ ^[0-9]+$ ]]; then
+        jq ".commands = [.commands[] | select(.id != $key)]" "$CMD_FILE" > "$CMD_FILE.tmp"
+    else
+        jq ".commands = [.commands[] | select(.alias != \"$key\")]" "$CMD_FILE" > "$CMD_FILE.tmp"
+    fi
+    mv "$CMD_FILE.tmp" "$CMD_FILE"
+    
+    echo "命令删除成功 (ID: $id)"
+}
+
+# 搜索并选择命令
+cmd_search() {
+    local commands=$(jq -r '.commands[] | "\(.id)|\(.alias)|\(.command)|\(.desc)"' "$CMD_FILE")
+    
+    [[ -z "$commands" ]] && echo "暂无命令" && return 0
+    
+    local selected=$(echo "$commands" | \
+        awk -F'|' '{printf "%s\t%s\t%s\t%s\n", $1, $2, $3, $4}' | \
+        column -t -s $'\t' | \
+        fzf --header="ID ALIAS COMMAND DESC" \
+            --expect=ctrl-m,cmd-enter \
+            --bind 'cmd-enter:accept')
+    
+    [[ -z "$selected" ]] && return 0
+    
+    local key=$(echo "$selected" | tail -1 | awk '{print $1}')
+    local cmd_data=$(find_command "$key")
+    local command=$(echo "$cmd_data" | jq -r '.command')
+    
+    # 检查按键
+    local pressed_key=$(echo "$selected" | head -1)
+    
+    if [[ "$pressed_key" == "cmd-enter" ]]; then
+        # 直接执行
+        eval "$command"
+    else
+        # 输出到命令行
+        print -z "$command"
+    fi
+}
+
+# 主逻辑
+case $1 in
+    add)
+        cmd_add
+        ;;
+    edit)
+        cmd_edit "$2"
+        ;;
+    rm)
+        cmd_rm "$2"
+        ;;
+    *)
+        cmd_search
+        ;;
+esac
