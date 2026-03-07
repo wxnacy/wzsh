@@ -27,3 +27,10 @@
     - Commit: 7cc35f5 feat(cmd): 实现命令行管理工具
 - [x] 运行 `cmd rm [id|alias]` 脚本删除命令，可以接收 id 或者 alias 作为查找索引 ✅ 2026-03-07 22:06:13
     - Commit: 7cc35f5 feat(cmd): 实现命令行管理工具
+
+## BUG FIX
+
+- [x] `cmd` 报错 `unsupported key: cmd-enter` ✅ 2026-03-07 22:25:04
+    - 问题原因：fzf 不支持 cmd-enter 按键绑定，在 macOS 上该按键组合无法被 fzf 识别
+    - 修复方案：使用 ctrl-o 替代 cmd-enter，更新脚本注释和文档说明
+    - Commit: c756e5d fix(cmd): 修复 fzf 按键绑定错误
