@@ -27,6 +27,8 @@
     - Commit: 7cc35f5 feat(cmd): 实现命令行管理工具
 - [x] 运行 `cmd rm [id|alias]` 脚本删除命令，可以接收 id 或者 alias 作为查找索引 ✅ 2026-03-07 22:06:13
     - Commit: 7cc35f5 feat(cmd): 实现命令行管理工具
+- [x] 将 `aliases.zsh` 中 cmd 包装函数移到 zshrc 中 ✅ 2026-03-07 22:39:04
+    - Commit: cdfbcce refactor(cmd): 将 cmd 函数从 aliases.zsh 移到 zshrc
 
 ## BUG FIX
 
