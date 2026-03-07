@@ -2,6 +2,12 @@
 
 # cmd 命令管理工具包装函数
 cmd() {
+    # 对于交互式命令（add, edit），直接执行脚本
+    if [[ "$1" == "add" || "$1" == "edit" ]]; then
+        $HOME/.wzsh/plugins/wzsh-self/bin/cmd "$@"
+        return $?
+    fi
+    
     local result
     local exit_code
     

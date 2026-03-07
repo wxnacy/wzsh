@@ -79,16 +79,16 @@ cmd_add() {
     
     # 输入命令行
     echo -n "命令行 (command): "
-    read command < /dev/tty
+    read command
     [[ -z "$command" ]] && echo "命令行不能为空" && return 1
     
     # 输入描述
     echo -n "描述 (desc): "
-    read desc < /dev/tty
+    read desc
     
     # 输入别名
     echo -n "别名 (alias): "
-    read alias < /dev/tty
+    read alias
     
     # 检查别名唯一性
     if [[ -n "$alias" ]] && alias_exists "$alias"; then
@@ -129,12 +129,12 @@ cmd_edit() {
     
     # 编辑命令行
     echo -n "命令行 [$old_command]: "
-    read new_command < /dev/tty
+    read new_command
     [[ -z "$new_command" ]] && new_command="$old_command"
     
     # 编辑描述
     echo -n "描述 [$old_desc]: "
-    read new_desc < /dev/tty
+    read new_desc
     [[ -z "$new_desc" ]] && new_desc="$old_desc"
     
     # 更新命令
