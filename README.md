@@ -206,3 +206,4 @@ net:
 | cmd add    | 添加新命令                                                                                                                     | >$ cmd add                                     |
 | cmd edit   | 编辑命令                                                                                                                       | >$ cmd edit <id\|alias>                        |
 | cmd rm     | 删除命令                                                                                                                       | >$ cmd rm <id\|alias>                          |
+| cmd run    | 直接运行命令                                                                                                                   | >$ cmd run <id\|alias>                         |

@@ -1,13 +1,14 @@
 #!/bin/zsh
 # cmd - 命令行管理工具
 #
-# 功能：管理常用命令行，支持添加、编辑、删除和搜索命令
+# 功能：管理常用命令行，支持添加、编辑、删除、运行和搜索命令
 #
 # 使用示例：
 #   cmd                    # 搜索并选择命令（回车输入到 shell，Ctrl-O 直接执行）
 #   cmd add                # 添加新命令
 #   cmd edit <id|alias>    # 编辑命令
 #   cmd rm <id|alias>      # 删除命令
+#   cmd run <id|alias>     # 直接运行命令
 #   cmd -c <path>          # 指定配置目录
 #   cmd --config <path>    # 指定配置目录
 
@@ -78,16 +79,16 @@ cmd_add() {
     
     # 输入命令行
     echo -n "命令行 (command): "
-    read command
+    read command < /dev/tty
     [[ -z "$command" ]] && echo "命令行不能为空" && return 1
     
     # 输入描述
     echo -n "描述 (desc): "
-    read desc
+    read desc < /dev/tty
     
     # 输入别名
     echo -n "别名 (alias): "
-    read alias
+    read alias < /dev/tty
     
     # 检查别名唯一性
     if [[ -n "$alias" ]] && alias_exists "$alias"; then
@@ -128,12 +129,12 @@ cmd_edit() {
     
     # 编辑命令行
     echo -n "命令行 [$old_command]: "
-    read new_command
+    read new_command < /dev/tty
     [[ -z "$new_command" ]] && new_command="$old_command"
     
     # 编辑描述
     echo -n "描述 [$old_desc]: "
-    read new_desc
+    read new_desc < /dev/tty
     [[ -z "$new_desc" ]] && new_desc="$old_desc"
     
     # 更新命令
@@ -163,6 +164,20 @@ cmd_rm() {
     mv "$CMD_FILE.tmp" "$CMD_FILE"
     
     echo "命令删除成功 (ID: $id)"
+}
+
+# 运行命令
+cmd_run() {
+    local key=$1
+    [[ -z "$key" ]] && echo "用法: cmd run <id|alias>" && return 1
+    
+    local cmd_data=$(find_command "$key")
+    [[ -z "$cmd_data" ]] && echo "错误: 未找到命令 '$key'" && return 1
+    
+    local command=$(echo "$cmd_data" | jq -r '.command')
+    
+    # 直接执行命令
+    eval "$command"
 }
 
 # 搜索并选择命令
@@ -205,6 +220,9 @@ case $1 in
         ;;
     rm)
         cmd_rm "$2"
+        ;;
+    run)
+        cmd_run "$2"
         ;;
     *)
         cmd_search
