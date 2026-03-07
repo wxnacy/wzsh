@@ -34,3 +34,7 @@
     - 问题原因：fzf 不支持 cmd-enter 按键绑定，在 macOS 上该按键组合无法被 fzf 识别
     - 修复方案：使用 ctrl-o 替代 cmd-enter，更新脚本注释和文档说明
     - Commit: c756e5d fix(cmd): 修复 fzf 按键绑定错误
+- [x] `cmd` 回车时，并没有把选择的命令输入到 `shell` 输入框中 ✅ 2026-03-07 22:33:20
+    - 问题原因：print -z 只能在 zsh 交互式环境中工作，脚本作为子进程运行时无法将内容推送到父 shell 的输入缓冲区
+    - 修复方案：在 aliases.zsh 中添加 cmd 函数包装器，脚本输出命令，函数使用 print -z 推送到输入缓冲区
+    - Commit: b61ae94 fix(cmd): 修复命令无法输入到 shell 输入框的问题
