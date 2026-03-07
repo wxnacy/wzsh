@@ -46,3 +46,18 @@
     - 问题原因：函数包装器使用 result=$(cmd "$@") 捕获了所有输出，导致交互式命令的提示信息被捕获，用户看不到，用户输入也无法正常传递给脚本
     - 修复方案：对 add 和 edit 交互式命令直接执行脚本不捕获输出，恢复脚本中的正常 read 命令
     - Commit: 598b504 fix(cmd): 修复交互式命令卡住的真正原因
+- [x] `cmd run` 报错 `(eval):1: command not found: ` 但其实有这个命令，日志如下
+
+```bash
+cmd run nad
+(eval):1: command not found: nvshens
+░▒▓    ~/Projects/agent    master ⇡37 !6 ?2 ·································· ▼  agent   3.12    23:21:02  ▓▒░
+❯ which nvshens
+nvshens: aliased to website nvshens -d /Volumes/ZhiTai/xvideos/nvshens/images
+```
+```
+
+- 问题原因：eval 在脚本子进程中无法访问父 shell 的别名，Ctrl-O 直接执行也有同样的问题
+- 修复方案：脚本只负责输出命令不执行，run 命令和 Ctrl-O 的执行都在函数包装器中进行，使用特殊标记 __CMD_EXEC__: 标识需要执行的命令
+- Commit: e104039 fix(cmd): 修复 run 命令无法执行别名的问题
+- 完成时间：✅ 2026-03-07 23:22:15
