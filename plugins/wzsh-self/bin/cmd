@@ -4,7 +4,7 @@
 # 功能：管理常用命令行，支持添加、编辑、删除和搜索命令
 #
 # 使用示例：
-#   cmd                    # 搜索并选择命令
+#   cmd                    # 搜索并选择命令（回车输出到 shell，Ctrl-O 直接执行）
 #   cmd add                # 添加新命令
 #   cmd edit <id|alias>    # 编辑命令
 #   cmd rm <id|alias>      # 删除命令
@@ -174,9 +174,8 @@ cmd_search() {
     local selected=$(echo "$commands" | \
         awk -F'|' '{printf "%s\t%s\t%s\t%s\n", $1, $2, $3, $4}' | \
         column -t -s $'\t' | \
-        fzf --header="ID ALIAS COMMAND DESC" \
-            --expect=ctrl-m,cmd-enter \
-            --bind 'cmd-enter:accept')
+        fzf --header="ID ALIAS COMMAND DESC (Ctrl-O 直接执行)" \
+            --expect=ctrl-o)
     
     [[ -z "$selected" ]] && return 0
     
@@ -187,7 +186,7 @@ cmd_search() {
     # 检查按键
     local pressed_key=$(echo "$selected" | head -1)
     
-    if [[ "$pressed_key" == "cmd-enter" ]]; then
+    if [[ "$pressed_key" == "ctrl-o" ]]; then
         # 直接执行
         eval "$command"
     else
