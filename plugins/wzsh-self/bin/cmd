@@ -176,8 +176,8 @@ cmd_run() {
     
     local command=$(echo "$cmd_data" | jq -r '.command')
     
-    # 直接执行命令
-    eval "$command"
+    # 输出命令，由函数包装器执行
+    echo "$command"
 }
 
 # 搜索并选择命令
@@ -202,8 +202,8 @@ cmd_search() {
     local pressed_key=$(echo "$selected" | head -1)
     
     if [[ "$pressed_key" == "ctrl-o" ]]; then
-        # 直接执行
-        eval "$command"
+        # 输出特殊标记和命令，由函数包装器执行
+        echo "__CMD_EXEC__:$command"
     else
         # 输出命令
         echo "$command"

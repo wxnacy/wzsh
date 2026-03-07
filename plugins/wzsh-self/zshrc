@@ -15,12 +15,22 @@ cmd() {
     result=$($HOME/.wzsh/plugins/wzsh-self/bin/cmd "$@")
     exit_code=$?
     
-    # 如果是搜索模式且有结果，使用 print -z 推送到输入缓冲区
-    if [[ $# -eq 0 && -n "$result" && $exit_code -eq 0 ]]; then
+    [[ -z "$result" ]] && return $exit_code
+    
+    # 检查是否是执行标记
+    if [[ "$result" == __CMD_EXEC__:* ]]; then
+        # 提取命令并执行
+        local command="${result#__CMD_EXEC__:}"
+        eval "$command"
+    # 如果是搜索模式，使用 print -z 推送到输入缓冲区
+    elif [[ $# -eq 0 ]]; then
         print -z "$result"
+    # 如果是 run 命令，直接执行
+    elif [[ "$1" == "run" ]]; then
+        eval "$result"
     else
         # 其他情况直接输出结果
-        [[ -n "$result" ]] && echo "$result"
+        echo "$result"
     fi
     
     return $exit_code
