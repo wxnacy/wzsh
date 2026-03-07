@@ -4,7 +4,7 @@
 # 功能：管理常用命令行，支持添加、编辑、删除和搜索命令
 #
 # 使用示例：
-#   cmd                    # 搜索并选择命令（回车输出到 shell，Ctrl-O 直接执行）
+#   cmd                    # 搜索并选择命令（回车输入到 shell，Ctrl-O 直接执行）
 #   cmd add                # 添加新命令
 #   cmd edit <id|alias>    # 编辑命令
 #   cmd rm <id|alias>      # 删除命令
@@ -190,8 +190,8 @@ cmd_search() {
         # 直接执行
         eval "$command"
     else
-        # 输出到命令行
-        print -z "$command"
+        # 输出命令
+        echo "$command"
     fi
 }
 

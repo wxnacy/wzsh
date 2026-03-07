@@ -30,3 +30,23 @@ alias assh="autossh -M 0 "
 
 # fastfetch
 alias ff="fastfetch"
+
+# cmd 命令管理工具包装函数
+cmd() {
+    local result
+    local exit_code
+    
+    # 调用实际的 cmd 脚本
+    result=$($HOME/.wzsh/plugins/wzsh-self/bin/cmd "$@")
+    exit_code=$?
+    
+    # 如果是搜索模式且有结果，使用 print -z 推送到输入缓冲区
+    if [[ $# -eq 0 && -n "$result" && $exit_code -eq 0 ]]; then
+        print -z "$result"
+    else
+        # 其他情况直接输出结果
+        [[ -n "$result" ]] && echo "$result"
+    fi
+    
+    return $exit_code
+}
