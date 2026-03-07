@@ -29,6 +29,8 @@
     - Commit: 7cc35f5 feat(cmd): 实现命令行管理工具
 - [x] 将 `aliases.zsh` 中 cmd 包装函数移到 zshrc 中 ✅ 2026-03-07 22:39:04
     - Commit: cdfbcce refactor(cmd): 将 cmd 函数从 aliases.zsh 移到 zshrc
+- [x] 运行 `cmd run [id|alias]` 脚本直接运行命令，可以接收 id 或者 alias 作为查找索引 ✅ 2026-03-07 22:44:31
+    - Commit: 534c8e7 feat(cmd): 添加 run 命令并修复输入卡住问题
 
 ## BUG FIX
 
@@ -40,3 +42,7 @@
     - 问题原因：print -z 只能在 zsh 交互式环境中工作，脚本作为子进程运行时无法将内容推送到父 shell 的输入缓冲区
     - 修复方案：在 aliases.zsh 中添加 cmd 函数包装器，脚本输出命令，函数使用 print -z 推送到输入缓冲区
     - Commit: b61ae94 fix(cmd): 修复命令无法输入到 shell 输入框的问题
+- [x] `cmd add` 现在会卡主不动 ✅ 2026-03-07 22:44:31
+    - 问题原因：read 命令在通过函数包装器调用的脚本中无法正常读取标准输入
+    - 修复方案：使用 read < /dev/tty 从终端直接读取输入，同时修复 cmd edit 的相同问题
+    - Commit: 534c8e7 feat(cmd): 添加 run 命令并修复输入卡住问题
