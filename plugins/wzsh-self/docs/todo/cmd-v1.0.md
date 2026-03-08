@@ -50,6 +50,10 @@
     - Commit: 5c0fe9e feat(cmd): cmd run 运行命令前打印描述信息
 - [x] `ctrl-o` 直接执行时，也应该先打印下描述信息 ✅ 2026-03-08 16:05:15
     - Commit: 5de0e53 feat(cmd): Ctrl-O 执行命令前也打印描述信息
+- [x] `cmd run [id|alias]` 运行命令时，可以做到参数传递。将后面的参数也都传递给最终的命令行 ✅ 2026-03-08 16:08:45
+    - Commit: 0f60f4d feat(cmd): cmd run 支持参数传递
+    - 比如 `alias=dl` 的命令时 `wdg download`
+    - 运行 `cmd run dl 1 --name w` 可以做到直接运行 `wdg download 1 --name w`
 
 ## BUG FIX
 
