@@ -202,7 +202,7 @@ net:
 | wzshupdate | 更新 wzsh 版本                                                                                                                 | >$ wzshupdate                                  |
 | ydl        | 使用 youtube-dl 下载视频，并开启后台进程                                                                                       | >$ ydl <https://youtube.com/v/xxxx>            |
 | gpush      | git 默认提交所有变动信息                                                                                                       | >$ gpush commit msg                            |
-| cmd        | 命令行管理工具，管理常用命令                                                                                                   | >$ cmd                                         |
+| cmd        | 命令行管理工具，管理常用命令<br/>回车：输入到 shell<br/>Ctrl-O：直接执行<br/>Ctrl-Y：复制到剪贴板                              | >$ cmd                                         |
 | cmd add    | 添加新命令                                                                                                                     | >$ cmd add                                     |
 | cmd edit   | 编辑命令                                                                                                                       | >$ cmd edit <id\|alias>                        |
 | cmd rm     | 删除命令                                                                                                                       | >$ cmd rm <id\|alias>                          |
