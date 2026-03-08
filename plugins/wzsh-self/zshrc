@@ -6,7 +6,7 @@ eval "$(zoxide init zsh --cmd j)"
 cmd() {
     # 对于交互式命令（add, edit），直接执行脚本
     if [[ "$1" == "add" || "$1" == "edit" ]]; then
-        $HOME/.wzsh/plugins/wzsh-self/bin/cmd "$@"
+        ${WZSH_HOME}/plugins/wzsh-self/bin/cmd "$@"
         return $?
     fi
 
@@ -14,7 +14,7 @@ cmd() {
     local exit_code
 
     # 调用实际的 cmd 脚本
-    result=$($HOME/.wzsh/plugins/wzsh-self/bin/cmd "$@")
+    result=$(${WZSH_HOME}/plugins/wzsh-self/bin/cmd "$@")
     exit_code=$?
 
     [[ -z "$result" ]] && return $exit_code
