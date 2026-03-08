@@ -4,13 +4,51 @@
 # 功能：管理常用命令行，支持添加、编辑、删除、运行和搜索命令
 #
 # 使用示例：
-#   cmd                    # 搜索并选择命令（回车输入到 shell，Ctrl-O 直接执行）
-#   cmd add                # 添加新命令
-#   cmd edit <id|alias>    # 编辑命令
-#   cmd rm <id|alias>      # 删除命令
-#   cmd run <id|alias>     # 直接运行命令
-#   cmd -c <path>          # 指定配置目录
-#   cmd --config <path>    # 指定配置目录
+#   cmd                       # 搜索并选择命令（回车输入到 shell，Ctrl-O 直接执行，Ctrl-Y 复制）
+#   cmd add                   # 添加新命令
+#   cmd edit <id|alias>       # 编辑命令
+#   cmd rm <id|alias>         # 删除命令
+#   cmd run <id|alias> [args] # 直接运行命令，支持参数传递
+#   cmd -c <path>             # 指定配置目录
+#   cmd --config <path>       # 指定配置目录
+#   cmd -h, --help            # 显示帮助信息
+
+# 显示帮助信息
+show_help() {
+    cat << 'EOF'
+cmd - 命令行管理工具
+
+功能：
+  管理常用命令行，避免时间长忘记命令怎么使用，可以搜索并把选中的命令行输入到 shell 中。
+
+用法：
+  cmd                       搜索并选择命令
+  cmd add                   添加新命令
+  cmd edit <id|alias>       编辑命令
+  cmd rm <id|alias>         删除命令
+  cmd run <id|alias> [args] 直接运行命令
+  cmd -h, --help            显示此帮助信息
+  cmd -c, --config <path>   指定配置目录
+
+搜索模式快捷键：
+  回车      将命令输入到 shell 输入框，等待手动执行
+  Ctrl-O    直接执行命令
+  Ctrl-Y    复制命令到剪贴板
+
+配置：
+  默认配置目录: ~/Documents/Configs/wzsh/self
+  数据文件: ${config}/cmd.json
+
+示例：
+  cmd                       # 打开搜索界面
+  cmd add                   # 添加新命令
+  cmd edit 1                # 编辑 ID 为 1 的命令
+  cmd edit myalias          # 编辑别名为 myalias 的命令
+  cmd rm 1                  # 删除 ID 为 1 的命令
+  cmd run myalias           # 运行别名为 myalias 的命令
+  cmd run myalias arg1 arg2 # 运行命令并传递参数
+EOF
+}
 
 # 默认配置目录
 CONFIG_DIR="$HOME/Documents/Configs/wzsh/self"
@@ -18,6 +56,10 @@ CONFIG_DIR="$HOME/Documents/Configs/wzsh/self"
 # 解析参数
 while [[ $# -gt 0 ]]; do
     case $1 in
+        -h|--help)
+            show_help
+            exit 0
+            ;;
         -c|--config)
             CONFIG_DIR="$2"
             shift 2
