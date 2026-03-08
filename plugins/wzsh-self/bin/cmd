@@ -87,11 +87,16 @@ cmd_add() {
     read desc
     
     # 输入别名
-    echo -n "别名 (alias): "
+    echo -n "别名 (alias，留空自动生成): "
     read alias
     
+    # 如果别名为空，生成 UUID
+    if [[ -z "$alias" ]]; then
+        alias=$(uuidgen | tr '[:upper:]' '[:lower:]')
+    fi
+    
     # 检查别名唯一性
-    if [[ -n "$alias" ]] && alias_exists "$alias"; then
+    if alias_exists "$alias"; then
         echo "错误: 别名 '$alias' 已存在"
         return 1
     fi
@@ -124,6 +129,7 @@ cmd_edit() {
     local id=$(echo "$cmd_data" | jq -r '.id')
     local old_command=$(echo "$cmd_data" | jq -r '.command')
     local old_desc=$(echo "$cmd_data" | jq -r '.desc')
+    local old_alias=$(echo "$cmd_data" | jq -r '.alias')
     
     echo "编辑命令 (ID: $id)"
     
@@ -137,9 +143,21 @@ cmd_edit() {
     read new_desc
     [[ -z "$new_desc" ]] && new_desc="$old_desc"
     
+    # 编辑别名
+    echo -n "别名 [$old_alias]: "
+    read new_alias
+    [[ -z "$new_alias" ]] && new_alias="$old_alias"
+    
+    # 检查别名唯一性（如果修改了别名）
+    if [[ "$new_alias" != "$old_alias" ]] && alias_exists "$new_alias"; then
+        echo "错误: 别名 '$new_alias' 已存在"
+        return 1
+    fi
+    
     # 更新命令
     jq "(.commands[] | select(.id == $id) | .command) = \"$new_command\" | 
-        (.commands[] | select(.id == $id) | .desc) = \"$new_desc\"" \
+        (.commands[] | select(.id == $id) | .desc) = \"$new_desc\" |
+        (.commands[] | select(.id == $id) | .alias) = \"$new_alias\"" \
         "$CMD_FILE" > "$CMD_FILE.tmp" && mv "$CMD_FILE.tmp" "$CMD_FILE"
     
     echo "命令更新成功"
@@ -186,8 +204,17 @@ cmd_search() {
     
     [[ -z "$commands" ]] && echo "暂无命令" && return 0
     
-    local selected=$(echo "$commands" | \
-        awk -F'|' '{printf "%s\t%s\t%s\t%s\n", $1, $2, $3, $4}' | \
+    # 处理 UUID 样式的 alias，只显示前 8 位
+    local formatted=$(echo "$commands" | awk -F'|' '{
+        alias = $2
+        # 检查是否是 UUID 格式（8-4-4-4-12）
+        if (alias ~ /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/) {
+            alias = substr(alias, 1, 8)
+        }
+        printf "%s\t%s\t%s\t%s\n", $1, alias, $3, $4
+    }')
+    
+    local selected=$(echo "$formatted" | \
         column -t -s $'\t' | \
         fzf --header="ID ALIAS COMMAND DESC (Ctrl-O 直接执行)" \
             --expect=ctrl-o)
