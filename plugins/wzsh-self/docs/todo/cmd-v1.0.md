@@ -48,6 +48,8 @@
     - Commit: 9f3ed5d fix(cmd): Ctrl-Y 复制后不退出 fzf 界面
 - [x] `cmd run` 运行命令时，先打印下描述信息 ✅ 2026-03-08 16:03:45
     - Commit: 5c0fe9e feat(cmd): cmd run 运行命令前打印描述信息
+- [x] `ctrl-o` 直接执行时，也应该先打印下描述信息 ✅ 2026-03-08 16:05:15
+    - Commit: 5de0e53 feat(cmd): Ctrl-O 执行命令前也打印描述信息
 
 ## BUG FIX
 
