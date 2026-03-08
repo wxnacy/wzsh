@@ -216,8 +216,8 @@ cmd_search() {
     
     local selected=$(echo "$formatted" | \
         column -t -s $'\t' | \
-        fzf --header="ID ALIAS COMMAND DESC (Ctrl-O 直接执行)" \
-            --expect=ctrl-o)
+        fzf --header="ID ALIAS COMMAND DESC (Ctrl-O 直接执行, Ctrl-Y 复制命令)" \
+            --expect=ctrl-o,ctrl-y)
     
     [[ -z "$selected" ]] && return 0
     
@@ -228,7 +228,12 @@ cmd_search() {
     # 检查按键
     local pressed_key=$(echo "$selected" | head -1)
     
-    if [[ "$pressed_key" == "ctrl-o" ]]; then
+    if [[ "$pressed_key" == "ctrl-y" ]]; then
+        # 复制命令到剪贴板
+        echo -n "$command" | pbcopy
+        echo "命令已复制到剪贴板: $command"
+        return 0
+    elif [[ "$pressed_key" == "ctrl-o" ]]; then
         # 输出特殊标记和命令，由函数包装器执行
         echo "__CMD_EXEC__:$command"
     else
