@@ -218,7 +218,7 @@ cmd_search() {
         column -t -s $'\t' | \
         fzf --header="ID ALIAS COMMAND DESC (Ctrl-O 直接执行, Ctrl-Y 复制命令)" \
             --expect=ctrl-o \
-            --bind="ctrl-y:execute-silent(echo {} | awk '{print \$1}' | xargs -I{} sh -c 'jq -r \".commands[] | select(.id == {}) | .command\" \"$CMD_FILE\" | pbcopy && echo \"命令已复制到剪贴板\" >&2')")
+            --bind="ctrl-y:execute-silent(echo {} | awk '{print \$1}' | xargs -I{} sh -c \"jq -r '.commands[] | select(.id == {}) | .command' '$CMD_FILE' | pbcopy && echo '命令已复制到剪贴板' >&2\")")
     
     [[ -z "$selected" ]] && return 0
     
