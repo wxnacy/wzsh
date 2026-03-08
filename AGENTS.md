@@ -8,12 +8,20 @@
 │   └── wzsh-self/
 │       ├── bin/
 │       │   └── cmd              # 命令行管理工具
+│       ├── zshrc                # zsh 配置和函数包装器
 │       └── docs/
 │           └── todo/
 │               └── cmd-v1.0.md  # 产品需求文档
 ├── AGENTS.md                    # 项目结构说明
 └── README.md                    # 项目使用说明
 ```
+
+## 项目规范
+
+### 路径引用规范
+
+- 本项目文件根目录统一使用 `${WZSH_HOME}` 变量引用，不使用 `$HOME/.wzsh` 硬编码路径
+- 示例：`${WZSH_HOME}/plugins/wzsh-self/bin/cmd`
 
 ## 命令说明
 
