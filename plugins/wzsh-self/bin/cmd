@@ -187,7 +187,9 @@ cmd_rm() {
 # 运行命令
 cmd_run() {
     local key=$1
-    [[ -z "$key" ]] && echo "用法: cmd run <id|alias>" && return 1
+    shift  # 移除第一个参数，剩余的是要传递的参数
+    
+    [[ -z "$key" ]] && echo "用法: cmd run <id|alias> [args...]" && return 1
     
     local cmd_data=$(find_command "$key")
     [[ -z "$cmd_data" ]] && echo "错误: 未找到命令 '$key'" && return 1
@@ -198,8 +200,12 @@ cmd_run() {
     # 打印描述信息
     [[ -n "$desc" && "$desc" != "null" ]] && echo "描述: $desc" >&2
     
-    # 输出命令，由函数包装器执行
-    echo "$command"
+    # 输出命令和参数，由函数包装器执行
+    if [[ $# -gt 0 ]]; then
+        echo "$command $@"
+    else
+        echo "$command"
+    fi
 }
 
 # 搜索并选择命令
@@ -257,7 +263,8 @@ case $1 in
         cmd_rm "$2"
         ;;
     run)
-        cmd_run "$2"
+        shift  # 移除 'run' 参数
+        cmd_run "$@"
         ;;
     *)
         cmd_search
