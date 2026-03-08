@@ -42,6 +42,10 @@
     - Commit: 8c6de01 refactor(cmd): 使用 WZSH_HOME 变量替代硬编码路径
 - [x] `cmd` 命令，fzf 模式下，可以使用 `ctrl-y` 复制选中行的 `command`，并在header 中提示用户 ✅ 2026-03-08 15:55:30
     - Commit: 7df3f8f feat(cmd): 添加 Ctrl-Y 复制命令到剪贴板功能
+- [x] `cmd` 命令现在按下 `ctrl-y` 会退出程序，不太友好，只复制，如果可以在 `fzf` 提示已复制信息，就提示，不能就不用提示了。✅ 2026-03-08 15:57:45
+    - 问题原因：使用 --expect=ctrl-y 会导致按键后退出 fzf
+    - 修复方案：改用 --bind="ctrl-y:execute-silent(...)" 实现复制后不退出，并在 stderr 输出提示信息
+    - Commit: 9f3ed5d fix(cmd): Ctrl-Y 复制后不退出 fzf 界面
 
 ## BUG FIX
 
