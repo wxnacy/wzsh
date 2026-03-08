@@ -40,6 +40,8 @@
 - [x] `zshrc` 中 `cmd` 包装器中 `$HOME/.wzsh` 替换为 `${WZSH_HOME}` ✅ 2026-03-08 12:28:45
     - 这一点记录到 `AGENTS.md` 中，本项目文件根目录都这样写
     - Commit: 8c6de01 refactor(cmd): 使用 WZSH_HOME 变量替代硬编码路径
+- [x] `cmd` 命令，fzf 模式下，可以使用 `ctrl-y` 复制选中行的 `command`，并在header 中提示用户 ✅ 2026-03-08 15:55:30
+    - Commit: 7df3f8f feat(cmd): 添加 Ctrl-Y 复制命令到剪贴板功能
 
 ## BUG FIX
 
