@@ -37,6 +37,9 @@
     - Commit: 2581b3d feat(cmd): 增强 add 和 edit 命令功能
 - [x] `cmd` fzf 展示列表时，如果 `alias` 是 `uuid` 样式，只展示前 8 位 ✅ 2026-03-08 11:11:13
     - Commit: 2581b3d feat(cmd): 增强 add 和 edit 命令功能
+- [x] `zshrc` 中 `cmd` 包装器中 `$HOME/.wzsh` 替换为 `${WZSH_HOME}` ✅ 2026-03-08 12:28:45
+    - 这一点记录到 `AGENTS.md` 中，本项目文件根目录都这样写
+    - Commit: 8c6de01 refactor(cmd): 使用 WZSH_HOME 变量替代硬编码路径
 
 ## BUG FIX
 
