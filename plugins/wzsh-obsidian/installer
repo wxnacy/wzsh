@@ -1,0 +1,6 @@
+#!/bin/zsh
+
+zlink /Volumes/ZhiTai/影片 ${OBSIDIAN_HOME}/附件/影片
+zlink /Volumes/ZhiTai/书籍 ${OBSIDIAN_HOME}/附件/书籍
+zlink ${HOME}/Projects/obsidian-douban-play-record ${OBSIDIAN_HOME}/.obsidian/plugins/obsidian-douban-play-record
+zlink ${HOME}/Projects/obsidian-fold-properties ${OBSIDIAN_HOME}/.obsidian/plugins/obsidian-fold-properties
