@@ -54,6 +54,11 @@
     - Commit: 0f60f4d feat(cmd): cmd run 支持参数传递
     - 比如 `alias=dl` 的命令时 `wdg download`
     - 运行 `cmd run dl 1 --name w` 可以做到直接运行 `wdg download 1 --name w`
+- [x] `cmd -h` 可以获取帮助文档 ✅ 2026-03-08 16:11:30
+    - Commit: a81bb90 feat(cmd): 添加 -h/--help 帮助文档功能
+- [x] 将 `cmd` 详细功能细节整理到 `cmd` 脚本文档中 ✅ 2026-03-08 16:11:30
+    - 已在脚本开头注释和 -h 帮助文档中详细说明所有功能
+    - Commit: a81bb90 feat(cmd): 添加 -h/--help 帮助文档功能
 
 ## BUG FIX
 
