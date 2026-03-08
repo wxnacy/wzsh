@@ -1,5 +1,7 @@
 . ${WZSH_HOME}/plugins/wzsh-self/aliases.zsh
 
+eval "$(zoxide init zsh --cmd j)"
+
 # cmd 命令管理工具包装函数
 cmd() {
     # 对于交互式命令（add, edit），直接执行脚本
@@ -7,16 +9,16 @@ cmd() {
         $HOME/.wzsh/plugins/wzsh-self/bin/cmd "$@"
         return $?
     fi
-    
+
     local result
     local exit_code
-    
+
     # 调用实际的 cmd 脚本
     result=$($HOME/.wzsh/plugins/wzsh-self/bin/cmd "$@")
     exit_code=$?
-    
+
     [[ -z "$result" ]] && return $exit_code
-    
+
     # 检查是否是执行标记
     if [[ "$result" == __CMD_EXEC__:* ]]; then
         # 提取命令并执行
@@ -32,6 +34,6 @@ cmd() {
         # 其他情况直接输出结果
         echo "$result"
     fi
-    
+
     return $exit_code
 }

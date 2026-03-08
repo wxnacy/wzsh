@@ -47,9 +47,5 @@ zinit snippet OMZ::lib/key-bindings.zsh
 zinit snippet OMZ::lib/completion.zsh
 zinit snippet OMZ::lib/history.zsh
 
-if command -v "autojump" >/dev/null 2>&1; then
-    zinit ice lucid wait='1'
-    zinit snippet OMZ::plugins/autojump
-fi
 zinit ice lucid wait='1'
 zinit snippet OMZ::plugins/git

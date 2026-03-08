@@ -6,7 +6,7 @@ brew "fzf"
 # 磁盘空间分析
 brew "ncdu"
 brew "jq"
-brew "autojump"
+brew "zoxide"
 brew "direnv"
 brew "eza"
 brew "wget"
