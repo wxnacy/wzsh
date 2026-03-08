@@ -193,6 +193,10 @@ cmd_run() {
     [[ -z "$cmd_data" ]] && echo "错误: 未找到命令 '$key'" && return 1
     
     local command=$(echo "$cmd_data" | jq -r '.command')
+    local desc=$(echo "$cmd_data" | jq -r '.desc')
+    
+    # 打印描述信息
+    [[ -n "$desc" && "$desc" != "null" ]] && echo "描述: $desc" >&2
     
     # 输出命令，由函数包装器执行
     echo "$command"
