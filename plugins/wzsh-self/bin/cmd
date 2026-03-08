@@ -229,11 +229,14 @@ cmd_search() {
     local key=$(echo "$selected" | tail -1 | awk '{print $1}')
     local cmd_data=$(find_command "$key")
     local command=$(echo "$cmd_data" | jq -r '.command')
+    local desc=$(echo "$cmd_data" | jq -r '.desc')
     
     # 检查按键
     local pressed_key=$(echo "$selected" | head -1)
     
     if [[ "$pressed_key" == "ctrl-o" ]]; then
+        # 打印描述信息
+        [[ -n "$desc" && "$desc" != "null" ]] && echo "描述: $desc" >&2
         # 输出特殊标记和命令，由函数包装器执行
         echo "__CMD_EXEC__:$command"
     else
