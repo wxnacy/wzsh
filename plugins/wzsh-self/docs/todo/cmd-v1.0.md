@@ -46,6 +46,8 @@
     - 问题原因：使用 --expect=ctrl-y 会导致按键后退出 fzf
     - 修复方案：改用 --bind="ctrl-y:execute-silent(...)" 实现复制后不退出，并在 stderr 输出提示信息
     - Commit: 9f3ed5d fix(cmd): Ctrl-Y 复制后不退出 fzf 界面
+- [x] `cmd run` 运行命令时，先打印下描述信息 ✅ 2026-03-08 16:03:45
+    - Commit: 5c0fe9e feat(cmd): cmd run 运行命令前打印描述信息
 
 ## BUG FIX
 
