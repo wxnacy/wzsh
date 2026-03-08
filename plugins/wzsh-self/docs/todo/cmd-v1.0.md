@@ -31,6 +31,12 @@
     - Commit: cdfbcce refactor(cmd): 将 cmd 函数从 aliases.zsh 移到 zshrc
 - [x] 运行 `cmd run [id|alias]` 脚本直接运行命令，可以接收 id 或者 alias 作为查找索引 ✅ 2026-03-07 22:44:31
     - Commit: 534c8e7 feat(cmd): 添加 run 命令并修复输入卡住问题
+- [x] 运行 `cmd edit [id|alias]` 命令需要支持修改 `alias` ✅ 2026-03-08 11:11:13
+    - Commit: 2581b3d feat(cmd): 增强 add 和 edit 命令功能
+- [x] `add` 命令在 `alias` 为空时，默认设置一个 `uuid` ✅ 2026-03-08 11:11:13
+    - Commit: 2581b3d feat(cmd): 增强 add 和 edit 命令功能
+- [x] `cmd` fzf 展示列表时，如果 `alias` 是 `uuid` 样式，只展示前 8 位 ✅ 2026-03-08 11:11:13
+    - Commit: 2581b3d feat(cmd): 增强 add 和 edit 命令功能
 
 ## BUG FIX
 
