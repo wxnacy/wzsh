@@ -1,1 +1,51 @@
 . ${WZSH_HOME}/plugins/wzsh-bilibili/aliases.zsh
+
+# - [x] 实现 `bb` 功能，对 `/Users/wxnacy/Projects/bilibili-cli/.venv/bin/bili` 进行包装 ✅ 2026-03-14 00:42:12
+#   - 需求细节
+#       - 接收参数 `-u` `--user-cookie` 作为 `cookie` 地址，默认 `cookies.json`，并获取文件所在目录 `cookie_dir`
+#       - 如果 `cookie` 文件不存在，报错并安全退出
+#       - 运行命令 `bili -u ${cookie} credential --save`
+#       - 排除 `bb` 自定义参数，其余参数都传给命令 `BILIBILI_CREDENTIAL=${cookie_dir} /Users/wxnacy/Projects/bilibili-cli/.venv/bin/bili` 并执行
+#   - 功能说明：
+#     - 包装 bilibili-cli 命令，简化 cookie 管理
+#     - 自动设置 BILIBILI_CREDENTIAL 环境变量
+#     - 自动保存凭证到指定目录
+#   - 实现方案：
+#     - 解析 -u/--user-cookie 参数，默认 cookies.json
+#     - 验证 cookie 文件存在性
+#     - 提取 cookie 文件所在目录
+#     - 执行 credential --save 保存凭证
+#     - 传递剩余参数给 bili 命令
+bb() {
+    local cookie="cookies.json"
+    local bili_args=()
+    
+    # 解析参数
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -u|--user-cookie)
+                cookie="$2"
+                shift 2
+                ;;
+            *)
+                bili_args+=("$1")
+                shift
+                ;;
+        esac
+    done
+    
+    # 检查 cookie 文件是否存在
+    if [[ ! -f "$cookie" ]]; then
+        echo "错误: cookie 文件不存在: $cookie" >&2
+        return 1
+    fi
+    
+    # 获取 cookie 文件所在目录
+    local cookie_dir=$(dirname "$cookie")
+    
+    # 保存凭证
+    /Users/wxnacy/Projects/bilibili-cli/.venv/bin/bili -u "$cookie" credential --save
+    
+    # 执行命令
+    BILIBILI_CREDENTIAL="$cookie_dir" /Users/wxnacy/Projects/bilibili-cli/.venv/bin/bili "${bili_args[@]}"
+}
