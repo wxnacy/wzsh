@@ -19,33 +19,33 @@
 bb() {
     local cookie="cookies.json"
     local bili_args=()
-    
+
     # 解析参数
     while [[ $# -gt 0 ]]; do
         case $1 in
-            -u|--user-cookie)
-                cookie="$2"
-                shift 2
-                ;;
-            *)
-                bili_args+=("$1")
-                shift
-                ;;
+        -u | --user-cookie)
+            cookie="$2"
+            shift 2
+            ;;
+        *)
+            bili_args+=("$1")
+            shift
+            ;;
         esac
     done
-    
+
     # 检查 cookie 文件是否存在
     if [[ ! -f "$cookie" ]]; then
         echo "错误: cookie 文件不存在: $cookie" >&2
         return 1
     fi
-    
+
     # 获取 cookie 文件所在目录
     local cookie_dir=$(dirname "$cookie")
-    
+
     # 保存凭证
-    /Users/wxnacy/Projects/bilibili-cli/.venv/bin/bili -u "$cookie" credential --save
-    
+    bili -u "$cookie" credential --save >/dev/null
+
     # 执行命令
     BILIBILI_CREDENTIAL="$cookie_dir" /Users/wxnacy/Projects/bilibili-cli/.venv/bin/bili "${bili_args[@]}"
 }
