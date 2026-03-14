@@ -37,3 +37,45 @@ cmd() {
 
     return $exit_code
 }
+
+# switch_dir - 交互式切换目录
+#
+# 使用 gum choose 选择器列出指定根目录下的子目录名称，选择后进入该子目录。
+#
+# 用法：
+#   switch_dir [-d|--dir <目录>]
+#
+# 参数：
+#   -d, --dir <目录>  指定根目录，默认为当前目录
+#
+# 示例：
+#   switch_dir                    # 在当前目录下选择子目录
+#   switch_dir -d ~/Projects      # 在 ~/Projects 下选择子目录
+#   switch_dir --dir ~/Documents  # 在 ~/Documents 下选择子目录
+switch_dir() {
+    local dir="."
+
+    # 解析参数
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -d|--dir)
+                dir="$2"
+                shift 2
+                ;;
+            *)
+                echo "未知参数: $1" >&2
+                return 1
+                ;;
+        esac
+    done
+
+    # 展开 ~ 和 ${HOME}
+    dir="${dir/#\~/$HOME}"
+
+    # 列出子目录并用 gum choose 选择
+    local chosen
+    chosen=$(ls -1 "$dir" | gum choose --header "选择目录 ($dir)")
+    [[ -z "$chosen" ]] && return 0
+
+    cd "$dir/$chosen"
+}

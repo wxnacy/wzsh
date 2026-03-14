@@ -207,3 +207,4 @@ net:
 | cmd edit   | 编辑命令                                                                                                                       | >$ cmd edit <id\|alias>                        |
 | cmd rm     | 删除命令                                                                                                                       | >$ cmd rm <id\|alias>                          |
 | cmd run    | 直接运行命令                                                                                                                   | >$ cmd run <id\|alias>                         |
+| switch_dir | 交互式切换目录，使用 gum choose 选择子目录后进入                                                                               | >$ switch_dir -d ~/Projects                    |

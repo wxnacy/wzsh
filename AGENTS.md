@@ -25,6 +25,22 @@
 
 ## 命令说明
 
+### switch_dir - 交互式切换目录
+
+在 `zshrc` 中定义的 zsh 函数，使用 `gum choose` 选择器列出指定根目录下的文件/目录名称，选择后进入该子目录。
+
+#### 参数
+
+- `-d, --dir <目录>` - 指定根目录，默认为当前目录，支持 `~` 和 `${HOME}` 路径展开
+
+#### 示例
+
+```bash
+switch_dir                    # 在当前目录下选择子目录
+switch_dir -d ~/Projects      # 在 ~/Projects 下选择子目录
+switch_dir --dir ~/Documents  # 在 ~/Documents 下选择子目录
+```
+
 ### cmd - 命令行管理工具
 
 管理常用命令行，避免时间长忘记命令怎么使用，可以搜索并把选中的命令行输入到 shell 中。
