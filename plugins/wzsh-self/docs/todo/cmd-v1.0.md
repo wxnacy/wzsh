@@ -59,6 +59,21 @@
 - [x] 将 `cmd` 详细功能细节整理到 `cmd` 脚本文档中 ✅ 2026-03-08 16:11:30
     - 已在脚本开头注释和 -h 帮助文档中详细说明所有功能
     - Commit: a81bb90 feat(cmd): 添加 -h/--help 帮助文档功能
+- [x] 完成 `switch_dir` 函数 ✅ 2026-03-14 12:54:18
+    - 需求细节：
+        - 接收参数 `-d` `--dir` 作为选择根目录
+        - 使用 `gum choose` 选择器，列出 `dir` 中的文件名名称，选择后进入子目录
+    - 功能说明：
+        - 在 `zshrc` 中实现 `switch_dir` 函数
+        - 支持 `-d`/`--dir` 参数指定根目录，默认为当前目录
+        - 支持 `~` 路径展开
+        - 使用 `gum choose` 展示目录列表，选择后 `cd` 进入
+    - 修改内容：
+        - `plugins/wzsh-self/zshrc`：实现 `switch_dir` 函数
+        - `AGENTS.md`：新增 `switch_dir` 命令说明
+        - `README.md`：新增 `switch_dir` 方法说明
+    - 提交记录：
+        - 55aa114 feat(zshrc): 实现 switch_dir 交互式切换目录函数
 
 ## BUG FIX
 
