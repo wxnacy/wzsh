@@ -12,11 +12,18 @@ play = [
 ]
 
 [open]
+# https://yazi-rs.github.io/docs/configuration/yazi#open
+append_rules = [
+    # custom 所有文件类型都加上 open --interactive
+	{ url = "*", use = [ "edit", "play", "open", "reveal" ] },
+    # https://github.com/sxyazi/yazi/pull/3222
+    # 解决文件用不了 open --interactive 能力
+	{ url = "*/", use = [ "play", "open", "reveal" ] },
+]
 rules = [
 	# Folder
     # custom add play
 	{ name = "*/", use = [ "edit", "play", "open", "reveal" ] },
-	{ mime = "inode/directory", use = [ "edit", "play", "open", "reveal" ] },
 	# Text
     # custom m3u8 add play
 	{ mime = "text/*", use = [ "edit", "play", "reveal" ] },
@@ -33,9 +40,6 @@ rules = [
 	{ mime = "*/javascript", use = [ "edit", "reveal" ] },
 	# Empty file
 	{ mime = "inode/empty", use = [ "edit", "reveal" ] },
-	# Fallback
-    # custom 所有文件类型都加上 play 备用操作
-	{ name = "*", use = [ "open", "play", "reveal" ] },
 ]
 
 # plugins
