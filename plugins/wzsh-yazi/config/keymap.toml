@@ -25,6 +25,8 @@ prepend_keymap = [
     { on = ["b", "R"], run = 'plugin yamb rename_by_fzf', desc = 'Rename bookmark by fzf' },
     # for mount https://github.com/yazi-rs/plugins/tree/main/mount.yazi
     { on = ["M"], run = 'plugin mount', desc = 'Manage mount' },
+    # smart-open: 目录执行 enter，文件执行 open --interactive（修复 O 键在目录上不生效的问题）
+    { on = "O", run = 'plugin smart-open', desc = 'Enter directory or open file interactively' },
 ]
 
 keymap = [
