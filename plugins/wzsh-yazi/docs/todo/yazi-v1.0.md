@@ -25,3 +25,10 @@
         - `config/keymap.toml`：在 `prepend_keymap` 中添加 `O` 键绑定
     - 提交记录：
         - 189e161 fix(yazi): 修复 O 键在目录上不生效的问题
+- [x] 看来是 `yazi` 更新后导致的 `open --interactive` 在目录上不生效，`https://github.com/sxyazi/yazi/blob/main/CHANGELOG.md` 这是变动日志，看下有没有说到哪个版本导致的 ✅ 2026-03-15 12:49:32
+    - 分析结论：
+        - v25.12.29 引入了 `mime.dir` fetcher，目录开始有 MIME 类型（`inode/directory`）
+        - v25.12.29 同时移除了 opener rules 中的 `$0` 参数，修改了 `open` 命令对目录的处理逻辑
+        - 升级后 `open --interactive` 直接绑定在 `keymap` 中，但 `prepend_keymap` 的 `smart-enter` 插件拦截了 `l`/`<Enter>`，而 `O` 键没有被拦截，直接走原生 `open --interactive`
+        - 原生 `open --interactive` 在目录上的行为依赖 opener 规则，v25.12.29 后行为变化导致无响应
+        - 已通过新增 `smart-open.yazi` 插件并在 `prepend_keymap` 中绑定 `O` 键解决（见上方 BUG FIX 记录）
