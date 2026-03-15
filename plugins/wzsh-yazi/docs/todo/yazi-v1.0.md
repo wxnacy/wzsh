@@ -6,6 +6,20 @@
         - `config/plugins/smart-open.yazi/main.lua`：简化为直接 emit `open --interactive`
     - 提交记录：
         - d904676 feat(yazi): smart-open 对目录和文件都使用 open --interactive
+- [x] 现在 `smart-open.yazi` 不能解决问题，我希望文件夹上 `O` 键位可以和文件上一样，展示 `Open with` 列表 ✅ 2026-03-15 12:55:16
+    - 需求细节
+        - `https://yazi-rs.github.io/docs/configuration/yazi` 参考文档修改键位文件
+    - 问题原因：
+        - `smart-open.yazi` 通过 `ya.emit("open", { interactive = true })` 传参方式不正确，导致 `--interactive` 参数未生效
+        - `yazi.toml` 中目录已有 opener 规则 `{ name = "*/", use = [...] }`，原生 `open --interactive` 本身支持目录
+    - 解决方案：
+        - 移除 `smart-open.yazi` 插件
+        - 在 `prepend_keymap` 中直接用 `run = "open --interactive"` 绑定 `O` 键，覆盖 `keymap` 中的同名绑定
+    - 修改内容：
+        - `config/keymap.toml`：`prepend_keymap` 中 `O` 键改为直接 `open --interactive`
+        - `config/plugins/smart-open.yazi/`：删除插件
+    - 提交记录：
+        - d7b2181 fix(yazi): O 键直接使用 open --interactive，移除 smart-open 插件
 
 ## BUG FIX
 
