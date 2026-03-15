@@ -1,42 +1,42 @@
 [[plugin.deps]]
 use = "yazi-rs/plugins:git"
-rev = "7afba3a"
-hash = "47d8513034b81ee8ae814e36e455bfa7"
+rev = "1962818"
+hash = "26db011a778f261d730d4f5f8bf24b3f"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:smart-enter"
-rev = "7afba3a"
-hash = "c1a2739e9ef2d837030ccb4267be3ed1"
+rev = "1962818"
+hash = "187cc58ba7ac3befd49c342129e6f1b6"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:full-border"
-rev = "7afba3a"
-hash = "3a73613fc702a5f8369791b3401f52f1"
+rev = "1962818"
+hash = "6fa6a05a81c98dd000fbca3cca6e9682"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:diff"
-rev = "7afba3a"
-hash = "284f6694e3b1a4afd686acf1052acd90"
+rev = "1962818"
+hash = "8b1af6b5a69797ee951f2a80ce570818"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:chmod"
-rev = "7afba3a"
-hash = "36c82bb433078e8e752351d961cac777"
+rev = "1962818"
+hash = "f0c8c378184d5f8abd1b095a443d336d"
 
 [[plugin.deps]]
 use = "h-hg/yamb"
-rev = "108347b"
-hash = "faf1b817347b5b46c96039dab538694b"
+rev = "5f2e22e"
+hash = "699fe07e0d2d1b4af8dafb84168eeb04"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:piper"
-rev = "4b027c7"
-hash = "ca862f0008f47952e2bd3e19328aca02"
+rev = "1962818"
+hash = "384464b6df8cb807425c521f8cd790f3"
 
 [[plugin.deps]]
 use = "Rolv-Apneseth/starship"
-rev = "6fde3b2"
-hash = "7ddb7a790746fd91ecdd0350cc5a5d8c"
+rev = "eca1861"
+hash = "e519d894e94ded741e06aae4d4775981"
 
 [flavor]
 deps = []
