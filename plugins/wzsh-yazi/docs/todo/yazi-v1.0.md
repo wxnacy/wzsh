@@ -46,3 +46,18 @@
         - 升级后 `open --interactive` 直接绑定在 `keymap` 中，但 `prepend_keymap` 的 `smart-enter` 插件拦截了 `l`/`<Enter>`，而 `O` 键没有被拦截，直接走原生 `open --interactive`
         - 原生 `open --interactive` 在目录上的行为依赖 opener 规则，v25.12.29 后行为变化导致无响应
         - 已通过新增 `smart-open.yazi` 插件并在 `prepend_keymap` 中绑定 `O` 键解决（见上方 BUG FIX 记录）
+- [x] 问题没有解决，目录使用 `open --interactive` 还是没有反应 ✅ 2026-03-15 13:05:19
+    - 需求细节
+        - https://github.com/sxyazi/yazi/pull/3222
+        - https://github.com/sxyazi/yazi/issues/3545
+        - 参考这两个链接，看看是否需要修改 yazi.toml
+    - 问题原因：
+        - v25.12.29 引入 `mime.dir` fetcher 后，目录有了 MIME 类型 `inode/directory`
+        - `open` 规则匹配时优先按 `mime` 匹配，`yazi.toml` 中目录规则只有 `name = "*/"` 没有对应的 `mime` 规则
+        - 导致目录按 MIME 匹配时找不到规则，`open --interactive` 无响应
+    - 解决方案：
+        - 在 `yazi.toml` 的 `open.rules` 中添加 `{ mime = "inode/directory", use = [...] }` 规则
+    - 修改内容：
+        - `config/yazi.toml`：新增 `mime = "inode/directory"` 的 opener 规则
+    - 提交记录：
+        - cbba829 fix(yazi): 添加 inode/directory mime 规则修复目录 open --interactive 无响应
