@@ -16,6 +16,7 @@ rules = [
 	# Folder
     # custom add play
 	{ name = "*/", use = [ "edit", "play", "open", "reveal" ] },
+	{ mime = "inode/directory", use = [ "edit", "play", "open", "reveal" ] },
 	# Text
     # custom m3u8 add play
 	{ mime = "text/*", use = [ "edit", "play", "reveal" ] },
