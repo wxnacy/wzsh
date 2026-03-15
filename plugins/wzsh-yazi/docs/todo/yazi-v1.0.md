@@ -1,3 +1,12 @@
+## TODO
+
+- [x] `smart-open.yazi` 应该不管目录还是文件都使用 `open --interactive` ✅ 2026-03-15 12:46:00
+    - 功能说明：移除目录/文件的条件判断，直接调用 `open --interactive`，让 yazi 自身处理目录和文件的交互式打开逻辑
+    - 修改内容：
+        - `config/plugins/smart-open.yazi/main.lua`：简化为直接 emit `open --interactive`
+    - 提交记录：
+        - d904676 feat(yazi): smart-open 对目录和文件都使用 open --interactive
+
 ## BUG FIX
 
 - [x] `O` 键位在文件夹上不生效了，只能在文件上生效，以前都可以的 ✅ 2026-03-15 12:38:50
