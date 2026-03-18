@@ -113,8 +113,20 @@ local keys = {
 		end),
 	},
 
-	-- 关闭
-	{ key = "w", mods = "SUPER", action = act.CloseCurrentTab({ confirm = true }) },
+	-- 关闭：多 pane 时关闭当前 pane，只有一个 pane 时关闭 tab
+	{
+		key = "w",
+		mods = "SUPER",
+		action = wezterm.action_callback(function(window, pane)
+			local tab = window:active_tab()
+			if #tab:panes() > 1 then
+				pane:activate()
+				window:perform_action(act.CloseCurrentPane({ confirm = false }), pane)
+			else
+				window:perform_action(act.CloseCurrentTab({ confirm = true }), pane)
+			end
+		end),
+	},
 }
 
 for _, binding in ipairs(keys) do
