@@ -30,7 +30,7 @@ config.font_size = 16.0 -- 根据你的屏幕 DPI 调整，13~15 最舒适
 config.color_scheme = "Catppuccin Frappe" -- 备选: Catppuccin Frappe / Macchiato / Latte
 
 -- 窗口
-config.window_background_opacity = 0.66 -- 轻微透明
+config.window_background_opacity = 0.86 -- 轻微透明
 config.macos_window_background_blur = 30 -- macOS 背景模糊（Linux 用 window_decorations）
 config.window_decorations = "RESIZE" -- 隐藏标题栏，只留 resize 手柄（macOS/Linux 推荐）
 config.window_padding = {
@@ -80,8 +80,8 @@ local keys = {
 
 	-- 新 tab / 分屏（类似 tmux）
 	{ key = "t", mods = "SUPER", action = act.SpawnTab("CurrentPaneDomain") },
-	{ key = "|", mods = "SUPER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-	{ key = "-", mods = "SUPER", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+	{ key = "d", mods = "SUPER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+	{ key = "D", mods = "SUPER", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
 
 	-- 切换 tab / pane
 	{ key = "]", mods = "SUPER", action = act.ActivateTabRelative(1) },

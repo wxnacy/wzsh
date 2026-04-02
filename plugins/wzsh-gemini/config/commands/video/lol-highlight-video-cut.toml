@@ -1,0 +1,8 @@
+# https://geminicli.com/docs/cli/custom-commands/
+description = "剪辑LOL比赛视频高光时刻"
+
+prompt = """
+使用 `skill:lol-highlight-video-cuter` 剪辑 {{args}} 高光时刻
+
+自动允许 `ls ffmpeg conda source` 操作
+"""

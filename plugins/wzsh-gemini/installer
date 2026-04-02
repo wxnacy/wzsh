@@ -8,3 +8,4 @@ if [ ! -d "${GEMINI_CONFIG_DIR}" ]; then
 fi
 
 zlink "${PLUGIN_CONFIG_DIR}/GEMINI.md" "${GEMINI_CONFIG_DIR}/GEMINI.md"
+zlink "${PLUGIN_CONFIG_DIR}/commands" "${GEMINI_CONFIG_DIR}/commands"

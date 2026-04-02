@@ -1,2 +1,2 @@
-export OBSIDIAN_HOME=/Users/wxnacy/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents/MyObsidian
+export OBSIDIAN_HOME="/Users/wxnacy/Projects/Obsidian/MyObsidian"
 export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"

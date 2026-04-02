@@ -1,1 +1,4 @@
 . ${WZSH_HOME}/plugins/wzsh-ai/aliases.zsh
+
+# OpenClaw Completion
+source "/Users/wxnacy/.openclaw/completions/openclaw.zsh"

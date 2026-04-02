@@ -114,6 +114,7 @@ node_modules/
 
 .idea/
 .vim/
+.nvimlog
 *.sw*
 .project
 target/

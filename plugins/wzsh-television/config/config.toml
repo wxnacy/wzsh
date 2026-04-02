@@ -161,13 +161,14 @@ ctrl-s = "cycle_sources"
 ctrl-t = "toggle_remote_control"
 ctrl-x = "toggle_action_picker"
 ctrl-o = "toggle_preview"
-ctrl-h = "toggle_help"
+f11 = "toggle_help" # customize
 f12 = "toggle_status_bar"
 ctrl-l = "toggle_layout"
 
 # Input field actions
 # ----------------------------------------
 backspace = "delete_prev_char"
+ctrl-h = "delete_prev_char" # customize
 ctrl-w = "delete_prev_word"
 ctrl-u = "delete_line"
 delete = "delete_next_char"
