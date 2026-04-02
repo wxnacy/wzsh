@@ -170,3 +170,4 @@ plugins/wzsh-mpv/config/watch_later/
 #=================== for plugins end
 .aider*
 config.local.json
+config.cache

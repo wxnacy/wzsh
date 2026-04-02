@@ -20,6 +20,8 @@ import sys
 
 WZSH_HOME = os.environ.get('WZSH_HOME', os.path.expanduser('~/.zsh'))
 WZSH_DATA = os.environ.get('WZSH_DATA', os.path.expanduser('~/.local/share/wzsh'))
+WZSH_TEMP = os.environ.get('WZSH_TEMP', '/tmp/wzsh')
+CACHE_FILE = os.path.join(WZSH_TEMP, 'config.cache')
 
 
 def _load_json(path: str) -> dict:
@@ -78,5 +80,10 @@ def get_plugin_paths() -> list[str]:
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else 'paths'
     if cmd == 'paths':
-        for path in get_plugin_paths():
+        paths = get_plugin_paths()
+        # 写入缓存
+        os.makedirs(WZSH_TEMP, exist_ok=True)
+        with open(CACHE_FILE, 'w') as f:
+            f.write('\n'.join(paths) + '\n')
+        for path in paths:
             print(path)

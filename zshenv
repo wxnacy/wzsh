@@ -61,8 +61,14 @@ addpath "${WZSH_HOME}/bin"
 addpath ${WZSH_BIN}
 addpath "${HOME}/.local/bin"
 
-# 加载 config.json 插件（新逻辑）
-WZSH_PLUGIN_PATHS=($(/usr/bin/python3 ${WZSH_HOME}/lib/pythonx/config.py paths 2>/dev/null))
+# 加载 config.json 插件（新逻辑，带缓存）
+_wzsh_cache=${WZSH_TEMP}/config.cache
+_wzsh_config=${WZSH_HOME}/config.json
+_wzsh_config_local=${WZSH_HOME}/config.local.json
+if [[ ! -f $_wzsh_cache || $_wzsh_config -nt $_wzsh_cache || ( -f $_wzsh_config_local && $_wzsh_config_local -nt $_wzsh_cache ) ]]; then
+    /usr/bin/python3 ${WZSH_HOME}/lib/pythonx/config.py paths 2>/dev/null
+fi
+WZSH_PLUGIN_PATHS=(${(f)"$(<$_wzsh_cache)"})
 for plugin_path in "${WZSH_PLUGIN_PATHS[@]}"; do
     bindir=${plugin_path}/bin
     if [[ -d $bindir ]]; then
