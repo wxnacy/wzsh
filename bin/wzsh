@@ -1,157 +1,147 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 # wzsh 主管理命令
 # 整合 wzsh、wzsh-install、z 的功能
+
+WZSH_HOME="${WZSH_HOME:-${HOME}/.zsh}"
+WZSH_BIN="${WZSH_BIN:-${HOME}/.local/share/wzsh/bin}"
+
+# 加载日志函数（从 basic.zsh 提取的 bash 兼容版本）
+_log() { echo "[$(date '+%F %T')] [$1] $2"; }
+zinfo()  { _log "INFO"  "$*"; }
+zwarn()  { _log "WARN"  "$*"; }
+zerror() { _log "ERROR" "$*"; }
+
+_zlink() {
+    # 软链文件
+    local src=$1 dest=$2
+    if [ -L "$dest" ]; then
+        if [ "$(readlink "$dest")" = "$src" ]; then
+            zinfo "✓ 已正确链接: $dest"
+        else
+            zinfo "重新链接: $dest -> $src"
+            ln -sf "$src" "$dest"
+        fi
+    elif [ -e "$dest" ]; then
+        local bak="${dest}.bak.$(date +%Y%m%d%H%M%S)"
+        zinfo "备份: $dest -> $bak"
+        mv "$dest" "$bak"
+        zinfo "链接: $dest -> $src"
+        ln -sf "$src" "$dest"
+    else
+        zinfo "链接: $dest -> $src"
+        ln -sf "$src" "$dest"
+    fi
+}
 
 # =============================================================================
 # 顶层命令
 # =============================================================================
 
-function update() {
+update() {
     # 更新 wzsh
     cd ~/.zsh && proxyon
     git pull && git submodule update --init --recursive
     proxyoff && cd - && zsh
 }
 
-function conf() {
+conf() {
     # 打开配置文件
-    cd ${WZSH_HOME}
-    vim
-    cd -
-}
-
-function env() {
-    # 获取 wzsh 环境
-    local envfile=~/.wzshenv
-    if [[ -f $envfile ]]; then
-        cat $envfile
-    fi
-}
-
-function setenv() {
-    # 设置 wzsh 环境
-    local envfile=~/.wzshenv
-    echo $1 > $envfile
-}
-
-function debug() {
-    # 调试 lib 脚本
-    local name=$1
-    shift
-    local filepath=${WZSH_HOME}/lib/${name}.zsh
-    if [[ ! -f $filepath ]]; then
-        zerror "${name} 不存在"
-        return
-    fi
-    /bin/zsh ${WZSH_HOME}/lib/__debug.zsh ${filepath} $@
+    cd "${WZSH_HOME}" && eval "${EDITOR}"; cd -
 }
 
 # =============================================================================
 # plugin 子命令
 # =============================================================================
 
-function __get_plugin_dir() {
+__get_plugin_dir() {
     # 获取插件目录（优先从 config.py 查，回退到旧逻辑）
     local name=$1
     local path
-    path=$(/usr/bin/python3 ${WZSH_HOME}/lib/pythonx/config.py path-of "${name}" 2>/dev/null)
-    if [[ -n $path ]]; then
-        echo $path
+    path=$(/usr/bin/python3 "${WZSH_HOME}/lib/pythonx/config.py" path-of "$name" 2>/dev/null)
+    if [ -n "$path" ]; then
+        echo "$path"
     else
-        echo ${WZSH_HOME}/plugins/wzsh-${name}
+        echo "${WZSH_HOME}/plugins/wzsh-${name}"
     fi
 }
 
-function __create_plugin() {
+__create_plugin() {
     # 创建插件骨架
     local name=$1
-    if [[ ! $name ]]; then
+    if [ -z "$name" ]; then
         zerror "缺少参数 {name}"
-        return
+        return 1
     fi
-    local plugin_root=${2:-${WZSH_HOME}/plugins}
-    local dirname=${plugin_root}/wzsh-${name}
+    local plugin_root="${2:-${WZSH_HOME}/plugins}"
+    local dirname="${plugin_root}/wzsh-${name}"
     zinfo "wzsh-${name} 开始创建"
-    [[ -d $dirname ]] || mkdir $dirname
-    [[ -d $dirname/bin ]] || mkdir $dirname/bin
-    [[ -d $dirname/config ]] || mkdir $dirname/config
-    echo '{}' > $dirname/config/help.json
+    mkdir -p "$dirname/bin" "$dirname/config"
+    echo '{}' > "$dirname/config/help.json"
     for _name in aliases.zsh zprofile zshenv zshrc installer; do
-        touch $dirname/$_name
+        touch "$dirname/$_name"
         zinfo "创建 $dirname/$_name"
     done
-    echo '. ${WZSH_HOME}/plugins/wzsh-'${name}'/aliases.zsh' >> $dirname/zshrc
-    chmod +x "${dirname}/installer"
+    echo ". \${WZSH_HOME}/plugins/wzsh-${name}/aliases.zsh" >> "$dirname/zshrc"
+    chmod +x "$dirname/installer"
     zinfo "wzsh-${name} 创建成功"
 }
 
-function __conf_plugin() {
+__conf_plugin() {
     # 编辑插件
-    local name=$1
-    local dirname=$(__get_plugin_dir $name)
-    if [[ ! -d ${dirname} ]]; then
-        zwarn "插件 $name 不存在"
-        return
+    local dirname
+    dirname=$(__get_plugin_dir "$1")
+    if [ ! -d "$dirname" ]; then
+        zwarn "插件 $1 不存在"
+        return 1
     fi
-    cd $dirname && eval ${EDITOR}; cd -
+    cd "$dirname" && eval "${EDITOR}"; cd -
 }
 
-function __home_plugin() {
+__home_plugin() {
     # 输出插件目录
-    echo $(__get_plugin_dir $1)
+    __get_plugin_dir "$1"
 }
 
-function __init_plugin() {
+__init_plugin() {
     # 执行插件 init.zsh
-    local init_path=$(__get_plugin_dir $1)/init.zsh
-    if [[ ! -f $init_path ]]; then
+    local init_path
+    init_path="$(__get_plugin_dir "$1")/init.zsh"
+    if [ ! -f "$init_path" ]; then
         zerror "缺少脚本 ${init_path}"
-        return
+        return 1
     fi
-    zsh $init_path
+    bash "$init_path"
 }
 
-function __debug_plugin() {
-    # 调试插件脚本
-    local name=$1
-    shift
-    local filepath=${WZSH_HOME}/plugins/wzsh-${name}/zshrc
-    if [[ ! -f $filepath ]]; then
-        zerror "${name} 插件不存在"
-        return
-    fi
-    /bin/zsh ${WZSH_HOME}/lib/__debug.zsh ${filepath} $@
-}
-
-function __add_brew() {
+__add_brew() {
     # 将软件添加到插件的 Brewfile
-    local name=$1
-    local plugin_home=$(__get_plugin_dir ${name})
-    if [[ ! -d ${plugin_home} ]]; then
-        zerror "插件 ${name} 不存在"
+    local plugin_home
+    plugin_home=$(__get_plugin_dir "$1")
+    if [ ! -d "$plugin_home" ]; then
+        zerror "插件 $1 不存在"
         return 1
     fi
-    brew bundle --file=${plugin_home}/Brewfile add ${@:2}
+    brew bundle --file="${plugin_home}/Brewfile" add "${@:2}"
 }
 
-function __remove_brew() {
+__remove_brew() {
     # 从插件 Brewfile 移除软件
-    local name=$1
-    local plugin_home=$(__get_plugin_dir ${name})
-    if [[ ! -d ${plugin_home} ]]; then
-        zerror "插件 ${name} 不存在"
+    local plugin_home
+    plugin_home=$(__get_plugin_dir "$1")
+    if [ ! -d "$plugin_home" ]; then
+        zerror "插件 $1 不存在"
         return 1
     fi
-    brew bundle --file=${plugin_home}/Brewfile remove ${@:2}
+    brew bundle --file="${plugin_home}/Brewfile" remove "${@:2}"
 }
 
-function __install_one() {
+__install_one() {
     # 安装单个插件
-    # 参数：plugin_home 插件目录路径
+    # 参数：$1=plugin_home $2=no_brew
     local plugin_home=$1
     local no_brew=$2
 
-    if [[ ! -d $plugin_home ]]; then
+    if [ ! -d "$plugin_home" ]; then
         zwarn "插件目录不存在: $plugin_home"
         return 1
     fi
@@ -160,35 +150,35 @@ function __install_one() {
 
     # 软链 bin/ 下可执行文件到 WZSH_BIN
     local plugin_bin_dir="${plugin_home}/bin"
-    if [[ -d "${plugin_bin_dir}" ]]; then
+    if [ -d "$plugin_bin_dir" ]; then
         zinfo "软链脚本命令: ${plugin_bin_dir} → ${WZSH_BIN}"
-        mkdir -p "${WZSH_BIN}"
-        for bin_file in $(find "${plugin_bin_dir}" -type f -maxdepth 1); do
-            if [[ -x "${bin_file}" ]]; then
-                local dest_file="${WZSH_BIN}/$(basename "${bin_file}")"
-                zlink "${bin_file}" "${dest_file}"
+        mkdir -p "$WZSH_BIN"
+        while IFS= read -r bin_file; do
+            if [ -x "$bin_file" ]; then
+                local dest_file="${WZSH_BIN}/$(basename "$bin_file")"
+                _zlink "$bin_file" "$dest_file"
             fi
-        done
+        done < <(find "$plugin_bin_dir" -maxdepth 1 -type f)
     fi
 
     # 执行 Brewfile
-    local brewfile=${plugin_home}/Brewfile
-    if [[ -f $brewfile && "$no_brew" != "true" ]]; then
+    local brewfile="${plugin_home}/Brewfile"
+    if [ -f "$brewfile" ] && [ "$no_brew" != "true" ]; then
         zinfo "安装 Brew 软件: ${brewfile}"
-        wbrew bundle install --file=$brewfile
+        wbrew bundle install --file="$brewfile"
     fi
 
     # 执行自定义安装脚本
-    local installer=${plugin_home}/installer
-    if [[ -f $installer ]]; then
+    local installer="${plugin_home}/installer"
+    if [ -f "$installer" ]; then
         zinfo "执行安装脚本: ${installer}"
-        zsh $installer
+        bash "$installer"
     fi
 
     zinfo "插件安装完成: $plugin_home"
 }
 
-function __install_plugin() {
+__install_plugin() {
     # 安装插件，支持按 name 单装或全装
     # 用法：__install_plugin [name] [--no-brew]
     local no_brew=false
@@ -201,52 +191,51 @@ function __install_plugin() {
     done
 
     # 确保 config.local.json 存在
-    local local_config=${WZSH_HOME}/config.local.json
-    if [[ ! -f $local_config ]]; then
+    local local_config="${WZSH_HOME}/config.local.json"
+    if [ ! -f "$local_config" ]; then
         zinfo "创建 config.local.json"
-        echo '{ "plugins": [] }' > $local_config
+        echo '{ "plugins": [] }' > "$local_config"
     fi
 
-    if [[ -n $target_name ]]; then
+    if [ -n "$target_name" ]; then
         # 安装指定插件
-        local plugin_home=$(__get_plugin_dir $target_name)
+        local plugin_home
+        plugin_home=$(__get_plugin_dir "$target_name")
         # github 插件：目录不存在则先 clone
-        local github_url=$(/usr/bin/python3 ${WZSH_HOME}/lib/pythonx/config.py github-of "${target_name}" 2>/dev/null)
-        if [[ -n $github_url && ! -d $plugin_home ]]; then
-            zinfo "克隆插件: git clone https://github.com/${github_url} ${plugin_home}"
-            git clone "https://github.com/${github_url}" "${plugin_home}"
+        local github_url
+        github_url=$(/usr/bin/python3 "${WZSH_HOME}/lib/pythonx/config.py" github-of "$target_name" 2>/dev/null)
+        if [ -n "$github_url" ] && [ ! -d "$plugin_home" ]; then
+            zinfo "克隆插件: https://github.com/${github_url} -> ${plugin_home}"
+            git clone "https://github.com/${github_url}" "$plugin_home"
         fi
-        __install_one $plugin_home $no_brew
+        __install_one "$plugin_home" "$no_brew"
     else
-        # 安装全部插件
-        local paths=($(/usr/bin/python3 ${WZSH_HOME}/lib/pythonx/config.py paths 2>/dev/null))
-        # github 插件先 clone
-        local github_map=$(/usr/bin/python3 ${WZSH_HOME}/lib/pythonx/config.py github-list 2>/dev/null)
+        # 安装全部插件，先处理 github clone
         while IFS='|' read -r path url; do
-            if [[ -n $url && ! -d $path ]]; then
-                zinfo "克隆插件: git clone https://github.com/${url} ${path}"
-                git clone "https://github.com/${url}" "${path}"
+            if [ -n "$url" ] && [ ! -d "$path" ]; then
+                zinfo "克隆插件: https://github.com/${url} -> ${path}"
+                git clone "https://github.com/${url}" "$path"
             fi
-        done <<< "$github_map"
-        for plugin_home in "${paths[@]}"; do
-            __install_one $plugin_home $no_brew
-        done
+        done < <(/usr/bin/python3 "${WZSH_HOME}/lib/pythonx/config.py" github-list 2>/dev/null)
+
+        while IFS= read -r plugin_home; do
+            __install_one "$plugin_home" "$no_brew"
+        done < <(/usr/bin/python3 "${WZSH_HOME}/lib/pythonx/config.py" paths 2>/dev/null)
     fi
 }
 
-function plugin() {
+plugin() {
     # 插件管理子命令
     local action=$1
     shift
     case $action in
-        'create')   __create_plugin $@ ;;
-        'conf')     __conf_plugin $@ ;;
-        'home')     __home_plugin $@ ;;
-        'init')     __init_plugin $@ ;;
-        'debug')    __debug_plugin $@ ;;
-        'install')  __install_plugin $@ ;;
-        'add-brew') __add_brew $@ ;;
-        'remove-brew') __remove_brew $@ ;;
+        create)      __create_plugin "$@" ;;
+        conf)        __conf_plugin "$@" ;;
+        home)        __home_plugin "$@" ;;
+        init)        __init_plugin "$@" ;;
+        install)     __install_plugin "$@" ;;
+        add-brew)    __add_brew "$@" ;;
+        remove-brew) __remove_brew "$@" ;;
         *) zwarn "暂不支持 $action 指令" ;;
     esac
 }
@@ -255,10 +244,6 @@ function plugin() {
 # 入口
 # =============================================================================
 
-if [[ $* ]]; then
-    local cmd="$1"
-    shift
-    local rc=0
-    $cmd "$@" || rc=$?
-    return $rc
-fi
+cmd="$1"
+shift
+"$cmd" "$@"
