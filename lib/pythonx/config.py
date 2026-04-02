@@ -21,7 +21,7 @@ import sys
 WZSH_HOME = os.environ.get('WZSH_HOME', os.path.expanduser('~/.zsh'))
 WZSH_DATA = os.environ.get('WZSH_DATA', os.path.expanduser('~/.local/share/wzsh'))
 WZSH_TEMP = os.environ.get('WZSH_TEMP', '/tmp/wzsh')
-CACHE_FILE = os.path.join(WZSH_TEMP, 'config.cache')
+CACHE_FILE = os.path.join(WZSH_TEMP, 'plugins.cache')
 
 
 def _load_json(path: str) -> dict:
