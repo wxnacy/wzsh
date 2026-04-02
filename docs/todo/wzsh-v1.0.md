@@ -36,3 +36,12 @@
     - 提交记录：
       - 59f1ebe perf(config): 新增 config.cache 缓存，优化 zsh 启动速度
 
+- [x] 插件加载支持 `order` 字段控制顺序：
+  - `config.json` 中 `wzsh-self` 设置 `"order": 0`
+  - `lib/pythonx/config.py` merge 后按 `order` 稳定排序，默认值为 `100` ✅ 2026-04-02 21:15:21
+    - 修改内容：
+      - `config.json`：wzsh-self 新增 `"order": 0`
+      - `lib/pythonx/config.py`：load_config 中加入 `plugins.sort(key=lambda p: p.get('order', 100))`
+    - 提交记录：
+      - bba50b0 feat(config): 插件支持 order 字段控制加载顺序，wzsh-self 设为 0
+
