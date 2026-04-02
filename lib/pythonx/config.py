@@ -89,3 +89,33 @@ if __name__ == '__main__':
             f.write('\n'.join(paths) + '\n')
         for path in paths:
             print(path)
+    elif cmd == 'path-of':
+        # 按 name 返回插件路径
+        name = sys.argv[2] if len(sys.argv) > 2 else ''
+        config = load_config()
+        for plugin in config.get('plugins', []):
+            pname = plugin.get('name') or (
+                plugin.get('path', '').rstrip('/').split('/')[-1] if 'path' in plugin
+                else plugin.get('github', '').split('/')[-1]
+            )
+            if pname == name:
+                print(resolve_plugin_path(plugin))
+                sys.exit(0)
+        sys.exit(1)
+    elif cmd == 'github-of':
+        # 按 name 返回 github 地址（user/repo），无则退出 1
+        name = sys.argv[2] if len(sys.argv) > 2 else ''
+        config = load_config()
+        for plugin in config.get('plugins', []):
+            pname = plugin.get('name') or plugin.get('github', '').split('/')[-1]
+            if pname == name and 'github' in plugin and 'path' not in plugin:
+                print(plugin['github'])
+                sys.exit(0)
+        sys.exit(1)
+    elif cmd == 'github-list':
+        # 输出所有 github 插件的 "path|github" 列表（无本地 path 覆盖的）
+        config = load_config()
+        for plugin in config.get('plugins', []):
+            if 'github' in plugin and 'path' not in plugin:
+                path = resolve_plugin_path(plugin)
+                print(f"{path}|{plugin['github']}")

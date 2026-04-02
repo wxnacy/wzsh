@@ -70,11 +70,6 @@ if [[ ! -f $_wzsh_cache || $_wzsh_config -nt $_wzsh_cache || ( -f $_wzsh_config_
 fi
 WZSH_PLUGIN_PATHS=(${(f)"$(<$_wzsh_cache)"})
 for plugin_path in "${WZSH_PLUGIN_PATHS[@]}"; do
-    bindir=${plugin_path}/bin
-    if [[ -d $bindir ]]; then
-        zdebug "加载 bin $plugin_path"
-        export PATH="$bindir:${PATH}"
-    fi
     shfile=${plugin_path}/zshenv
     if [[ -f $shfile ]]; then
         source $shfile
@@ -84,13 +79,7 @@ done
 # 加载插件（旧逻辑，灰度过渡中）
 for plugin in "${WZSH_PLUGINS[@]}"; do
     name="wzsh-${plugin}"
-    bindir=${WZSH_HOME}/plugins/${name}/bin
-    if [[ -d $bindir ]]; then
-        zdebug "加载 bin $name"
-        export PATH="$bindir:${PATH}"
-    fi
     shfile=${WZSH_HOME}/plugins/${name}/zshenv
-
     if [ -f $shfile ]; then
         source $shfile
     fi
