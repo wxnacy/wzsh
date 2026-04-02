@@ -35,12 +35,14 @@ def _load_json(path: str) -> dict:
 def load_config() -> dict:
     """
     读取并 merge config.json 和 config.local.json。
-    local 的 plugins 追加到 config.json 的 plugins 后面。
+    local 的 plugins 追加到 config.json 的 plugins 后面，
+    merge 后按 order 字段稳定排序，默认 order 为 100。
     """
     base = _load_json(os.path.join(WZSH_HOME, 'config.json'))
     local = _load_json(os.path.join(WZSH_HOME, 'config.local.json'))
 
     plugins = base.get('plugins', []) + local.get('plugins', [])
+    plugins.sort(key=lambda p: p.get('order', 100))
     return {**base, **local, 'plugins': plugins}
 
 
