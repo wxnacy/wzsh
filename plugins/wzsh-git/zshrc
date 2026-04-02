@@ -12,9 +12,9 @@
 source ${WZSH_HOME}/plugins/wzsh-git/forgit.zsh
 
 # 推送
-function gpush(){
+function gpush() {
     proxyon
-    bname=`git branch | grep '*' | awk '{print $2}'`
+    bname=$(git branch | grep '*' | awk '{print $2}')
     zinfo '当前分支:' $bname
     gcmit $@
     git pull origin $bname
@@ -23,7 +23,7 @@ function gpush(){
 }
 
 # 创建并推送 tag
-function gptag(){
+function gptag() {
     git tag ${1}
     proxyon
     git push origin ${1}
@@ -31,10 +31,9 @@ function gptag(){
 }
 
 # 添加并提交
-function gcmit(){
+function gcmit() {
     file=$1
-    if [ $file ]
-    then
+    if [ $file ]; then
         zinfo '提交文件:' ${file}
         git add $file
     else
@@ -44,23 +43,22 @@ function gcmit(){
     msg=${@/#$1/}
     # 去掉开头空格
     msg=${msg/# /}
-    if [ $msg ]
-    then
+    if [ $msg ]; then
         zinfo '提交信息:' ${msg}
         git commit -m "$msg"
     fi
 }
 
 # 拉取
-function gpull(){
-    bname=`git branch | grep '*' | awk '{print $2}'`
+function gpull() {
+    bname=$(git branch | grep '*' | awk '{print $2}')
     zinfo "当前分支名称: ${bname}"
     proxyon
     git pull origin $bname $@
     proxyoff
 }
 
-function gsub(){
+function gsub() {
     # 拉去子模块初始状态
     proxyon
     zinfo '拉取子模块初始化状态'
@@ -68,7 +66,7 @@ function gsub(){
     proxyoff
 }
 
-function gsubr(){
+function gsubr() {
     # 从远程拉去最新子模块的提交
     proxyon
     zinfo '拉取子模块最新提交'
@@ -76,7 +74,7 @@ function gsubr(){
     proxyoff
 }
 
-function gsuba(){
+function gsuba() {
     # 添加子模块
     proxyon
     zinfo '添加子模块'
@@ -85,7 +83,7 @@ function gsuba(){
 }
 
 # 删除子模块，并提交
-function gsubm(){
+function gsubm() {
     local p=$1
     git submodule deinit -f $p
     git rm -f $p
@@ -94,7 +92,7 @@ function gsubm(){
 }
 
 # git clone
-function glone(){
+function glone() {
     proxyon
     params=$(python3 $WZSH_GIT_PY conver_clone_url $@)
     zinfo "解析参数 $params"
@@ -102,20 +100,28 @@ function glone(){
     proxyoff
 }
 
+# git clone
+function pglone() {
+    mkdir -p ~/Projects/github/
+    cd ~/Projects/github/
+    glone $@
+    cd -
+}
+
 # 配置
-function gconf(){
+function gconf() {
     git config user.name "${WZSH_GIT_NAME}"
     git config user.email "${WZSH_GIT_EMAIL}"
 }
 
 # 全局配置
-function ggconf(){
+function ggconf() {
     git config --global user.name "${WZSH_GIT_NAME}"
     git config --global user.email "${WZSH_GIT_EMAIL}"
 }
 
 # 修改 remove url 到 ssh
-function git-set-ssh-url(){
+function git-set-ssh-url() {
     name="origin"
     url=$(git remote get-url ${name})
     ssh_url=$(python3 $WZSH_GIT_PY conver_clone_url ${url})
@@ -123,9 +129,9 @@ function git-set-ssh-url(){
 }
 
 # 增加 .gitlint
-function gitlint-config(){
+function gitlint-config() {
     name=.gitlint
-cat > $name <<EOF
+    cat >$name <<EOF
 [general]
 ignore=B6
 contrib=CT1
