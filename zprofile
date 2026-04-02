@@ -10,7 +10,16 @@ zdbug $(blue "###############################################")
 # 创建临时文件目录
 test -d $WZSH_TEMP || mkdir $WZSH_TEMP && zdebug '创建临时文件目录'
 
-# 加载插件
+# 加载 config.json 插件（新逻辑）
+for plugin_path in "${WZSH_PLUGIN_PATHS[@]}"; do
+    shfile=${plugin_path}/zprofile
+    if [[ -f $shfile ]]; then
+        zdebug "加载 zprofile $plugin_path"
+        source $shfile
+    fi
+done
+
+# 加载插件（旧逻辑，灰度过渡中）
 for plugin in "${WZSH_PLUGINS[@]}"; do
     name="wzsh-${plugin}"
     shfile=${WZSH_HOME}/plugins/${name}/zprofile

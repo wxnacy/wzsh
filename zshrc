@@ -36,7 +36,15 @@ autoload -Uz compinit; compinit
 zstyle ':completion:*' menu select
 
 zdebug $(yellow "开始加载插件")
-# load zsh plugins
+# 加载 config.json 插件（新逻辑）
+for plugin_path in "${WZSH_PLUGIN_PATHS[@]}"; do
+    shfile=${plugin_path}/zshrc
+    if [[ -f $shfile ]]; then
+        source $shfile
+    fi
+done
+
+# load zsh plugins（旧逻辑，灰度过渡中）
 for plugin in "${WZSH_PLUGINS[@]}"; do
     name="wzsh-${plugin}"
     # 加载 zshrc
