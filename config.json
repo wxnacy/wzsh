@@ -1,3 +1,6 @@
 {
-  "plugins": []
+  "plugins": [
+    { "name": "wzsh-self" },
+    { "path": "${HOME}/Projects/agent/.agent", "name": "agent" }
+  ]
 }
