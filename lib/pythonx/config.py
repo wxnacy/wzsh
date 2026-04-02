@@ -56,7 +56,7 @@ def resolve_plugin_path(plugin: dict) -> str:
     """
     # 有 path 字段时直接使用（本地插件或 github 本地调试）
     if 'path' in plugin:
-        return os.path.expanduser(plugin['path'])
+        return os.path.expandvars(os.path.expanduser(plugin['path']))
 
     # 只有 name → 内置插件
     if 'name' in plugin and 'github' not in plugin:
