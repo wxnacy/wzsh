@@ -58,3 +58,7 @@
   - `config.py add-plugin` 子命令负责向 config.local.json 写入插件配置 ✅ 2026-04-03 10:08:07
     - 提交记录：
       - 674f3d7 feat(wzsh): 拆分 plugin load/install，新增 config.py add-plugin 子命令
+
+- [x] `plugin load` 全量加载前清理 `WZSH_BIN` 中的无效软链 ✅ 2026-04-03 10:19:08
+    - 提交记录：
+      - 2999565 feat(wzsh): plugin load 全量加载前自动清理 WZSH_BIN 无效软链
