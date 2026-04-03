@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # homebrew from https://mirrors.tuna.tsinghua.edu.cn/help/homebrew/
 
-cur_dir=${0:A:h}
-# cur_dir=$(wzsh plugin home homebrew)
+cur_dir=$(wzsh plugin home homebrew)
 if ! command -v "brew" >/dev/null 2>&1; then
     install_brew=${cur_dir}/install-brew
     $install_brew
