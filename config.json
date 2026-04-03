@@ -18,7 +18,6 @@
     { "name": "wzsh-vagrant" },
     { "name": "wzsh-chezmoi" },
     { "name": "wzsh-conda" },
-    { "name": "wzsh-obsidian" },
     { "name": "wzsh-youtube-dl" },
     { "name": "wzsh-television" },
     { "name": "wzsh-bilibili" },
