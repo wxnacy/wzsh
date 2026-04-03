@@ -190,6 +190,13 @@ __load_plugin() {
         esac
     done
 
+    # 全量加载时，先清理 WZSH_BIN 中的无效软链
+    if [ -z "$target_name" ] && [ -d "$WZSH_BIN" ]; then
+        find "$WZSH_BIN" -maxdepth 1 -type l | while read -r link; do
+            [ ! -e "$link" ] && zinfo "清理无效链接: $link" && rm "$link"
+        done
+    fi
+
     if [ -n "$target_name" ]; then
         local plugin_home
         plugin_home=$(__get_plugin_dir "$target_name")
