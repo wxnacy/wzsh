@@ -135,8 +135,8 @@ __remove_brew() {
     brew bundle --file="${plugin_home}/Brewfile" remove "${@:2}"
 }
 
-__install_one() {
-    # 安装单个插件
+__load_one() {
+    # 加载单个插件（软链 bin、执行 Brewfile、执行 installer）
     # 参数：$1=plugin_home $2=no_brew
     local plugin_home=$1
     local no_brew=$2
@@ -146,7 +146,7 @@ __install_one() {
         return 1
     fi
 
-    zinfo "安装插件: $plugin_home"
+    zinfo "加载插件: $plugin_home"
 
     # 软链 bin/ 下可执行文件到 WZSH_BIN
     local plugin_bin_dir="${plugin_home}/bin"
@@ -175,12 +175,12 @@ __install_one() {
         bash "$installer"
     fi
 
-    zinfo "插件安装完成: $plugin_home"
+    zinfo "插件加载完成: $plugin_home"
 }
 
-__install_plugin() {
-    # 安装插件，支持按 name 单装或全装
-    # 用法：__install_plugin [name] [--no-brew]
+__load_plugin() {
+    # 加载插件
+    # 用法：__load_plugin [name] [--no-brew]
     local no_brew=false
     local target_name=""
     for arg in "$@"; do
@@ -190,6 +190,34 @@ __install_plugin() {
         esac
     done
 
+    if [ -n "$target_name" ]; then
+        local plugin_home
+        plugin_home=$(__get_plugin_dir "$target_name")
+        __load_one "$plugin_home" "$no_brew"
+    else
+        while IFS= read -r plugin_home; do
+            __load_one "$plugin_home" "$no_brew"
+        done < <(/usr/bin/python3 "${WZSH_HOME}/lib/pythonx/config.py" paths 2>/dev/null)
+    fi
+}
+
+__install_plugin() {
+    # 安装新插件：写入 config.local.json，clone github 插件，然后 load
+    # 用法：__install_plugin <target> [--name <name>]
+    local target="" name="" no_brew=false
+    while [ $# -gt 0 ]; do
+        case $1 in
+            --name)  name=$2; shift 2 ;;
+            --no-brew) no_brew=true; shift ;;
+            *) target=$1; shift ;;
+        esac
+    done
+
+    if [ -z "$target" ]; then
+        zerror "缺少参数 <target>"
+        return 1
+    fi
+
     # 确保 config.local.json 存在
     local local_config="${WZSH_HOME}/config.local.json"
     if [ ! -f "$local_config" ]; then
@@ -197,31 +225,36 @@ __install_plugin() {
         echo '{ "plugins": [] }' > "$local_config"
     fi
 
-    if [ -n "$target_name" ]; then
-        # 安装指定插件
-        local plugin_home
-        plugin_home=$(__get_plugin_dir "$target_name")
-        # github 插件：目录不存在则先 clone
-        local github_url
-        github_url=$(/usr/bin/python3 "${WZSH_HOME}/lib/pythonx/config.py" github-of "$target_name" 2>/dev/null)
-        if [ -n "$github_url" ] && [ ! -d "$plugin_home" ]; then
-            zinfo "克隆插件: https://github.com/${github_url} -> ${plugin_home}"
-            git clone "https://github.com/${github_url}" "$plugin_home"
-        fi
-        __install_one "$plugin_home" "$no_brew"
-    else
-        # 安装全部插件，先处理 github clone
-        while IFS='|' read -r path url; do
-            if [ -n "$url" ] && [ ! -d "$path" ]; then
-                zinfo "克隆插件: https://github.com/${url} -> ${path}"
-                git clone "https://github.com/${url}" "$path"
-            fi
-        done < <(/usr/bin/python3 "${WZSH_HOME}/lib/pythonx/config.py" github-list 2>/dev/null)
+    local plugin_home=""
 
-        while IFS= read -r plugin_home; do
-            __install_one "$plugin_home" "$no_brew"
-        done < <(/usr/bin/python3 "${WZSH_HOME}/lib/pythonx/config.py" paths 2>/dev/null)
+    # 判断类型：github 还是本地路径
+    if [[ "$target" == /* || "$target" == ./* || "$target" == ~* ]]; then
+        # 本地路径
+        local abs_path
+        abs_path=$(cd "$(dirname "${target/#\~/$HOME}/${target##*/}")" 2>/dev/null && pwd)/$(basename "$target") 2>/dev/null || abs_path="${target/#\~/$HOME}"
+        abs_path="${target/#\~/$HOME}"
+        abs_path=$(realpath "$abs_path" 2>/dev/null || echo "$abs_path")
+        [ -z "$name" ] && name=$(basename "$abs_path")
+        zinfo "写入本地插件: path=$abs_path name=$name"
+        /usr/bin/python3 "${WZSH_HOME}/lib/pythonx/config.py" add-plugin --path "$abs_path" --name "$name"
+        plugin_home="$abs_path"
+    else
+        # github
+        [ -z "$name" ] && name=$(echo "$target" | cut -d'/' -f2)
+        plugin_home="${WZSH_DATA}/plugins/${name}"
+        if [ ! -d "$plugin_home" ]; then
+            zinfo "克隆插件: https://github.com/${target} -> ${plugin_home}"
+            git clone "https://github.com/${target}" "$plugin_home"
+        else
+            zinfo "插件已存在，跳过 clone: $plugin_home"
+        fi
+        zinfo "写入 github 插件: github=$target name=$name"
+        /usr/bin/python3 "${WZSH_HOME}/lib/pythonx/config.py" add-plugin --github "$target" --name "$name"
     fi
+
+    # 刷新缓存并 load
+    /usr/bin/python3 "${WZSH_HOME}/lib/pythonx/config.py" paths > /dev/null 2>&1
+    __load_one "$plugin_home" "$no_brew"
 }
 
 plugin() {
@@ -233,6 +266,7 @@ plugin() {
         conf)        __conf_plugin "$@" ;;
         home)        __home_plugin "$@" ;;
         init)        __init_plugin "$@" ;;
+        load)        __load_plugin "$@" ;;
         install)     __install_plugin "$@" ;;
         add-brew)    __add_brew "$@" ;;
         remove-brew) __remove_brew "$@" ;;
@@ -241,14 +275,27 @@ plugin() {
 用法: wzsh plugin <子命令> [参数]
 
 子命令:
-  create <name>              创建插件骨架
-  conf <name>                编辑插件目录
-  home <name>                输出插件目录路径
-  init <name>                执行插件 init.zsh
-  install [name] [--no-brew] 安装插件（无 name 则安装全部）
-  add-brew <name> <formula>  将软件添加到插件 Brewfile
-  remove-brew <name> <formula> 从插件 Brewfile 移除软件
-  -h, --help                 显示帮助
+  create <name>                    创建插件骨架
+  conf <name>                      编辑插件目录
+  home <name>                      输出插件目录路径
+  init <name>                      执行插件 init.zsh
+  load [name] [--no-brew]          加载插件（软链 bin、执行 Brewfile、installer）
+  install <target> [--name <name>] 安装新插件，写入配置并 load
+  add-brew <name> <formula>        将软件添加到插件 Brewfile
+  remove-brew <name> <formula>     从插件 Brewfile 移除软件
+  -h, --help                       显示帮助
+
+install 示例:
+  wzsh plugin install wxnacy/wzsh-work
+  wzsh plugin install wxnacy/wzsh-work --name work
+  wzsh plugin install /path/to/plugin
+  wzsh plugin install ./my-plugin --name myplugin
+  wzsh plugin install ~/my-plugin
+
+load 示例:
+  wzsh plugin load
+  wzsh plugin load wzsh-self
+  wzsh plugin load --no-brew
 EOF
             ;;
         *) zwarn "暂不支持 $action 指令" ;;

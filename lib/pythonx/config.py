@@ -119,3 +119,41 @@ if __name__ == '__main__':
             if 'github' in plugin and 'path' not in plugin:
                 path = resolve_plugin_path(plugin)
                 print(f"{path}|{plugin['github']}")
+    elif cmd == 'add-plugin':
+        # 向 config.local.json 追加插件配置
+        # 用法：config.py add-plugin --github user/repo [--name xxx]
+        #       config.py add-plugin --path /abs/path [--name xxx]
+        import argparse
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--github')
+        parser.add_argument('--path')
+        parser.add_argument('--name')
+        args = parser.parse_args(sys.argv[2:])
+
+        entry = {}
+        if args.github:
+            entry['github'] = args.github
+        elif args.path:
+            entry['path'] = os.path.expandvars(os.path.expanduser(args.path))
+        else:
+            print('error: --github or --path required', file=sys.stderr)
+            sys.exit(1)
+        if args.name:
+            entry['name'] = args.name
+
+        local_path = os.path.join(WZSH_HOME, 'config.local.json')
+        local = _load_json(local_path) or {'plugins': []}
+        if 'plugins' not in local:
+            local['plugins'] = []
+
+        # 避免重复写入（按 github/path 去重）
+        key = 'github' if 'github' in entry else 'path'
+        for p in local['plugins']:
+            if p.get(key) == entry[key]:
+                print(f'already exists: {entry[key]}')
+                sys.exit(0)
+
+        local['plugins'].append(entry)
+        with open(local_path, 'w', encoding='utf-8') as f:
+            json.dump(local, f, indent=2, ensure_ascii=False)
+        print(f'added: {entry}')
