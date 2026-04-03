@@ -29,14 +29,6 @@ done
 #     fi
 # done
 
-# 加载 bash 登录配置
-for name in .local/zprofile; do
-    shfile=${HOME}/${name}
-    if [ -f $shfile ]; then
-        zdebug "加载 $shfile"
-        source $shfile
-    fi
-done
 
 # Kiro CLI post block. Keep at the bottom of this file.
 # 禁用 kiro-cli 自动建议以避免与 zsh-autosuggestions 冲突

@@ -54,17 +54,6 @@ done
 #     fi
 # done
 
-zdebug $(yellow "开始加载本地环境")
-for name in .local/zshrc
-do
-    shfile=${HOME}/${name}
-    if [ -f $shfile ]; then
-        zdebug "加载 $shfile"
-        source $shfile
-    fi
-done
-
-
 # 计算加载时间
 if [ -n "$ZSH_START_TIME" ]; then
     ZSH_END_TIME=$(/usr/bin/python3 -c 'import time; print(int(time.time() * 1000))')
