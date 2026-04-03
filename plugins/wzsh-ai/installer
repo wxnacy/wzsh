@@ -1,4 +1,0 @@
-#!/bin/zsh
-
-zlink "${WZSH_HOME}/plugins/wzsh-ai/config/factory/AGENTS.md" "${HOME}/.factory/AGENTS.md"
-# for droid end

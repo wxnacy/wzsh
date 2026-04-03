@@ -1,6 +1,0 @@
-# https://geminicli.com/docs/cli/custom-commands/
-description = "生成传入视频的字幕"
-
-prompt = """
-使用 skill: create-video-subtitle 创建视频字幕 {{args}}
-"""
