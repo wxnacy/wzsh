@@ -15,7 +15,7 @@ export WZSH_DATA=${HOME}/.local/share/wzsh
 export WZSH_BIN=${WZSH_DATA}/bin
 export WZSH_COMPLETION=${WZSH_DATA}/completions
 export WZSH_PLUGIN=${WZSH_DATA}/plugins
-export WZSH_HOME=${HOME}/.zsh
+export WZSH_HOME=${HOME}/.wzsh
 # 加载基础命令
 source ${WZSH_HOME}/lib/basic.zsh
 export WZSH_NAME=wZsh
