@@ -45,3 +45,9 @@
   - `WZSH_BIN` 只加一次 PATH（已在 zshenv 中） ✅ 2026-04-02 22:14:46
     - 提交记录：
       - 7dac2f4 feat(wzsh): 合并 wzsh/wzsh-install/z，统一 bin 加载机制
+
+- [x] `bin/wzsh` 及其子命令增加 `-h` 帮助文档 ✅ 2026-04-03 09:54:46
+    - 修改内容：
+      - `bin/wzsh`：顶层和 `plugin` 子命令均支持 `-h`/`--help`
+    - 提交记录：
+      - e5d548e feat(wzsh): 新增 -h 帮助文档，wzsh 和 wzsh plugin 均支持
