@@ -1,5 +1,6 @@
-
-eval "$(zoxide init zsh --cmd j)"
+if [ $(command -v zoxide) ]; then
+    eval "$(zoxide init zsh --cmd j)"
+fi
 
 # cmd 命令管理工具包装函数
 cmd() {
@@ -57,14 +58,14 @@ switch_dir() {
     # 解析参数
     while [[ $# -gt 0 ]]; do
         case "$1" in
-            -d|--dir)
-                dir="$2"
-                shift 2
-                ;;
-            *)
-                echo "未知参数: $1" >&2
-                return 1
-                ;;
+        -d | --dir)
+            dir="$2"
+            shift 2
+            ;;
+        *)
+            echo "未知参数: $1" >&2
+            return 1
+            ;;
         esac
     done
 

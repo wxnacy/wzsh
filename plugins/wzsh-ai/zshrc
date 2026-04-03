@@ -1,3 +1,4 @@
-
 # OpenClaw Completion
-source "/Users/wxnacy/.openclaw/completions/openclaw.zsh"
+if [ $(command -v openclaw) ]; then
+    source "/Users/wxnacy/.openclaw/completions/openclaw.zsh"
+fi
