@@ -65,7 +65,8 @@ _wzsh_cache=${WZSH_TEMP}/plugins.cache
 _wzsh_config=${WZSH_HOME}/config.json
 _wzsh_config_local=${WZSH_HOME}/config.local.json
 if [[ ! -f $_wzsh_cache || $_wzsh_config -nt $_wzsh_cache || ( -f $_wzsh_config_local && $_wzsh_config_local -nt $_wzsh_cache ) ]]; then
-    /usr/bin/python3 ${WZSH_HOME}/lib/pythonx/config.py paths 2>/dev/null
+    zdbug "重新生成插件缓存: $_wzsh_cache"
+    /usr/bin/python3 ${WZSH_HOME}/lib/pythonx/config.py paths > /dev/null 2>&1
 fi
 WZSH_PLUGIN_PATHS=(${(f)"$(<$_wzsh_cache)"})
 for plugin_path in "${WZSH_PLUGIN_PATHS[@]}"; do
