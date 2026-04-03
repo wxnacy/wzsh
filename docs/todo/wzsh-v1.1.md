@@ -51,3 +51,10 @@
       - `bin/wzsh`：顶层和 `plugin` 子命令均支持 `-h`/`--help`
     - 提交记录：
       - e5d548e feat(wzsh): 新增 -h 帮助文档，wzsh 和 wzsh plugin 均支持
+
+- [x] 拆分 `plugin install` 和新增 `plugin load`，职责分离：
+  - `wzsh plugin load [name] [--no-brew]`：加载插件（软链 bin、执行 Brewfile、执行 installer）
+  - `wzsh plugin install <target> [--name <name>]`：安装新插件，写入配置并 load
+  - `config.py add-plugin` 子命令负责向 config.local.json 写入插件配置 ✅ 2026-04-03 10:08:07
+    - 提交记录：
+      - 674f3d7 feat(wzsh): 拆分 plugin load/install，新增 config.py add-plugin 子命令
