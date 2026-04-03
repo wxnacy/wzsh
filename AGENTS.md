@@ -108,7 +108,7 @@
 
 | 变量 | 说明 |
 | --- | --- |
-| `WZSH_HOME` | wzsh 根目录，值为 `$HOME/.zsh` |
+| `WZSH_HOME` | wzsh 根目录，值为 `$HOME/.wzsh` |
 | `WZSH_DATA` | 数据目录，值为 `$HOME/.local/share/wzsh` |
 | `WZSH_BIN` | 安装后的可执行文件目录 `$WZSH_DATA/bin` |
 | `WZSH_CACHE_HOME` | 配置缓存目录 `~/Documents/Configs/wzsh` |
