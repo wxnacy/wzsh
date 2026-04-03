@@ -2,13 +2,13 @@
 # wzsh 主管理命令
 # 整合 wzsh、wzsh-install、z 的功能
 
-WZSH_HOME="${WZSH_HOME:-${HOME}/.zsh}"
+WZSH_HOME="${WZSH_HOME:-${HOME}/.wzsh}"
 WZSH_BIN="${WZSH_BIN:-${HOME}/.local/share/wzsh/bin}"
 
 # 加载日志函数（从 basic.zsh 提取的 bash 兼容版本）
 _log() { echo "[$(date '+%F %T')] [$1] $2"; }
-zinfo()  { _log "INFO"  "$*"; }
-zwarn()  { _log "WARN"  "$*"; }
+zinfo() { _log "INFO" "$*"; }
+zwarn() { _log "WARN" "$*"; }
 zerror() { _log "ERROR" "$*"; }
 
 _zlink() {
@@ -39,14 +39,15 @@ _zlink() {
 
 update() {
     # 更新 wzsh
-    cd ~/.zsh && proxyon
-    git pull && git submodule update --init --recursive
+    cd "${WZSH_HOME}" && proxyon
+    git pull
     proxyoff && cd - && zsh
 }
 
 conf() {
     # 打开配置文件
-    cd "${WZSH_HOME}" && eval "${EDITOR}"; cd -
+    cd "${WZSH_HOME}" && ${EDITOR} zshrc
+    cd -
 }
 
 # =============================================================================
@@ -76,12 +77,12 @@ __create_plugin() {
     local dirname="${plugin_root}/wzsh-${name}"
     zinfo "wzsh-${name} 开始创建"
     mkdir -p "$dirname/bin" "$dirname/config"
-    echo '{}' > "$dirname/config/help.json"
+    echo '{}' >"$dirname/config/help.json"
     for _name in aliases.zsh zprofile zshenv zshrc installer; do
         touch "$dirname/$_name"
         zinfo "创建 $dirname/$_name"
     done
-    echo ". \${WZSH_HOME}/plugins/wzsh-${name}/aliases.zsh" >> "$dirname/zshrc"
+    echo ". \${WZSH_HOME}/plugins/wzsh-${name}/aliases.zsh" >>"$dirname/zshrc"
     chmod +x "$dirname/installer"
     zinfo "wzsh-${name} 创建成功"
 }
@@ -94,7 +95,8 @@ __conf_plugin() {
         zwarn "插件 $1 不存在"
         return 1
     fi
-    cd "$dirname" && eval "${EDITOR}"; cd -
+    cd "$dirname" && eval "${EDITOR} zshrc"
+    cd -
 }
 
 __home_plugin() {
@@ -185,8 +187,8 @@ __load_plugin() {
     local target_name=""
     for arg in "$@"; do
         case $arg in
-            --no-brew) no_brew=true ;;
-            *) target_name=$arg ;;
+        --no-brew) no_brew=true ;;
+        *) target_name=$arg ;;
         esac
     done
 
@@ -214,9 +216,18 @@ __install_plugin() {
     local target="" name="" no_brew=false
     while [ $# -gt 0 ]; do
         case $1 in
-            --name)  name=$2; shift 2 ;;
-            --no-brew) no_brew=true; shift ;;
-            *) target=$1; shift ;;
+        --name)
+            name=$2
+            shift 2
+            ;;
+        --no-brew)
+            no_brew=true
+            shift
+            ;;
+        *)
+            target=$1
+            shift
+            ;;
         esac
     done
 
@@ -229,7 +240,7 @@ __install_plugin() {
     local local_config="${WZSH_HOME}/config.local.json"
     if [ ! -f "$local_config" ]; then
         zinfo "创建 config.local.json"
-        echo '{ "plugins": [] }' > "$local_config"
+        echo '{ "plugins": [] }' >"$local_config"
     fi
 
     local plugin_home=""
@@ -260,7 +271,7 @@ __install_plugin() {
     fi
 
     # 刷新缓存并 load
-    /usr/bin/python3 "${WZSH_HOME}/lib/pythonx/config.py" paths > /dev/null 2>&1
+    /usr/bin/python3 "${WZSH_HOME}/lib/pythonx/config.py" paths >/dev/null 2>&1
     __load_one "$plugin_home" "$no_brew"
 }
 
@@ -269,16 +280,16 @@ plugin() {
     local action=$1
     shift
     case $action in
-        create)      __create_plugin "$@" ;;
-        conf)        __conf_plugin "$@" ;;
-        home)        __home_plugin "$@" ;;
-        init)        __init_plugin "$@" ;;
-        load)        __load_plugin "$@" ;;
-        install)     __install_plugin "$@" ;;
-        add-brew)    __add_brew "$@" ;;
-        remove-brew) __remove_brew "$@" ;;
-        -h|--help|"")
-            cat <<'EOF'
+    create) __create_plugin "$@" ;;
+    conf) __conf_plugin "$@" ;;
+    home) __home_plugin "$@" ;;
+    init) __init_plugin "$@" ;;
+    load) __load_plugin "$@" ;;
+    install) __install_plugin "$@" ;;
+    add-brew) __add_brew "$@" ;;
+    remove-brew) __remove_brew "$@" ;;
+    -h | --help | "")
+        cat <<'EOF'
 用法: wzsh plugin <子命令> [参数]
 
 子命令:
@@ -304,8 +315,8 @@ load 示例:
   wzsh plugin load wzsh-self
   wzsh plugin load --no-brew
 EOF
-            ;;
-        *) zwarn "暂不支持 $action 指令" ;;
+        ;;
+    *) zwarn "暂不支持 $action 指令" ;;
     esac
 }
 
@@ -328,6 +339,6 @@ EOF
 cmd="$1"
 shift
 case $cmd in
-    -h|--help|"") _usage ;;
-    *) "$cmd" "$@" ;;
+-h | --help | "") _usage ;;
+*) "$cmd" "$@" ;;
 esac
