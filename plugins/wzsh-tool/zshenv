@@ -1,6 +1,0 @@
-
-# for wshell
-if [ -d "${HOME}/.wshell" ]; then
-    export WS_HOME="${HOME}/.wshell"
-    export PATH=$PATH:${WS_HOME}/bin
-fi

@@ -1,9 +1,0 @@
-#!/bin/zsh
-#
-plugin_home=${WZSH_PLUGIN}/alacritty
-mkdir -p $plugin_home
-proxyon
-git clone https://github.com/alacritty/alacritty-theme $plugin_home/alacritty-theme
-proxyoff
-
-zlink $WZSH_HOME/plugins/wzsh-alacritty/config $HOME/.config/alacritty
