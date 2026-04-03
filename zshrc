@@ -44,15 +44,15 @@ for plugin_path in "${WZSH_PLUGIN_PATHS[@]}"; do
     fi
 done
 
-# load zsh plugins（旧逻辑，灰度过渡中）
-for plugin in "${WZSH_PLUGINS[@]}"; do
-    name="wzsh-${plugin}"
-    # 加载 zshrc
-    shfile=${WZSH_HOME}/plugins/${name}/zshrc
-    if [ -f $shfile ]; then
-        source $shfile
-    fi
-done
+# load zsh plugins（旧逻辑，已迁移到 config.json，暂时注释）
+# for plugin in "${WZSH_PLUGINS[@]}"; do
+#     name="wzsh-${plugin}"
+#     # 加载 zshrc
+#     shfile=${WZSH_HOME}/plugins/${name}/zshrc
+#     if [ -f $shfile ]; then
+#         source $shfile
+#     fi
+# done
 
 zdebug $(yellow "开始加载本地环境")
 for name in .local/zshrc

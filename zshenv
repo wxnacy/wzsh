@@ -9,9 +9,8 @@
 #===============================
 
 export ZSH_START_TIME=$(/usr/bin/python3 -c 'import time; print(int(time.time() * 1000))')
-# 需要加载的插件列表
-# 需要加载的插件列表（self 和 agent 已迁移到 config.json）
-export WZSH_PLUGINS=(homebrew zinit go ai python direnv eza fzf gemini git kitty mpv nvim poetry rust ssh yazi vagrant chezmoi conda obsidian youtube-dl television website bilibili nvm alacritty wezterm)
+# 需要加载的插件列表（已迁移到 config.json，保留注释备用）
+# export WZSH_PLUGINS=(homebrew zinit go ai python direnv eza fzf gemini git kitty mpv nvim poetry rust ssh yazi vagrant chezmoi conda obsidian youtube-dl television website bilibili nvm alacritty wezterm)
 export WZSH_DATA=${HOME}/.local/share/wzsh
 export WZSH_BIN=${WZSH_DATA}/bin
 export WZSH_COMPLETION=${WZSH_DATA}/completions
@@ -76,14 +75,14 @@ for plugin_path in "${WZSH_PLUGIN_PATHS[@]}"; do
     fi
 done
 
-# 加载插件（旧逻辑，灰度过渡中）
-for plugin in "${WZSH_PLUGINS[@]}"; do
-    name="wzsh-${plugin}"
-    shfile=${WZSH_HOME}/plugins/${name}/zshenv
-    if [ -f $shfile ]; then
-        source $shfile
-    fi
-done
+# 加载插件（旧逻辑，已迁移到 config.json，暂时注释）
+# for plugin in "${WZSH_PLUGINS[@]}"; do
+#     name="wzsh-${plugin}"
+#     shfile=${WZSH_HOME}/plugins/${name}/zshenv
+#     if [ -f $shfile ]; then
+#         source $shfile
+#     fi
+# done
 
 # 加载 bash 登录配置
 for name in .local/zshenv; do

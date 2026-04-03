@@ -1,6 +1,33 @@
 {
   "plugins": [
     { "name": "wzsh-self", "order": 0 },
-    { "path": "${HOME}/Projects/agent/.agent", "name": "agent" }
+    { "name": "wzsh-homebrew" },
+    { "name": "wzsh-zinit" },
+    { "name": "wzsh-go" },
+    { "name": "wzsh-ai" },
+    { "name": "wzsh-python" },
+    { "name": "wzsh-direnv" },
+    { "name": "wzsh-eza" },
+    { "name": "wzsh-fzf" },
+    { "name": "wzsh-gemini" },
+    { "name": "wzsh-git" },
+    { "name": "wzsh-kitty" },
+    { "name": "wzsh-mpv" },
+    { "name": "wzsh-nvim" },
+    { "name": "wzsh-poetry" },
+    { "name": "wzsh-rust" },
+    { "name": "wzsh-ssh" },
+    { "name": "wzsh-yazi" },
+    { "name": "wzsh-vagrant" },
+    { "name": "wzsh-chezmoi" },
+    { "name": "wzsh-conda" },
+    { "name": "wzsh-obsidian" },
+    { "name": "wzsh-youtube-dl" },
+    { "name": "wzsh-television" },
+    { "name": "wzsh-website" },
+    { "name": "wzsh-bilibili" },
+    { "name": "wzsh-nvm" },
+    { "name": "wzsh-alacritty" },
+    { "name": "wzsh-wezterm" }
   ]
 }
