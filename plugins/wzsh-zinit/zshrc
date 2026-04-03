@@ -2,7 +2,6 @@
 # https://www.aloxaf.com/2019/11/zplugin_tutorial/
 # https://zenlian.github.io/zsh-zinit/
 # https://github.com/zdharma-continuum/zinit
-. ${WZSH_HOME}/plugins/wzsh-zinit/aliases.zsh
 
 # 加载 zinit
 source "$ZINIT_ZSH"

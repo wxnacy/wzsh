@@ -38,6 +38,12 @@ zstyle ':completion:*' menu select
 zdebug $(yellow "开始加载插件")
 # 加载 config.json 插件（新逻辑）
 for plugin_path in "${WZSH_PLUGIN_PATHS[@]}"; do
+    # 先加载 aliases.zsh
+    aliasfile=${plugin_path}/aliases.zsh
+    if [[ -f $aliasfile ]]; then
+        source $aliasfile
+    fi
+    # 再加载 zshrc
     shfile=${plugin_path}/zshrc
     if [[ -f $shfile ]]; then
         source $shfile

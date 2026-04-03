@@ -8,7 +8,6 @@
 fzf_key_bind_file="${WZSH_BREW_HOME_OPT}/fzf/shell/key-bindings.zsh"
 test -f $fzf_key_bind_file && source $fzf_key_bind_file
 
-. ${WZSH_FZF_HOME}/aliases.zsh
 . ${WZSH_FZF_HOME}/functions.zsh
 . ${WZSH_FZF_HOME}/chrome.zsh
 . ${WZSH_FZF_HOME}/git.zsh

@@ -7,7 +7,6 @@
 # Description: homebrew 相关命令
 #===============================
 
-. ${WZSH_HOME}/plugins/wzsh-homebrew/aliases.zsh
 
 function binfo() {
     name=$1

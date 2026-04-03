@@ -1,3 +1,2 @@
-. ${WZSH_HOME}/plugins/wzsh-television/aliases.zsh
 
 eval "$(tv init zsh)"

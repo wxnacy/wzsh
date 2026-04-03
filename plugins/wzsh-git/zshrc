@@ -7,7 +7,6 @@
 # Description: wzsh-git 插件
 #===============================
 
-. ${WZSH_HOME}/plugins/wzsh-git/aliases.zsh
 
 source ${WZSH_HOME}/plugins/wzsh-git/forgit.zsh
 
