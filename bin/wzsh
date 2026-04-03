@@ -169,7 +169,9 @@ __load_one() {
     local brewfile="${plugin_home}/Brewfile"
     if [ -f "$brewfile" ] && [ "$mode" != "no_brew" ]; then
         zinfo "安装 Brew 软件: ${brewfile}"
-        wbrew bundle install --file="$brewfile"
+        local brew_cmd
+        command -v wbrew >/dev/null 2>&1 && brew_cmd="wbrew" || brew_cmd="brew"
+        $brew_cmd bundle install --file="$brewfile"
     fi
 
     if [ "$mode" != "brew_only" ]; then
