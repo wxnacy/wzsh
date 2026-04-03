@@ -2,9 +2,8 @@
 # wzsh 主管理命令
 # 整合 wzsh、wzsh-install、z 的功能
 
-WZSH_HOME="${WZSH_HOME:-${HOME}/.wzsh}"
-WZSH_BIN="${WZSH_BIN:-${HOME}/.local/share/wzsh/bin}"
-source "${WZSH_HOME}/lib/basic.zsh"
+export WZSH_HOME="${WZSH_HOME:-${HOME}/.wzsh}"
+export WZSH_BIN="${WZSH_BIN:-${HOME}/.local/share/wzsh/bin}"
 
 # 加载日志函数（从 basic.zsh 提取的 bash 兼容版本）
 _log() { echo "[$(date '+%F %T')] [$1] $2"; }
@@ -140,9 +139,9 @@ __remove_brew() {
 
 __load_one() {
     # 加载单个插件（软链 bin、执行 Brewfile、执行 installer）
-    # 参数：$1=plugin_home $2=no_brew
+    # 参数：$1=plugin_home $2=mode（默认全量，no_brew=跳过brew，brew_only=只执行brew）
     local plugin_home=$1
-    local no_brew=$2
+    local mode=${2:-full}
 
     if [ ! -d "$plugin_home" ]; then
         zwarn "插件目录不存在: $plugin_home"
@@ -151,31 +150,35 @@ __load_one() {
 
     zinfo "加载插件: $plugin_home"
 
-    # 软链 bin/ 下可执行文件到 WZSH_BIN
-    local plugin_bin_dir="${plugin_home}/bin"
-    if [ -d "$plugin_bin_dir" ]; then
-        zinfo "软链脚本命令: ${plugin_bin_dir} → ${WZSH_BIN}"
-        mkdir -p "$WZSH_BIN"
-        while IFS= read -r bin_file; do
-            if [ -x "$bin_file" ]; then
-                local dest_file="${WZSH_BIN}/$(basename "$bin_file")"
-                _zlink "$bin_file" "$dest_file"
-            fi
-        done < <(find "$plugin_bin_dir" -maxdepth 1 -type f)
+    if [ "$mode" != "brew_only" ]; then
+        # 软链 bin/ 下可执行文件到 WZSH_BIN
+        local plugin_bin_dir="${plugin_home}/bin"
+        if [ -d "$plugin_bin_dir" ]; then
+            zinfo "软链脚本命令: ${plugin_bin_dir} → ${WZSH_BIN}"
+            mkdir -p "$WZSH_BIN"
+            while IFS= read -r bin_file; do
+                if [ -x "$bin_file" ]; then
+                    local dest_file="${WZSH_BIN}/$(basename "$bin_file")"
+                    _zlink "$bin_file" "$dest_file"
+                fi
+            done < <(find "$plugin_bin_dir" -maxdepth 1 -type f)
+        fi
     fi
 
     # 执行 Brewfile
     local brewfile="${plugin_home}/Brewfile"
-    if [ -f "$brewfile" ] && [ "$no_brew" != "true" ]; then
+    if [ -f "$brewfile" ] && [ "$mode" != "no_brew" ]; then
         zinfo "安装 Brew 软件: ${brewfile}"
         wbrew bundle install --file="$brewfile"
     fi
 
-    # 执行自定义安装脚本
-    local installer="${plugin_home}/installer"
-    if [ -f "$installer" ]; then
-        zinfo "执行安装脚本: ${installer}"
-        bash "$installer"
+    if [ "$mode" != "brew_only" ]; then
+        # 执行自定义安装脚本
+        local installer="${plugin_home}/installer"
+        if [ -f "$installer" ]; then
+            zinfo "执行安装脚本: ${installer}"
+            bash "$installer"
+        fi
     fi
 
     zinfo "插件加载完成: $plugin_home"
@@ -183,18 +186,19 @@ __load_one() {
 
 __load_plugin() {
     # 加载插件
-    # 用法：__load_plugin [name] [--no-brew]
-    local no_brew=false
+    # 用法：__load_plugin [name] [--no-brew] [--brew]
+    local mode="full"
     local target_name=""
     for arg in "$@"; do
         case $arg in
-        --no-brew) no_brew=true ;;
+        --no-brew) mode="no_brew" ;;
+        --brew)    mode="brew_only" ;;
         *) target_name=$arg ;;
         esac
     done
 
     # 全量加载时，先清理 WZSH_BIN 中的无效软链
-    if [ -z "$target_name" ] && [ -d "$WZSH_BIN" ]; then
+    if [ -z "$target_name" ] && [ -d "$WZSH_BIN" ] && [ "$mode" != "brew_only" ]; then
         find "$WZSH_BIN" -maxdepth 1 -type l | while read -r link; do
             [ ! -e "$link" ] && zinfo "清理无效链接: $link" && rm "$link"
         done
@@ -203,10 +207,10 @@ __load_plugin() {
     if [ -n "$target_name" ]; then
         local plugin_home
         plugin_home=$(__get_plugin_dir "$target_name")
-        __load_one "$plugin_home" "$no_brew"
+        __load_one "$plugin_home" "$mode"
     else
         while IFS= read -r plugin_home; do
-            __load_one "$plugin_home" "$no_brew"
+            __load_one "$plugin_home" "$mode"
         done < <(/usr/bin/python3 "${WZSH_HOME}/lib/pythonx/config.py" paths 2>/dev/null)
     fi
 }
@@ -273,7 +277,7 @@ __install_plugin() {
 
     # 刷新缓存并 load
     /usr/bin/python3 "${WZSH_HOME}/lib/pythonx/config.py" paths >/dev/null 2>&1
-    __load_one "$plugin_home" "$no_brew"
+    __load_one "$plugin_home" "no_brew"
 }
 
 plugin() {
@@ -298,7 +302,7 @@ plugin() {
   conf <name>                      编辑插件目录
   home <name>                      输出插件目录路径
   init <name>                      执行插件 init.zsh
-  load [name] [--no-brew]          加载插件（软链 bin、执行 Brewfile、installer）
+  load [name] [--no-brew] [--brew]  加载插件（软链 bin、执行 Brewfile、installer）
   install <target> [--name <name>] 安装新插件，写入配置并 load
   add-brew <name> <formula>        将软件添加到插件 Brewfile
   remove-brew <name> <formula>     从插件 Brewfile 移除软件
@@ -315,6 +319,7 @@ load 示例:
   wzsh plugin load
   wzsh plugin load wzsh-self
   wzsh plugin load --no-brew
+  wzsh plugin load --brew
 EOF
         ;;
     *) zwarn "暂不支持 $action 指令" ;;
