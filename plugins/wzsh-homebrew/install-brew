@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 # homebrew from https://mirrors.tuna.tsinghua.edu.cn/help/homebrew/
+# 功能需求:
+#   - Homebrew 清华源安装脚本。需要适配 https://mirrors.tuna.tsinghua.edu.cn/help/homebrew/ 网页文档中的步骤。适配 MacOS M 芯片和 Linux 系统
+#   - Homebrew 环境变量（镜像源、shellenv）由 wzsh-homebrew/zshenv 统一管理，本脚本不写入任何 profile 文件
 
 set -euo pipefail
 
@@ -33,19 +36,6 @@ require_cmd() {
     fi
 }
 
-append_once() {
-    local file="$1"
-    local line="$2"
-
-    [[ -n "${file}" ]] || return 0
-    mkdir -p "$(dirname "${file}")"
-    [[ -e "${file}" ]] || : >"${file}"
-
-    if ! grep -Fqx -- "${line}" "${file}" >/dev/null 2>&1; then
-        echo "${line}" >>"${file}"
-    fi
-}
-
 install_brew() {
     tmp_dir=$(mktemp -d 2>/dev/null || mktemp -d -t brew-install)
     if git clone --depth=1 "${install_repo}" "${tmp_dir}" >/dev/null 2>&1; then
@@ -74,23 +64,19 @@ detect_brew() {
 }
 
 system=$(uname -s)
-arch=$(uname -m)
 
 case "${system}" in
-    Darwin)
-        if ! xcode-select -p >/dev/null 2>&1; then
-            log "请先运行: xcode-select --install"
-            exit 1
-        fi
-        profiles_to_update=("${HOME}/.zprofile" "${HOME}/.bash_profile")
-        ;;
-    Linux)
-        profiles_to_update=("${HOME}/.profile" "${HOME}/.bash_profile" "${HOME}/.zprofile")
-        ;;
-    *)
-        log "暂不支持的系统: ${system}"
+Darwin)
+    if ! xcode-select -p >/dev/null 2>&1; then
+        log "请先运行: xcode-select --install"
         exit 1
-        ;;
+    fi
+    ;;
+Linux) ;;
+*)
+    log "暂不支持的系统: ${system}"
+    exit 1
+    ;;
 esac
 
 export HOMEBREW_BREW_GIT_REMOTE="${brew_remote}"
@@ -118,19 +104,4 @@ eval "$(${brew_cmd} shellenv)"
 
 brew update
 
-# shellenv_line="eval \"\$(${brew_cmd} shellenv)\""
-# env_lines=(
-    # "export HOMEBREW_BREW_GIT_REMOTE=\"${brew_remote}\""
-    # "export HOMEBREW_CORE_GIT_REMOTE=\"${core_remote}\""
-    # "export HOMEBREW_API_DOMAIN=\"${bottles_api}\""
-    # "export HOMEBREW_BOTTLE_DOMAIN=\"${bottles_domain}\""
-# )
-
-# for profile in "${profiles_to_update[@]}"; do
-    # for line in "${env_lines[@]}"; do
-        # append_once "${profile}" "${line}"
-    # done
-    # append_once "${profile}" "${shellenv_line}"
-# done
-
-log "Homebrew 环境已配置完成"
+log "Homebrew 安装完成"
