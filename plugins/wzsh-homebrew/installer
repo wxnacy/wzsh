@@ -10,6 +10,11 @@ else
     echo "✓ Homebrew Installed in $(command -v brew)"
 fi
 
+# 安装 go
+if ! command -v go >/dev/null 2>&1; then
+    brew install go
+fi
+
 # 安装 wbrew
 original_dir=$(pwd)
 cd ${cur_dir}/lib/wbrew
