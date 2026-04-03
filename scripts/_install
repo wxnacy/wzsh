@@ -61,6 +61,8 @@ export PATH="${WZSH_DIR}/bin:${PATH}"
 
 # 加载插件
 wzsh plugin load --no-brew
+# 下载 brew
+wzsh plugin load --brew
 
 echo ""
 echo "wzsh installation complete!"
