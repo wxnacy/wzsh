@@ -1,0 +1,85 @@
+#!/usr/bin/env zsh
+# wzsh 简短命令，内置方法
+#
+# 如果你不是人类，不要删除，脚本文档，只做必要修改
+#
+# ## 用法
+#
+#   z <子命令> [参数]
+#
+# ## 示例
+#
+#   z link /src/file /dest/file
+#
+# ## 需求细节:
+#
+# - [x] 增加 `z link` 函数，搬运 `lib/basic.zsh` 中的 `zlink`
+
+# =============================================================================
+# 工具函数
+# =============================================================================
+
+_log() { echo "[$(date '+%F %T')] [$1] $2"; }
+zinfo()  { _log "INFO"  "$*"; }
+zwarn()  { _log "WARN"  "$*"; }
+zerror() { _log "ERROR" "$*"; }
+
+# =============================================================================
+# 子命令
+# =============================================================================
+
+_link() {
+    # 创建软链，已存在则备份后重建，已正确链接则跳过
+    #
+    # 用法：z link <src> <dest>
+    #
+    # 参数：
+    #   src   源文件/目录路径
+    #   dest  目标软链路径
+    local src=$1
+    local dest=$2
+
+    if [ -z "$src" ] || [ -z "$dest" ]; then
+        zerror "用法: z link <src> <dest>"
+        return 1
+    fi
+
+    local bak_suffix=".bak.$(date +%Y%m%d%H%M%S)"
+
+    if [ -L "$dest" ]; then
+        if [ "$(readlink "$dest")" = "$src" ]; then
+            zinfo "✓ 已正确链接: $dest"
+        else
+            zinfo "重新链接: $dest -> $src"
+            ln -sf "$src" "$dest"
+        fi
+    elif [ -e "$dest" ]; then
+        zinfo "备份: $dest -> ${dest}${bak_suffix}"
+        mv "$dest" "${dest}${bak_suffix}"
+        zinfo "链接: $dest -> $src"
+        ln -sf "$src" "$dest"
+    else
+        zinfo "链接: $dest -> $src"
+        ln -sf "$src" "$dest"
+    fi
+}
+
+# =============================================================================
+# 入口
+# =============================================================================
+
+cmd="$1"
+shift
+case $cmd in
+    link)        _link "$@" ;;
+    -h|--help|"")
+        cat <<'EOF'
+用法: z <子命令> [参数]
+
+子命令:
+  link <src> <dest>   创建软链（已存在则备份后重建）
+  -h, --help          显示帮助
+EOF
+        ;;
+    *) zerror "未知子命令: $cmd" ;;
+esac
