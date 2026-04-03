@@ -4,6 +4,7 @@
 
 WZSH_HOME="${WZSH_HOME:-${HOME}/.wzsh}"
 WZSH_BIN="${WZSH_BIN:-${HOME}/.local/share/wzsh/bin}"
+source "${WZSH_HOME}/lib/basic.zsh"
 
 # 加载日志函数（从 basic.zsh 提取的 bash 兼容版本）
 _log() { echo "[$(date '+%F %T')] [$1] $2"; }

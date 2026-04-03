@@ -1,5 +1,0 @@
-#!/bin/zsh
-
-proxyon;
-nvim $@
-proxyoff;

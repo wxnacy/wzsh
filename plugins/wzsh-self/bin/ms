@@ -1,0 +1,32 @@
+#!/bin/bash
+
+action=$1
+name=$2
+
+if [ -z "$action" ]; then
+    echo "Error: action is required." >&2
+    exit 1
+fi
+
+# For actions that require a name, check for it upfront.
+if [[ "$action" == "ap" || "$action" == "fp" || "$action" == "dp" ]]; then
+    if [ -z "$name" ]; then
+        echo "Error: name is required for action '$action'." >&2
+        exit 1
+    fi
+fi
+
+case "$action" in
+ap)
+    security add-generic-password -a "$(whoami)" -s "${name}" -p
+    ;;
+fp)
+    security find-generic-password -a "$(whoami)" -s "${name}" -w
+    ;;
+dp)
+    security delete-generic-password -a "$(whoami)" -s "${name}"
+    ;;
+*)
+    echo "Usage: $0 {ap|fp|dp} <name>"
+    ;;
+esac

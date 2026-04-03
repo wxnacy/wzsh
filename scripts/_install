@@ -42,14 +42,11 @@ ensure_dir() {
 
 echo "The final step is to complete the configuration of Wzsh"
 echo "Run these commands"
-printf '	ln -sf %s %s\n' "${WZSH_DIR}" "${HOME}/.zsh"
 printf '	ln -sf %s %s\n' "${WZSH_DIR}/zshenv" "${HOME}/.zshenv"
 printf '	ln -sf %s %s\n' "${WZSH_DIR}/zprofile" "${HOME}/.zprofile"
 printf '	ln -sf %s %s\n' "${WZSH_DIR}/zshrc" "${HOME}/.zshrc"
 printf '	zsh\n'
 
-ZSH_HOME="${HOME}/.zsh"
-link_file "${WZSH_DIR}" "${ZSH_HOME}"
 link_file "${WZSH_DIR}/zshenv" "${HOME}/.zshenv"
 link_file "${WZSH_DIR}/zprofile" "${HOME}/.zprofile"
 link_file "${WZSH_DIR}/zshrc" "${HOME}/.zshrc"
@@ -62,10 +59,8 @@ ensure_dir "${WZSH_PLUGIN}"
 
 export PATH="${WZSH_DIR}/bin:${PATH}"
 
-# 安装 zinit
-zsh "${WZSH_DIR}/plugins/wzsh-zinit/installer"
-# 安装 homebrew
-zsh "${WZSH_DIR}/plugins/wzsh-homebrew/installer"
+# 加载插件
+wzsh plugin load --no-brew
 
 echo ""
 echo "wzsh installation complete!"

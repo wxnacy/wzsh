@@ -1,5 +1,0 @@
-alias v="nvim"
-alias vi="nvim"
-alias vim="nvim"
-# alias n="NVIM_APPNAME=nvim-lazy nvim"
-# alias n="nvim"
