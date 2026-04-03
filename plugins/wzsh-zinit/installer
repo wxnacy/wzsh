@@ -16,4 +16,4 @@ else
 fi
 
 # 软连接预设配置
-zlink "${cur_dir}/config/p10k.zsh" "${HOME}/.p10k.zsh"
+z link "${cur_dir}/config/p10k.zsh" "${HOME}/.p10k.zsh"
