@@ -236,8 +236,35 @@ plugin() {
         install)     __install_plugin "$@" ;;
         add-brew)    __add_brew "$@" ;;
         remove-brew) __remove_brew "$@" ;;
+        -h|--help|"")
+            cat <<'EOF'
+用法: wzsh plugin <子命令> [参数]
+
+子命令:
+  create <name>              创建插件骨架
+  conf <name>                编辑插件目录
+  home <name>                输出插件目录路径
+  init <name>                执行插件 init.zsh
+  install [name] [--no-brew] 安装插件（无 name 则安装全部）
+  add-brew <name> <formula>  将软件添加到插件 Brewfile
+  remove-brew <name> <formula> 从插件 Brewfile 移除软件
+  -h, --help                 显示帮助
+EOF
+            ;;
         *) zwarn "暂不支持 $action 指令" ;;
     esac
+}
+
+_usage() {
+    cat <<'EOF'
+用法: wzsh <命令> [参数]
+
+命令:
+  update          更新 wzsh
+  conf            打开配置目录
+  plugin          插件管理（wzsh plugin -h 查看子命令）
+  -h, --help      显示帮助
+EOF
 }
 
 # =============================================================================
@@ -246,4 +273,7 @@ plugin() {
 
 cmd="$1"
 shift
-"$cmd" "$@"
+case $cmd in
+    -h|--help|"") _usage ;;
+    *) "$cmd" "$@" ;;
+esac
