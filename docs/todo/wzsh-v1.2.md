@@ -14,3 +14,7 @@
     - 修改内容：`__load_one` 新增 mode 参数（full/no_brew/brew_only），`--brew` 传入 brew_only 只执行 Brewfile
     - 提交记录：
       - 34a1a88 feat(wzsh): plugin load 新增 --brew 参数，只执行 Brewfile；修复 WZSH_HOME export
+- [x] 删除 `zshrc` `zshenv` 中 `ZSH_START_TIME` 相关逻辑 ✅ 2026-04-04 10:27:59
+- [x] 删除 `zshrc` `zshenv` `zprofile` 中旧逻辑注释 ✅ 2026-04-04 10:27:59
+    - 提交记录：
+      - e25a6a4 refactor: 删除 zshenv/zshrc/zprofile 中 ZSH_START_TIME 和旧逻辑注释
