@@ -19,16 +19,6 @@ for plugin_path in "${WZSH_PLUGIN_PATHS[@]}"; do
     fi
 done
 
-# 加载插件（旧逻辑，已迁移到 config.json，暂时注释）
-# for plugin in "${WZSH_PLUGINS[@]}"; do
-#     name="wzsh-${plugin}"
-#     shfile=${WZSH_HOME}/plugins/${name}/zprofile
-#     if [ -f $shfile ]; then
-#         zdebug "加载 zprofile $name"
-#         source $shfile
-#     fi
-# done
-
 
 # Kiro CLI post block. Keep at the bottom of this file.
 # 禁用 kiro-cli 自动建议以避免与 zsh-autosuggestions 冲突

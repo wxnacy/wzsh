@@ -50,22 +50,6 @@ for plugin_path in "${WZSH_PLUGIN_PATHS[@]}"; do
     fi
 done
 
-# load zsh plugins（旧逻辑，已迁移到 config.json，暂时注释）
-# for plugin in "${WZSH_PLUGINS[@]}"; do
-#     name="wzsh-${plugin}"
-#     # 加载 zshrc
-#     shfile=${WZSH_HOME}/plugins/${name}/zshrc
-#     if [ -f $shfile ]; then
-#         source $shfile
-#     fi
-# done
-
-# 计算加载时间
-if [ -n "$ZSH_START_TIME" ]; then
-    ZSH_END_TIME=$(/usr/bin/python3 -c 'import time; print(int(time.time() * 1000))')
-    ZSH_LOAD_TIME=$(printf "%.3f\n" $(echo "($ZSH_END_TIME - $ZSH_START_TIME)/1000" | bc -l))
-    zdebug "Zsh load time: ${ZSH_LOAD_TIME}s"
-fi
 
 
 # Kiro CLI post block. Keep at the bottom of this file.
