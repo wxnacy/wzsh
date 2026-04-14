@@ -21,13 +21,12 @@ function has_command() {
     # > yes
     # > if [ $(has_command python) ];then;echo 'yes';else; echo 'no';fi;
     # > yes
-    command -v $1 >/dev/null 2>&1 && echo true  || { echo ""; }
+    command -v $1 >/dev/null 2>&1 && echo true || { echo ""; }
 }
 
 function is_apple_arm() {
     # 是否为苹果m芯片
-    if [[ "$(uname -s) $(uname -m)" == "Darwin arm64" ]]
-    then
+    if [[ "$(uname -s) $(uname -m)" == "Darwin arm64" ]]; then
         echo true
     else
         echo ''
@@ -36,8 +35,7 @@ function is_apple_arm() {
 
 function is_apple_intel() {
     # 是否为苹果intel芯片
-    if [[ "$(uname -s) $(uname -m)" == "Darwin x86_64" ]]
-    then
+    if [[ "$(uname -s) $(uname -m)" == "Darwin x86_64" ]]; then
         echo true
     else
         echo ''
@@ -46,8 +44,7 @@ function is_apple_intel() {
 
 function is_apple() {
     # 是否是苹果系统
-    if [[ "$(uname -s)" == "Darwin" ]]
-    then
+    if [[ "$(uname -s)" == "Darwin" ]]; then
         echo true
     else
         echo ''
@@ -56,8 +53,7 @@ function is_apple() {
 
 function is_linux() {
     # 是否是 Linux 系统
-    if [[ "$(uname -s)" == "Linux" ]]
-    then
+    if [[ "$(uname -s)" == "Linux" ]]; then
         echo true
     else
         echo ''
@@ -80,8 +76,7 @@ function debugoff() {
 
 function is_debug() {
     # 判断是否为 debug 模式
-    if [ -f ~/.WZSH_DEBUG ]
-    then
+    if [ -f ~/.WZSH_DEBUG ]; then
         echo true
     else
         echo ''
@@ -90,8 +85,7 @@ function is_debug() {
 
 function debug() {
     # 查看当前是否为 debug 模式
-    if [ $(is_debug) ]
-    then
+    if [ $(is_debug) ]; then
         zinfo "当前已开启 DEBUG 模式"
     else
         zinfo "当前已关闭 DEBUG 模式"
@@ -142,12 +136,10 @@ function sunday() {
 function proxyon() {
     # 开启代理
     local proxy=$1
-    if [[ ! ${proxy} ]]
-    then
-	    proxy=${PROXY}
+    if [[ ! ${proxy} ]]; then
+        proxy=${PROXY}
     fi
-    if [[ ! ${proxy} ]]
-    then
+    if [[ ! ${proxy} ]]; then
         zerror '代理地址 $PROXY 为空，开始代理失败'
         return
     fi
@@ -165,7 +157,7 @@ function proxyon() {
     zinfo "已开启代理"
 }
 
-function proxyoff(){
+function proxyoff() {
     # 关闭代理
     unset http_proxy
     unset https_proxy
@@ -173,15 +165,15 @@ function proxyoff(){
     zinfo "已关闭代理"
 }
 
-function proxy() {
-    # 查看当前代理开启状态
-    if [ $http_proxy ]
-    then
-        zinfo "当前已开启代理"
-    else
-        zinfo "当前已关闭代理"
-    fi
-}
+# function proxy() {
+# # 查看当前代理开启状态
+# if [ $http_proxy ]
+# then
+# zinfo "当前已开启代理"
+# else
+# zinfo "当前已关闭代理"
+# fi
+# }
 
 BACKUP_SUFFIX=".bak.$(date +%Y%m%d%H%M%S)"
 

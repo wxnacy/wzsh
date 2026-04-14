@@ -1,4 +1,3 @@
-
 plugin_home=${WZSH_PLUGIN}/eza
 test -d ${plugin_home} || mkdir -p ${plugin_home}
 

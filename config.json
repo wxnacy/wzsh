@@ -22,7 +22,6 @@
     { "name": "wzsh-television" },
     { "name": "wzsh-bilibili" },
     { "name": "wzsh-nvm" },
-    { "name": "wzsh-alacritty" },
     { "name": "wzsh-wezterm" }
   ]
 }
