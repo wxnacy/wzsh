@@ -20,11 +20,6 @@
 # 工具函数
 # =============================================================================
 
-_log() { echo "[$(date '+%F %T')] [$1] $2"; }
-zinfo() { _log "INFO" "$*"; }
-zwarn() { _log "WARN" "$*"; }
-zerror() { _log "ERROR" "$*"; }
-
 _log_cmd() {
     # 日志输出，调用 lib/logger.zsh 中对应函数
     #
@@ -64,7 +59,7 @@ _link() {
     local dest=$2
 
     if [ -z "$src" ] || [ -z "$dest" ]; then
-        zerror "用法: z link <src> <dest>"
+        _log_cmd error "用法: z link <src> <dest>"
         return 1
     fi
 
@@ -72,18 +67,18 @@ _link() {
 
     if [ -L "$dest" ]; then
         if [ "$(readlink "$dest")" = "$src" ]; then
-            zinfo "✓ 已正确链接: $dest"
+            _log_cmd info "✓ 已正确链接: $dest"
         else
-            zinfo "重新链接: $dest -> $src"
+            _log_cmd info "重新链接: $dest -> $src"
             ln -sf "$src" "$dest"
         fi
     elif [ -e "$dest" ]; then
-        zinfo "备份: $dest -> ${dest}${bak_suffix}"
+        _log_cmd info "备份: $dest -> ${dest}${bak_suffix}"
         mv "$dest" "${dest}${bak_suffix}"
-        zinfo "链接: $dest -> $src"
+        _log_cmd info "链接: $dest -> $src"
         ln -sf "$src" "$dest"
     else
-        zinfo "链接: $dest -> $src"
+        _log_cmd info "链接: $dest -> $src"
         ln -sf "$src" "$dest"
     fi
 }
@@ -107,5 +102,5 @@ log)  _log_cmd "$@" ;;
   -h, --help                     显示帮助
 EOF
     ;;
-*) zerror "未知子命令: $cmd" ;;
+*) _log_cmd error "未知子命令: $cmd" ;;
 esac
