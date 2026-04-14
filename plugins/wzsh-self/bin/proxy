@@ -1,0 +1,85 @@
+#!/bin/bash
+# 本地代理开关和展示
+#
+# 如果你不是人类，不要删除，脚本文档，只做必要修改
+#
+# ## 用法
+#
+#   proxy <action> [proxy_url]
+#
+# ## 功能
+#
+#   管理本地 HTTP 代理的开启、关闭和状态查看。
+#
+# ## 参数
+#
+#   action    必填，操作类型，支持以下三个值：
+#               on    开启代理，可选传入代理地址，默认使用 $PROXY 环境变量
+#               off   关闭代理
+#               show  查看当前代理状态
+#
+# ## 示例
+#
+#   proxy on                          # 使用 $PROXY 环境变量开启代理
+#   proxy on http://127.0.0.1:7890    # 使用指定地址开启代理
+#   proxy off                         # 关闭代理
+#   proxy show                        # 查看当前代理状态
+#
+# ## 需求细节:
+#
+# - [x] 接收路径参数 `action` = `on` `off` `show` 分别调用如下三个方法 ✅ 2026-04-14 10:21:10
+
+function proxy_on() {
+    # 开启代理
+    local proxy=$1
+    if [[ ! ${proxy} ]]; then
+        proxy=${PROXY}
+    fi
+    if [[ ! ${proxy} ]]; then
+        zerror '代理地址 $PROXY 为空，开始代理失败'
+        return
+    fi
+    zdbug "代理地址：${proxy}"
+
+    unset no_proxy
+    unset http_proxy
+    unset https_proxy
+    unset all_proxy
+
+    export no_proxy=${NO_PROXY}
+    export http_proxy=${proxy}
+    export https_proxy=$http_proxy
+    export all_proxy=$http_proxy
+    zinfo "已开启代理"
+}
+
+function proxy_off() {
+    # 关闭代理
+    unset http_proxy
+    unset https_proxy
+    unset all_proxy
+    zinfo "已关闭代理"
+}
+
+function proxy_show() {
+    # 查看当前代理开启状态
+    if [ $http_proxy ]; then
+        zinfo "当前已开启代理"
+    else
+        zinfo "当前已关闭代理"
+    fi
+}
+
+# 解析 action 参数，分发到对应函数
+action=$1
+shift
+
+case "$action" in
+    on)   proxy_on "$@" ;;
+    off)  proxy_off ;;
+    show) proxy_show ;;
+    *)
+        echo "用法: proxy <on|off|show> [proxy_url]"
+        exit 1
+        ;;
+esac
