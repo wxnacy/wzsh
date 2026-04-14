@@ -82,9 +82,9 @@
 }
 ```
 
-### config.local.json
+### 本地私有配置（~/.config/wzsh/config.json）
 
-位于 `${WZSH_HOME}/config.local.json`，**不纳入版本控制**，用于本地私有插件扩展。其 `plugins` 列表追加到 `config.json` 之后。
+位于 `~/.config/wzsh/config.json`（遵循 XDG 规范，可通过 `$XDG_CONFIG_HOME` 覆盖），**不纳入版本控制**，用于本地私有插件扩展。其 `plugins` 列表追加到 `config.json` 之后。
 
 ### 插件路径解析规则
 

@@ -4,7 +4,7 @@
 # Description: wzsh 配置解析模块
 #
 # 功能：
-#   读取 config.json 和 config.local.json，merge 后解析每个插件的实际路径。
+#   读取 config.json 和 ~/.config/wzsh/config.json，merge 后解析每个插件的实际路径。
 #
 # 插件路径解析规则：
 #   - 只有 name  → ${WZSH_HOME}/plugins/<name>
@@ -34,12 +34,15 @@ def _load_json(path: str) -> dict:
 
 def load_config() -> dict:
     """
-    读取并 merge config.json 和 config.local.json。
+    读取并 merge config.json 和 ~/.config/wzsh/config.json（本地私有配置）。
     local 的 plugins 追加到 config.json 的 plugins 后面，
     merge 后按 order 字段稳定排序，默认 order 为 100。
     """
+    xdg_config = os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
+    local_config_path = os.path.join(xdg_config, "wzsh", "config.json")
+
     base = _load_json(os.path.join(WZSH_HOME, "config.json"))
-    local = _load_json(os.path.join(WZSH_HOME, "config.local.json"))
+    local = _load_json(local_config_path)
 
     plugins = base.get("plugins", []) + local.get("plugins", [])
     plugins.sort(key=lambda p: p.get("order", 100))
@@ -121,7 +124,7 @@ if __name__ == "__main__":
                 path = resolve_plugin_path(plugin)
                 print(f"{path}|{plugin['github']}")
     elif cmd == "add-plugin":
-        # 向 config.local.json 追加插件配置
+        # 向 ~/.config/wzsh/config.json 追加插件配置
         # 用法：config.py add-plugin --github user/repo [--name xxx]
         #       config.py add-plugin --path /abs/path [--name xxx]
         import argparse
@@ -143,7 +146,9 @@ if __name__ == "__main__":
         if args.name:
             entry["name"] = args.name
 
-        local_path = os.path.join(WZSH_HOME, "config.local.json")
+        xdg_config = os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
+        local_path = os.path.join(xdg_config, "wzsh", "config.json")
+        os.makedirs(os.path.dirname(local_path), exist_ok=True)
         local = _load_json(local_path) or {"plugins": []}
         if "plugins" not in local:
             local["plugins"] = []

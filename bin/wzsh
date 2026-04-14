@@ -218,7 +218,7 @@ __load_plugin() {
 }
 
 __install_plugin() {
-    # 安装新插件：写入 config.local.json，clone github 插件，然后 load
+    # 安装新插件：写入 ~/.config/wzsh/config.json，clone github 插件，然后 load
     # 用法：__install_plugin <target> [--name <name>]
     local target="" name="" no_brew=false
     while [ $# -gt 0 ]; do
@@ -243,10 +243,11 @@ __install_plugin() {
         return 1
     fi
 
-    # 确保 config.local.json 存在
-    local local_config="${WZSH_HOME}/config.local.json"
+    # 确保 ~/.config/wzsh/config.json 存在
+    local local_config="${XDG_CONFIG_HOME:-$HOME/.config}/wzsh/config.json"
     if [ ! -f "$local_config" ]; then
-        zinfo "创建 config.local.json"
+        zinfo "创建 ~/.config/wzsh/config.json"
+        mkdir -p "$(dirname "$local_config")"
         echo '{ "plugins": [] }' >"$local_config"
     fi
 
