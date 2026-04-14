@@ -14,15 +14,39 @@
 # ## 需求细节:
 #
 # - [x] 增加 `z link` 函数，搬运 `lib/basic.zsh` 中的 `zlink`
+# - [x] 增加 `z log [info/warn/error/debug]` 子命令，调用 `lib/logger.zsh` 中对应函数 ✅ 2026-04-14 10:28:40
 
 # =============================================================================
 # 工具函数
 # =============================================================================
 
 _log() { echo "[$(date '+%F %T')] [$1] $2"; }
-zinfo()  { _log "INFO"  "$*"; }
-zwarn()  { _log "WARN"  "$*"; }
+zinfo() { _log "INFO" "$*"; }
+zwarn() { _log "WARN" "$*"; }
 zerror() { _log "ERROR" "$*"; }
+
+_log_cmd() {
+    # 日志输出，调用 lib/logger.zsh 中对应函数
+    #
+    # 用法：z log <level> <message>
+    #
+    # 参数：
+    #   level    日志级别：info / warn / error / debug
+    #   message  日志内容
+    local level=$1
+    shift
+    source "${WZSH_HOME}/lib/logger.zsh"
+    case $level in
+        info)  zinfo "$*" ;;
+        warn)  zwarn "$*" ;;
+        error) zerror "$*" ;;
+        debug) zdebug "$*" ;;
+        *)
+            zerror "未知日志级别: $level，支持: info / warn / error / debug"
+            return 1
+            ;;
+    esac
+}
 
 # =============================================================================
 # 子命令
@@ -71,15 +95,17 @@ _link() {
 cmd="$1"
 shift
 case $cmd in
-    link)        _link "$@" ;;
-    -h|--help|"")
-        cat <<'EOF'
+link) _link "$@" ;;
+log)  _log_cmd "$@" ;;
+-h | --help | "")
+    cat <<'EOF'
 用法: z <子命令> [参数]
 
 子命令:
-  link <src> <dest>   创建软链（已存在则备份后重建）
-  -h, --help          显示帮助
+  link <src> <dest>              创建软链（已存在则备份后重建）
+  log <level> <message>          输出日志（level: info/warn/error/debug）
+  -h, --help                     显示帮助
 EOF
-        ;;
-    *) zerror "未知子命令: $cmd" ;;
+    ;;
+*) zerror "未知子命令: $cmd" ;;
 esac
