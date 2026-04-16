@@ -90,8 +90,6 @@ local keys = {
 	{ key = "j", mods = "SUPER", action = act.ActivatePaneDirection("Down") },
 	{ key = "k", mods = "SUPER", action = act.ActivatePaneDirection("Up") },
 	{ key = "l", mods = "SUPER", action = act.ActivatePaneDirection("Right") },
-	{ key = "[", mods = "SUPER|SHIFT", action = act.ActivatePaneDirection("Prev") },
-	{ key = "]", mods = "SUPER|SHIFT", action = act.ActivatePaneDirection("Next") },
 	-- 修改 tab 名称
 	{
 		key = "e",
