@@ -84,12 +84,14 @@ local keys = {
 	{ key = "D", mods = "SUPER", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
 
 	-- 切换 tab / pane
-	{ key = "]", mods = "SUPER", action = act.ActivateTabRelative(1) },
-	{ key = "[", mods = "SUPER", action = act.ActivateTabRelative(-1) },
+	{ key = "]", mods = "SUPER", action = act.ActivatePaneDirection("Next") },
+	{ key = "[", mods = "SUPER", action = act.ActivatePaneDirection("Prev") },
 	{ key = "h", mods = "SUPER", action = act.ActivatePaneDirection("Left") },
 	{ key = "j", mods = "SUPER", action = act.ActivatePaneDirection("Down") },
 	{ key = "k", mods = "SUPER", action = act.ActivatePaneDirection("Up") },
 	{ key = "l", mods = "SUPER", action = act.ActivatePaneDirection("Right") },
+	{ key = "[", mods = "SUPER|SHIFT", action = act.ActivatePaneDirection("Prev") },
+	{ key = "]", mods = "SUPER|SHIFT", action = act.ActivatePaneDirection("Next") },
 	-- 修改 tab 名称
 	{
 		key = "e",
