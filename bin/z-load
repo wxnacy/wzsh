@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+# wzsh-install：向后兼容 wrapper，实际调用 wzsh plugin install
+wzsh plugin load --no-brew "$@"

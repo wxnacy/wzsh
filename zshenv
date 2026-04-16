@@ -15,6 +15,8 @@ export WZSH_BIN=${WZSH_DATA}/bin
 export WZSH_COMPLETION=${WZSH_DATA}/completions
 export WZSH_PLUGIN=${WZSH_DATA}/plugins
 export WZSH_HOME=${HOME}/.wzsh
+export WZSH_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}/wzsh
+export WZSH_CONFIG=${WZSH_CONFIG_HOME}/config.json
 # 加载基础命令
 source ${WZSH_HOME}/lib/basic.zsh
 export WZSH_NAME=wZsh
@@ -62,7 +64,7 @@ addpath "${HOME}/.local/bin"
 # 加载 config.json 插件（新逻辑，带缓存）
 _wzsh_cache=${WZSH_TEMP}/plugins.cache
 _wzsh_config=${WZSH_HOME}/config.json
-_wzsh_config_local=${XDG_CONFIG_HOME:-$HOME/.config}/wzsh/config.json
+_wzsh_config_local=${WZSH_CONFIG}
 if [[ ! -f $_wzsh_cache || $_wzsh_config -nt $_wzsh_cache || ( -f $_wzsh_config_local && $_wzsh_config_local -nt $_wzsh_cache ) ]]; then
     zdbug "重新生成插件缓存: $_wzsh_cache"
     /usr/bin/python3 ${WZSH_HOME}/lib/pythonx/config.py paths > /dev/null 2>&1

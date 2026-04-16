@@ -15,7 +15,7 @@
 
 # 显示帮助信息
 show_help() {
-    cat << 'EOF'
+    cat <<'EOF'
 cmd - 命令行管理工具
 
 功能：
@@ -51,22 +51,22 @@ EOF
 }
 
 # 默认配置目录
-CONFIG_DIR="$HOME/Documents/Configs/wzsh/self"
+CONFIG_DIR="$WZSH_CONFIG_HOME/self"
 
 # 解析参数
 while [[ $# -gt 0 ]]; do
     case $1 in
-        -h|--help)
-            show_help
-            exit 0
-            ;;
-        -c|--config)
-            CONFIG_DIR="$2"
-            shift 2
-            ;;
-        *)
-            break
-            ;;
+    -h | --help)
+        show_help
+        exit 0
+        ;;
+    -c | --config)
+        CONFIG_DIR="$2"
+        shift 2
+        ;;
+    *)
+        break
+        ;;
     esac
 done
 
@@ -77,7 +77,7 @@ CMD_FILE="$CONFIG_DIR/cmd.json"
 
 # 初始化 JSON 文件
 if [[ ! -f "$CMD_FILE" ]]; then
-    echo '{"commands":[],"next_id":1}' > "$CMD_FILE"
+    echo '{"commands":[],"next_id":1}' >"$CMD_FILE"
 fi
 
 # 获取下一个 ID
@@ -88,7 +88,7 @@ get_next_id() {
 # 更新下一个 ID
 update_next_id() {
     local next_id=$1
-    jq ".next_id = $next_id" "$CMD_FILE" > "$CMD_FILE.tmp" && mv "$CMD_FILE.tmp" "$CMD_FILE"
+    jq ".next_id = $next_id" "$CMD_FILE" >"$CMD_FILE.tmp" && mv "$CMD_FILE.tmp" "$CMD_FILE"
 }
 
 # 检查别名是否存在
@@ -118,34 +118,34 @@ find_command() {
 # 添加命令
 cmd_add() {
     echo "添加新命令"
-    
+
     # 输入命令行
     echo -n "命令行 (command): "
     read command
     [[ -z "$command" ]] && echo "命令行不能为空" && return 1
-    
+
     # 输入描述
     echo -n "描述 (desc): "
     read desc
-    
+
     # 输入别名
     echo -n "别名 (alias，留空自动生成): "
     read alias
-    
+
     # 如果别名为空，生成 UUID
     if [[ -z "$alias" ]]; then
         alias=$(uuidgen | tr '[:upper:]' '[:lower:]')
     fi
-    
+
     # 检查别名唯一性
     if alias_exists "$alias"; then
         echo "错误: 别名 '$alias' 已存在"
         return 1
     fi
-    
+
     # 获取新 ID
     local id=$(get_next_id)
-    
+
     # 添加命令
     local new_cmd=$(jq -n \
         --arg id "$id" \
@@ -153,10 +153,10 @@ cmd_add() {
         --arg desc "$desc" \
         --arg alias "$alias" \
         '{id: ($id | tonumber), command: $command, desc: $desc, alias: $alias}')
-    
-    jq ".commands += [$new_cmd]" "$CMD_FILE" > "$CMD_FILE.tmp" && mv "$CMD_FILE.tmp" "$CMD_FILE"
+
+    jq ".commands += [$new_cmd]" "$CMD_FILE" >"$CMD_FILE.tmp" && mv "$CMD_FILE.tmp" "$CMD_FILE"
     update_next_id $((id + 1))
-    
+
     echo "命令添加成功 (ID: $id)"
 }
 
@@ -164,44 +164,44 @@ cmd_add() {
 cmd_edit() {
     local key=$1
     [[ -z "$key" ]] && echo "用法: cmd edit <id|alias>" && return 1
-    
+
     local cmd_data=$(find_command "$key")
     [[ -z "$cmd_data" ]] && echo "错误: 未找到命令 '$key'" && return 1
-    
+
     local id=$(echo "$cmd_data" | jq -r '.id')
     local old_command=$(echo "$cmd_data" | jq -r '.command')
     local old_desc=$(echo "$cmd_data" | jq -r '.desc')
     local old_alias=$(echo "$cmd_data" | jq -r '.alias')
-    
+
     echo "编辑命令 (ID: $id)"
-    
+
     # 编辑命令行
     echo -n "命令行 [$old_command]: "
     read new_command
     [[ -z "$new_command" ]] && new_command="$old_command"
-    
+
     # 编辑描述
     echo -n "描述 [$old_desc]: "
     read new_desc
     [[ -z "$new_desc" ]] && new_desc="$old_desc"
-    
+
     # 编辑别名
     echo -n "别名 [$old_alias]: "
     read new_alias
     [[ -z "$new_alias" ]] && new_alias="$old_alias"
-    
+
     # 检查别名唯一性（如果修改了别名）
     if [[ "$new_alias" != "$old_alias" ]] && alias_exists "$new_alias"; then
         echo "错误: 别名 '$new_alias' 已存在"
         return 1
     fi
-    
+
     # 更新命令
     jq "(.commands[] | select(.id == $id) | .command) = \"$new_command\" | 
         (.commands[] | select(.id == $id) | .desc) = \"$new_desc\" |
         (.commands[] | select(.id == $id) | .alias) = \"$new_alias\"" \
-        "$CMD_FILE" > "$CMD_FILE.tmp" && mv "$CMD_FILE.tmp" "$CMD_FILE"
-    
+        "$CMD_FILE" >"$CMD_FILE.tmp" && mv "$CMD_FILE.tmp" "$CMD_FILE"
+
     echo "命令更新成功"
 }
 
@@ -209,39 +209,39 @@ cmd_edit() {
 cmd_rm() {
     local key=$1
     [[ -z "$key" ]] && echo "用法: cmd rm <id|alias>" && return 1
-    
+
     local cmd_data=$(find_command "$key")
     [[ -z "$cmd_data" ]] && echo "错误: 未找到命令 '$key'" && return 1
-    
+
     local id=$(echo "$cmd_data" | jq -r '.id')
-    
+
     # 删除命令
     if [[ "$key" =~ ^[0-9]+$ ]]; then
-        jq ".commands = [.commands[] | select(.id != $key)]" "$CMD_FILE" > "$CMD_FILE.tmp"
+        jq ".commands = [.commands[] | select(.id != $key)]" "$CMD_FILE" >"$CMD_FILE.tmp"
     else
-        jq ".commands = [.commands[] | select(.alias != \"$key\")]" "$CMD_FILE" > "$CMD_FILE.tmp"
+        jq ".commands = [.commands[] | select(.alias != \"$key\")]" "$CMD_FILE" >"$CMD_FILE.tmp"
     fi
     mv "$CMD_FILE.tmp" "$CMD_FILE"
-    
+
     echo "命令删除成功 (ID: $id)"
 }
 
 # 运行命令
 cmd_run() {
     local key=$1
-    shift  # 移除第一个参数，剩余的是要传递的参数
-    
+    shift # 移除第一个参数，剩余的是要传递的参数
+
     [[ -z "$key" ]] && echo "用法: cmd run <id|alias> [args...]" && return 1
-    
+
     local cmd_data=$(find_command "$key")
     [[ -z "$cmd_data" ]] && echo "错误: 未找到命令 '$key'" && return 1
-    
+
     local command=$(echo "$cmd_data" | jq -r '.command')
     local desc=$(echo "$cmd_data" | jq -r '.desc')
-    
+
     # 打印描述信息
     [[ -n "$desc" && "$desc" != "null" ]] && echo "描述: $desc" >&2
-    
+
     # 输出命令和参数，由函数包装器执行
     if [[ $# -gt 0 ]]; then
         echo "$command $@"
@@ -253,9 +253,9 @@ cmd_run() {
 # 搜索并选择命令
 cmd_search() {
     local commands=$(jq -r '.commands[] | "\(.id)|\(.alias)|\(.command)|\(.desc)"' "$CMD_FILE")
-    
+
     [[ -z "$commands" ]] && echo "暂无命令" && return 0
-    
+
     # 处理 UUID 样式的 alias，只显示前 8 位
     local formatted=$(echo "$commands" | awk -F'|' '{
         alias = $2
@@ -265,23 +265,23 @@ cmd_search() {
         }
         printf "%s\t%s\t%s\t%s\n", $1, alias, $3, $4
     }')
-    
-    local selected=$(echo "$formatted" | \
-        column -t -s $'\t' | \
+
+    local selected=$(echo "$formatted" |
+        column -t -s $'\t' |
         fzf --header="ID ALIAS COMMAND DESC (Ctrl-O 直接执行, Ctrl-Y 复制命令)" \
             --expect=ctrl-o \
             --bind="ctrl-y:execute-silent(echo {} | awk '{print \$1}' | xargs -I{} sh -c \"jq -r '.commands[] | select(.id == {}) | .command' '$CMD_FILE' | pbcopy && echo '命令已复制到剪贴板' >&2\")")
-    
+
     [[ -z "$selected" ]] && return 0
-    
+
     local key=$(echo "$selected" | tail -1 | awk '{print $1}')
     local cmd_data=$(find_command "$key")
     local command=$(echo "$cmd_data" | jq -r '.command')
     local desc=$(echo "$cmd_data" | jq -r '.desc')
-    
+
     # 检查按键
     local pressed_key=$(echo "$selected" | head -1)
-    
+
     if [[ "$pressed_key" == "ctrl-o" ]]; then
         # 打印描述信息
         [[ -n "$desc" && "$desc" != "null" ]] && echo "描述: $desc" >&2
@@ -295,20 +295,20 @@ cmd_search() {
 
 # 主逻辑
 case $1 in
-    add)
-        cmd_add
-        ;;
-    edit)
-        cmd_edit "$2"
-        ;;
-    rm)
-        cmd_rm "$2"
-        ;;
-    run)
-        shift  # 移除 'run' 参数
-        cmd_run "$@"
-        ;;
-    *)
-        cmd_search
-        ;;
+add)
+    cmd_add
+    ;;
+edit)
+    cmd_edit "$2"
+    ;;
+rm)
+    cmd_rm "$2"
+    ;;
+run)
+    shift # 移除 'run' 参数
+    cmd_run "$@"
+    ;;
+*)
+    cmd_search
+    ;;
 esac
