@@ -1,0 +1,2 @@
+. ${WZSH_HOME}/plugins/wzsh-atuin/aliases.zsh
+eval "$(atuin init zsh)"

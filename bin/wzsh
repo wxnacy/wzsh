@@ -78,11 +78,10 @@ __create_plugin() {
     zinfo "wzsh-${name} 开始创建"
     mkdir -p "$dirname/bin" "$dirname/config"
     echo '{}' >"$dirname/config/help.json"
-    for _name in aliases.zsh zprofile zshenv zshrc installer; do
+    for _name in aliases.zsh zprofile zshenv zshrc installer Brewfile; do
         touch "$dirname/$_name"
         zinfo "创建 $dirname/$_name"
     done
-    echo ". \${WZSH_HOME}/plugins/wzsh-${name}/aliases.zsh" >>"$dirname/zshrc"
     chmod +x "$dirname/installer"
     zinfo "wzsh-${name} 创建成功"
 }
@@ -194,7 +193,7 @@ __load_plugin() {
     for arg in "$@"; do
         case $arg in
         --no-brew) mode="no_brew" ;;
-        --brew)    mode="brew_only" ;;
+        --brew) mode="brew_only" ;;
         *) target_name=$arg ;;
         esac
     done

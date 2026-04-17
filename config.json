@@ -19,9 +19,10 @@
     { "name": "wzsh-chezmoi" },
     { "name": "wzsh-conda" },
     { "name": "wzsh-youtube-dl" },
-    { "name": "wzsh-television" },
+    { "name": "wzsh-television", "enabled": false },
     { "name": "wzsh-bilibili" },
     { "name": "wzsh-nvm" },
-    { "name": "wzsh-wezterm" }
+    { "name": "wzsh-wezterm" },
+    { "name": "wzsh-atuin" }
   ]
 }
