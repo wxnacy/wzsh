@@ -1,6 +1,6 @@
 {
   "plugins": [
-    { "name": "wzsh-self", "order": 0 },
+    { "name": "wzsh-self", "order": 0, "enabled": true },
     { "name": "wzsh-zinit", "order": 1 },
     { "name": "wzsh-homebrew", "order": 2 },
     { "name": "wzsh-go" },

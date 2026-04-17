@@ -75,6 +75,7 @@
 {
   "plugins": [
     { "name": "wzsh-self" },
+    { "name": "wzsh-zinit", "enabled": false },
     { "path": "/Users/wxnacy/Projects/agent/.agent", "name": "agent" },
     { "github": "wxnacy/wzsh-work" },
     { "github": "wxnacy/wzsh-work", "path": "/local/debug/path" }
@@ -94,6 +95,9 @@
 | `{ "path": "/foo/bar" }` | `/foo/bar` |
 | `{ "github": "user/repo" }` | `${WZSH_DATA}/plugins/repo` |
 | `{ "github": "...", "path": "/foo" }` | `/foo`（本地调试优先） |
+| `{ "name": "wzsh-zinit", "enabled": false }` | 跳过，不加载 |
+
+`enabled` 字段默认为 `true`，设为 `false` 时该插件不会被加载。`add-plugin` 子命令写入配置时默认带 `"enabled": true`。
 
 解析逻辑由 `lib/pythonx/config.py` 实现，输出 `WZSH_PLUGIN_PATHS` 数组供 `zshenv` / `zshrc` / `zprofile` 加载。
 

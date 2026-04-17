@@ -76,9 +76,9 @@ def resolve_plugin_path(plugin: dict) -> str:
 
 
 def get_plugin_paths() -> list[str]:
-    """返回所有插件的实际路径列表（过滤空值）"""
+    """返回所有已启用插件的实际路径列表（过滤空值和 enabled: false）"""
     config = load_config()
-    paths = [resolve_plugin_path(p) for p in config.get("plugins", [])]
+    paths = [resolve_plugin_path(p) for p in config.get("plugins", []) if p.get("enabled", True)]
     return [p for p in paths if p]
 
 
@@ -145,6 +145,7 @@ if __name__ == "__main__":
             sys.exit(1)
         if args.name:
             entry["name"] = args.name
+        entry["enabled"] = True
 
         xdg_config = os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
         local_path = os.path.join(xdg_config, "wzsh", "config.json")

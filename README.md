@@ -208,3 +208,26 @@ net:
 | cmd rm     | 删除命令                                                                                                                       | >$ cmd rm <id\|alias>                          |
 | cmd run    | 直接运行命令                                                                                                                   | >$ cmd run <id\|alias>                         |
 | switch_dir | 交互式切换目录，使用 gum choose 选择子目录后进入                                                                               | >$ switch_dir -d ~/Projects                    |
+
+## 插件配置
+
+插件列表由 `${WZSH_HOME}/config.json` 和 `~/.config/wzsh/config.json` 共同管理。
+
+```json
+{
+  "plugins": [
+    { "name": "wzsh-self", "order": 0 },
+    { "name": "wzsh-zinit", "enabled": false },
+    { "github": "wxnacy/wzsh-work" },
+    { "path": "/path/to/local-plugin", "name": "myplugin" }
+  ]
+}
+```
+
+| 字段 | 说明 |
+| --- | --- |
+| `name` | 插件名，内置插件对应 `plugins/<name>` 目录 |
+| `github` | GitHub 仓库地址（`user/repo`），自动 clone 到 `$WZSH_DATA/plugins/` |
+| `path` | 本地路径，直接使用该目录 |
+| `order` | 加载顺序，默认 100，数字越小越先加载 |
+| `enabled` | 是否加载，默认 `true`，设为 `false` 则跳过该插件 |
