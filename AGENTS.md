@@ -197,6 +197,37 @@ switch_dir -d ~/Projects      # 在 ~/Projects 下选择子目录
 }
 ```
 
+### wzsh plugin - 插件管理
+
+```bash
+wzsh plugin create <name>                    # 创建插件骨架（默认在 plugins/ 目录）
+wzsh plugin create <name> -d <dir>           # 指定父目录创建插件骨架
+wzsh plugin create <name> --dir <dir>        # 同上
+wzsh plugin init                             # 将当前目录作为插件目录，补全缺失的骨架文件
+wzsh plugin conf <name>                      # 编辑插件 zshrc
+wzsh plugin home <name>                      # 输出插件目录路径
+wzsh plugin load [name] [--no-brew] [--brew] # 加载插件
+wzsh plugin install <target> [--name <name>] # 安装新插件
+wzsh plugin add-brew <name> <formula>        # 添加 Brew 依赖
+wzsh plugin remove-brew <name> <formula>     # 移除 Brew 依赖
+```
+
+#### plugin create
+
+创建插件骨架，生成标准目录结构（`bin/`、`config/`、`aliases.zsh`、`zprofile`、`zshenv`、`zshrc`、`installer`、`Brewfile`）。
+
+- 若文件已存在则跳过，不会覆盖已有内容
+- `-d/--dir <dir>` 指定插件父目录，默认为 `${WZSH_HOME}/plugins`
+
+#### plugin init
+
+将当前目录作为插件目录，自动推断插件名（去掉目录名中的 `wzsh-` 前缀），在当前目录中补全缺失的骨架文件，已存在的文件不会被覆盖。
+
+```bash
+cd ~/my-plugins/wzsh-myplugin
+wzsh plugin init   # 等价于 wzsh plugin create myplugin --dir ~/my-plugins
+```
+
 ### wzsh-install - 安装插件
 
 ```bash
