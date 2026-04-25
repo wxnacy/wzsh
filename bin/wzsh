@@ -71,12 +71,12 @@ __create_plugin() {
     # 用法：__create_plugin <name> [--dir/-d <dir>]
     # 参数：
     #   name        插件名称（必填）
-    #   --dir/-d    指定插件创建的父目录，默认为 ${WZSH_HOME}/plugins
-    local name="" plugin_root="${WZSH_HOME}/plugins"
+    #   --dir/-d    直接指定插件目录路径（即 dirname），不指定时默认为 ${WZSH_HOME}/plugins/wzsh-<name>
+    local name="" dirname=""
     while [ $# -gt 0 ]; do
         case $1 in
         --dir | -d)
-            plugin_root=$2
+            dirname=$2
             shift 2
             ;;
         *)
@@ -89,7 +89,8 @@ __create_plugin() {
         zerror "缺少参数 {name}"
         return 1
     fi
-    local dirname="${plugin_root}/wzsh-${name}"
+    # 未指定 --dir 时，使用默认路径
+    [ -z "$dirname" ] && dirname="${WZSH_HOME}/plugins/wzsh-${name}"
     zinfo "wzsh-${name} 开始创建"
     mkdir -p "$dirname/bin" "$dirname/config"
     # 创建 help.json，已存在则跳过
@@ -130,18 +131,15 @@ __home_plugin() {
 
 __init_plugin() {
     # 将当前目录作为插件目录，执行 plugin create 操作（补全缺失的骨架文件）
-    # 用法：wzsh plugin init
-    # 从当前目录名推断插件名（去掉 wzsh- 前缀），然后在当前目录的父目录中执行 create
-    local cur_dir
-    cur_dir=$(pwd)
-    local dir_name
-    dir_name=$(basename "$cur_dir")
-    # 去掉 wzsh- 前缀得到插件名
-    local plugin_name="${dir_name#wzsh-}"
-    local parent_dir
-    parent_dir=$(dirname "$cur_dir")
-    zinfo "以当前目录作为插件目录初始化: $cur_dir"
-    __create_plugin "$plugin_name" --dir "$parent_dir"
+    # 用法：wzsh plugin init <name>
+    # 参数：name 为插件名称，当前目录 ./ 直接作为 --dir 传入 __create_plugin
+    local name=$1
+    if [ -z "$name" ]; then
+        zerror "缺少参数 {name}"
+        return 1
+    fi
+    zinfo "以当前目录作为插件目录初始化: $(pwd)"
+    __create_plugin "$name" --dir "$(pwd)"
 }
 
 __add_brew() {

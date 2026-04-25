@@ -29,3 +29,14 @@
       - `README.md`：方法表格新增 `wzsh plugin init` 行
     - 提交记录：
       - 2cbcb2d feat(plugin): create 增加 --dir/-d 参数，创建文件时跳过已存在文件
+- [x] 上面需求理解有误 ✅ 2026-04-25 12:58:00
+    - `plugin create` --dir 理解有误，赋值的是 `dirname` ，不是 plugin_root
+    - `plugin init` 也是，当前目录 `./` 作为 `--dir` 参数
+    - 功能说明：
+      - `--dir/-d` 直接赋值给 `dirname`（插件目录本身），不再拼接 `wzsh-<name>`
+      - `plugin init <name>` 将当前目录 `$(pwd)` 作为 `--dir` 传入 `__create_plugin`
+    - 修改内容：
+      - `bin/wzsh`：修正 `__create_plugin` 和 `__init_plugin` 逻辑
+      - `AGENTS.md`：更新说明
+    - 提交记录：
+      - feat(plugin): 修正 create --dir 语义和 init 实现逻辑

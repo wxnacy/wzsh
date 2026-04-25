@@ -217,15 +217,15 @@ wzsh plugin remove-brew <name> <formula>     # 移除 Brew 依赖
 创建插件骨架，生成标准目录结构（`bin/`、`config/`、`aliases.zsh`、`zprofile`、`zshenv`、`zshrc`、`installer`、`Brewfile`）。
 
 - 若文件已存在则跳过，不会覆盖已有内容
-- `-d/--dir <dir>` 指定插件父目录，默认为 `${WZSH_HOME}/plugins`
+- `-d/--dir <dir>` 直接指定插件目录路径（即 `dirname`），不指定时默认为 `${WZSH_HOME}/plugins/wzsh-<name>`
 
 #### plugin init
 
-将当前目录作为插件目录，自动推断插件名（去掉目录名中的 `wzsh-` 前缀），在当前目录中补全缺失的骨架文件，已存在的文件不会被覆盖。
+将当前目录作为插件目录，补全缺失的骨架文件，已存在的文件不会被覆盖。
 
 ```bash
 cd ~/my-plugins/wzsh-myplugin
-wzsh plugin init   # 等价于 wzsh plugin create myplugin --dir ~/my-plugins
+wzsh plugin init myplugin   # 等价于 wzsh plugin create myplugin --dir $(pwd)
 ```
 
 ### wzsh-install - 安装插件
