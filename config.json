@@ -23,6 +23,7 @@
     { "name": "wzsh-bilibili" },
     { "name": "wzsh-nvm" },
     { "name": "wzsh-wezterm" },
+    { "name": "wzsh-ghostty" },
     { "name": "wzsh-atuin" }
   ]
 }
