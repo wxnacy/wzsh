@@ -22,6 +22,18 @@ background-opacity = 0.86
 background-blur-radius = 30
 # 窗口状态记忆：关闭后记住窗口位置、标签页和分屏状态
 window-save-state = always
+# 左右内边距（单位：像素）
+window-padding-x = 8
+# 上下内边距（单位：像素）
+window-padding-y = 4
+
+# 打字时自动隐藏鼠标
+mouse-hide-while-typing = true
+# 选中文字自动复制到系统剪贴板
+copy-on-select = clipboard
+# 复制时去掉行尾多余空格
+clipboard-trim-trailing-spaces = true
+
 
 # 快捷键：cmd+shift+, 重新加载配置
 keybind = cmd+shift+comma=reload_config
