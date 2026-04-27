@@ -228,6 +228,23 @@ cd ~/my-plugins/wzsh-myplugin
 wzsh plugin init myplugin   # 等价于 wzsh plugin create myplugin --dir $(pwd)
 ```
 
+### apps - 列出 macOS 所有应用
+
+在 `plugins/wzsh-self/zshrc` 中定义的 zsh 函数，使用 `mdfind` 获取系统中所有 `.app` 应用，通过 `mdls` 获取 Bundle ID，并用 `fzf` 交互式展示。
+
+#### 快捷键
+
+| 快捷键 | 说明 |
+| --- | --- |
+| `Ctrl-Y` | 复制应用名称到剪贴板 |
+| `Ctrl-I` | 复制应用 Bundle ID 到剪贴板 |
+
+#### 示例
+
+```bash
+apps  # 列出所有应用，支持模糊搜索
+```
+
 ### wzsh-install - 安装插件
 
 ```bash

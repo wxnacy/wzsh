@@ -208,6 +208,7 @@ net:
 | cmd rm     | 删除命令                                                                                                                       | >$ cmd rm <id\|alias>                          |
 | cmd run    | 直接运行命令                                                                                                                   | >$ cmd run <id\|alias>                         |
 | switch_dir | 交互式切换目录，使用 gum choose 选择子目录后进入                                                                               | >$ switch_dir -d ~/Projects                    |
+| apps       | 列出 macOS 所有应用，fzf 搜索，Ctrl-Y 复制名称，Ctrl-I 复制 Bundle ID                                                         | >$ apps                                        |
 | wzsh plugin create | 创建插件骨架，`-d/--dir` 指定父目录，已存在文件自动跳过                                                              | >$ wzsh plugin create myplugin -d ~/plugins    |
 | wzsh plugin init   | 将当前目录作为插件目录，补全缺失的骨架文件（不覆盖已有文件）                                                          | >$ cd wzsh-myplugin && wzsh plugin init        |
 
