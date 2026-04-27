@@ -79,3 +79,27 @@ switch_dir() {
 
     cd "$dir/$chosen"
 }
+
+# 列举出 macOS 中所有应用
+#
+# 使用 fzf 交互式列出 macOS 所有应用，支持快捷键复制应用名称或 Bundle ID。
+#
+# 用法：
+#   apps
+#
+# 快捷键：
+#   ctrl+y  复制应用名称到剪贴板
+#   ctrl+i  复制应用 Bundle ID 到剪贴板
+#
+# 示例：
+#   apps  # 列出所有应用并支持搜索
+apps() {
+    mdfind "kMDItemContentType == 'com.apple.application-bundle'" 2>/dev/null | while read -r app_path; do
+        local app_name=$(basename "$app_path" .app)
+        local bundle_id=$(mdls -name kMDItemCFBundleIdentifier -raw "$app_path" 2>/dev/null)
+        [[ "$bundle_id" == "(null)" ]] && bundle_id=""
+        printf "%-40s %s\n" "$app_name" "$bundle_id"
+    done | fzf --header="应用列表 (ctrl+y: 复制名称, ctrl+i: 复制ID)" \
+        --bind="ctrl-y:execute-silent(echo -n {1} | pbcopy)+abort" \
+        --bind="ctrl-i:execute-silent(echo -n {2} | pbcopy)+abort"
+}
