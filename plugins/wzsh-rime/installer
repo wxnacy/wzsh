@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+z link $WZSH_HOME/plugins/wzsh-rime/config/squirrel.custom.yaml $HOME/Library/Rime/squirrel.custom.yaml
+
+# 定义 plum 的存放路径
+PLUM_DIR="$HOME/.local/share/rime/plum"
+
+# 确保父级目录存在
+mkdir -p "$(dirname "$PLUM_DIR")"
+
+proxy on
+
+if [ -d "$PLUM_DIR" ]; then
+    echo "🔄 Plum 已存在，正在更新至最新版本..."
+    cd "$PLUM_DIR" || exit
+    # 强制重置并拉取最新代码
+    git fetch --all
+    git reset --hard origin/master || git reset --hard origin/main
+    git pull
+else
+    echo "🚀 正在下载最新版本的 Plum 到 $PLUM_DIR ..."
+    git clone --depth 1 https://github.com/rime/plum.git "$PLUM_DIR"
+    cd "$PLUM_DIR" || exit
+fi
+
+echo "✅ Plum 已就绪！"
+echo "📍 当前位置: $(pwd)"
+echo "------------------------------------------------"
+echo "🚀 正在安装 rime-ice..."
+bash rime-install iDvel/rime-ice:others/recipes/full
+
+proxy off
