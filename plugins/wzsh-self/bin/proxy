@@ -75,11 +75,11 @@ action=$1
 shift
 
 case "$action" in
-    on)   proxy_on "$@" ;;
-    off)  proxy_off ;;
-    show) proxy_show ;;
-    *)
-        echo "用法: proxy <on|off|show> [proxy_url]"
-        exit 1
-        ;;
+on) proxy_on "$@" ;;
+off) proxy_off ;;
+show) proxy_show ;;
+*)
+    echo "用法: proxy <on|off|show> [proxy_url]"
+    exit 1
+    ;;
 esac

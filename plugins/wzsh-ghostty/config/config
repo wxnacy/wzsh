@@ -35,10 +35,12 @@ copy-on-select = clipboard
 clipboard-trim-trailing-spaces = true
 
 
-# 快捷键：cmd+shift+, 重新加载配置
-keybind = cmd+shift+comma=reload_config
+# cmd+shift+r 重新加载配置
+keybind = cmd+shift+r=reload_config
+# cmd+shift+, 在当前窗口用 $EDITOR 打开 ghostty 配置文件
+keybind = cmd+shift+comma=text:$EDITOR ~/.config/ghostty/config\n
 # 全局快捷键：cmd+i 呼出/隐藏 quick-terminal
-keybind = global:cmd+i=toggle_quick_terminal
+# keybind = global:cmd+i=toggle_quick_terminal
 
 # 滚动缓冲区行数上限，防止查看大量日志时内存无限增长
 scrollback-limit = 10000

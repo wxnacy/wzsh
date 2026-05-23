@@ -10,10 +10,11 @@ Vagrant.configure("2") do |config|
   config.vm.box = "hashicorp-education/ubuntu-24-04"
   config.vm.box_version = "0.1.0"
 
-  # 代理设置
-  config.proxy.http     = "http://10.0.2.2:7890"  # HTTP 代理
-  config.proxy.https    = "http://10.0.2.2:7890"  # HTTPS 代理
-  config.proxy.no_proxy = "localhost,127.0.0.1,"  # 无需代理的地址
+  # 代理设置，使用宿主机 $PROXY_PORT 环境变量（默认 7890）
+  proxy_port = ENV['PROXY_PORT'] || '7890'
+  config.proxy.http     = "http://10.0.2.2:#{proxy_port}"
+  config.proxy.https    = "http://10.0.2.2:#{proxy_port}"
+  config.proxy.no_proxy = "localhost,127.0.0.1"
 
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is

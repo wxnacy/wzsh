@@ -18,7 +18,7 @@
     { "name": "wzsh-vagrant" },
     { "name": "wzsh-chezmoi" },
     { "name": "wzsh-conda" },
-    { "name": "wzsh-youtube-dl" },
+    { "name": "wzsh-youtube-dl", "enabled": false },
     { "name": "wzsh-television", "enabled": false },
     { "name": "wzsh-bilibili" },
     { "name": "wzsh-nvm" },

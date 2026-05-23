@@ -1,4 +1,6 @@
-## PLAN
+## PRODUCT
+
+文档涉及功能都是 `bin/wzsh` 脚本相关
 
 
 ## TODO
