@@ -11,9 +11,3 @@ function binfo() {
     name=$1
     brew info ${name} --json=v2 | bat --theme "Visual Studio Dark+"
 }
-
-function omlx_upgrade() {
-    proxy on
-    git -C $(brew --repository jundot/omlx) pull && brew upgrade omlx
-    proxy off
-}
