@@ -46,5 +46,6 @@ zinit snippet OMZ::lib/key-bindings.zsh
 zinit snippet OMZ::lib/completion.zsh
 zinit snippet OMZ::lib/history.zsh
 
-zinit ice lucid wait='1'
+zinit ice lucid wait='1' atload='unalias gsd 2>/dev/null'
+# gsd 别名 (git svn dcommit) 与 @opengsd/gsd-pi 冲突，SVN 桥接已很少使用
 zinit snippet OMZ::plugins/git
