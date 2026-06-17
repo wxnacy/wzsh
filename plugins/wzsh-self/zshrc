@@ -2,6 +2,62 @@ if [ $(command -v zoxide) ]; then
     eval "$(zoxide init zsh --cmd j)"
 fi
 
+# proxy - 本地代理开关（作为函数运行在当前 shell，export 才能生效）
+#
+# 用法：
+#   proxy on [地址|端口]   # 开启代理
+#   proxy off              # 关闭代理
+#   proxy show             # 显示当前代理状态
+#
+# 参数：
+#   proxy on               # 使用 $PROXY 环境变量
+#   proxy on <url>         # 使用指定代理地址（如 http://127.0.0.1:7890）
+#   proxy on <port>        # 使用 $PROXY 的 host 部分拼接指定端口（如 7890）
+proxy() {
+    local action=$1
+    shift
+
+    case "$action" in
+    on)
+        local p
+        # 如果参数是纯数字，视为端口，从 $PROXY 中提取 host 拼接
+        if [[ $1 =~ ^[0-9]+$ ]]; then
+            local host
+            # 从 $PROXY 提取 host（去掉协议前缀和端口）
+            host=$(echo "${PROXY:-http://127.0.0.1}" | sed -E 's|^https?://||; s|:[0-9]+$||; s|/$||')
+            p="http://${host}:${1}"
+        else
+            p=${1:-$PROXY}
+        fi
+        if [[ ! ${p} ]]; then
+            z log error '代理地址 $PROXY 为空，开启代理失败'
+            return 1
+        fi
+        unset no_proxy http_proxy https_proxy all_proxy
+        export no_proxy=${NO_PROXY}
+        export http_proxy=${p}
+        export https_proxy=$http_proxy
+        export all_proxy=$http_proxy
+        z log info "已开启代理: ${p}"
+        ;;
+    off)
+        unset http_proxy https_proxy all_proxy
+        z log info "已关闭代理"
+        ;;
+    show)
+        if [[ ${http_proxy} ]]; then
+            z log info "当前已开启代理: ${http_proxy}"
+        else
+            z log info "当前已关闭代理"
+        fi
+        ;;
+    *)
+        echo "用法: proxy <on|off|show> [proxy_url|port]"
+        return 1
+        ;;
+    esac
+}
+
 # cmd 命令管理工具包装函数
 cmd() {
     # 对于交互式命令（add, edit），直接执行脚本

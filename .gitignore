@@ -172,3 +172,4 @@ plugins/wzsh-mpv/config/watch_later/
 .aider*
 config.local.json
 plugins.cache
+CLAUDE.md
